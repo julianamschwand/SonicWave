@@ -23,32 +23,32 @@ const router = useRouter()
 </template>
 <style scoped>
 #navbar {
-  height: calc(var(--navbar-size) - 5px);
+  height: calc(var(--ui-scale) * 0.65 - calc(var(--ui-scale) * 0.05));
   width: 100%;
   background-color: var(--objects);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: calc(var(--ui-scale) * 0.08);
   box-sizing: border-box;
 }
 
 #seperator {
-  height: 5px;
+  height: calc(var(--ui-scale) * 0.05);
   width: 100%;
   background-color: var(--accent);
 }
 
 #logo {
-  max-height: calc(var(--navbar-size) * 0.6);
+  max-height: calc(var(--ui-scale) * 0.4);
   cursor: pointer;
 }
 
 #search-container {
-  width: 350px;
+  width: calc(var(--ui-scale) * 3.5);
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: calc(var(--ui-scale) * 0.03);
 }
 
 #search-container * {
@@ -56,28 +56,28 @@ const router = useRouter()
   color: white;
   border: none;
   outline: none;
-  font-size: calc(var(--navbar-size) * 0.23);
+  font-size: calc(var(--ui-scale) * 0.15);
 }
 
 #search-container div:first-child {
   justify-content: center;
   border-radius: 0px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  max-width: calc(var(--navbar-size) * 0.6);
+  border-top-left-radius: calc(var(--ui-scale) * 0.05);
+  border-bottom-left-radius: calc(var(--ui-scale) * 0.05);
+  max-width: calc(var(--ui-scale) * 0.4);
   padding: 0px;
 }
 
 #search-container div {
   display: flex;
   align-items: center;
-  height: calc(var(--navbar-size) * 0.6);
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  width: calc(100% - calc(var(--navbar-size) - 20px));
+  height: calc(var(--ui-scale) * 0.4);
+  border-top-right-radius: calc(var(--ui-scale) * 0.05);
+  border-bottom-right-radius: calc(var(--ui-scale) * 0.05);
+  width: calc(100% - calc(var(--ui-scale) * 0.45));
   box-sizing: border-box;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left:calc(var(--ui-scale) * 0.1);
+  padding-right: calc(var(--ui-scale) * 0.1);
 }
 
 #search-container input {
@@ -85,17 +85,17 @@ const router = useRouter()
 }
 
 #login-button {
-  height: calc(var(--navbar-size) * 0.6);
-  width: 100px;
-  border-radius: 5px;
+  height: calc(var(--ui-scale) * 0.4);
+  width: var(--ui-scale);
+  border-radius: calc(var(--ui-scale) * 0.05);
   background-color: var(--accent);
   color: var(--background);
   font-weight: bold;
-  font-size: calc(var(--navbar-size) * 0.25);
+  font-size: calc(var(--ui-scale) * 0.16);
 }
 
 svg {
-  height: calc(var(--navbar-size) * 0.37);
-  width: calc(var(--navbar-size) * 0.37);
+  height: calc(var(--ui-scale) * 0.24);
+  width: calc(var(--ui-scale) * 0.24);
 }
 </style>
