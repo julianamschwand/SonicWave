@@ -48,7 +48,7 @@ const router = useRouter()
 <style scoped>
 #navbar {
   height: 100%;
-  width: var(--navbar-size);
+  width: calc(var(--ui-scale) * 0.65);
   background-color: var(--objects);
   display: flex;
   flex-direction: column;
@@ -56,8 +56,8 @@ const router = useRouter()
 }
 
 .nav-button {
-  width: var(--navbar-size);
-  height: var(--navbar-size);
+  width: calc(var(--ui-scale) * 0.65);
+  height: calc(var(--ui-scale) * 0.65);
   background-color: var(--objects);
   display: flex;
   justify-content: center;
@@ -65,7 +65,7 @@ const router = useRouter()
 }
 
 svg {
-  height: calc(var(--navbar-size) * 0.55);
-  width: calc(var(--navbar-size) * 0.55);
+  height: calc(var(--ui-scale) * 0.35);
+  width: calc(var(--ui-scale) * 0.35);
 }
 </style>

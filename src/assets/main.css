@@ -7,7 +7,7 @@
   --background: #00172b;
   --objects: #002646;
   --accent: #2ab9d2;
-  --navbar-size: 60px;
+  --ui-scale: 90px;
 }
 
 html, body, #app {
