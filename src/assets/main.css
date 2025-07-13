@@ -1,0 +1,27 @@
+* {
+  color: white;
+  font-family: 'Montserrat';
+}
+
+:root {
+  --background: #00172b;
+  --objects: #002646;
+  --accent: #2ab9d2;
+}
+
+body {
+  background-color: var(--background);
+  margin: 0px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  filter: brightness(1.07)
+}
