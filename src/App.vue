@@ -13,6 +13,6 @@ import SideNavbar from './components/SideNavbar.vue'
 <style scoped>
 #layout {
   display: flex;
-  height: calc(100% - 70px);
+  height: calc(100% - var(--navbar-size));
 }
 </style>

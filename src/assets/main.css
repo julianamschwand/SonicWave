@@ -7,6 +7,7 @@
   --background: #00172b;
   --objects: #002646;
   --accent: #2ab9d2;
+  --navbar-size: 60px;
 }
 
 html, body, #app {

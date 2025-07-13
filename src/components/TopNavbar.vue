@@ -7,7 +7,7 @@ const router = useRouter()
     <img src="/images/logo.png" alt="SonicWave" draggable="false" id="logo" @click="router.push('/')">
     <div id="search-container">
       <div>
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFF">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF">
           <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
         </svg>
       </div>
@@ -23,7 +23,7 @@ const router = useRouter()
 </template>
 <style scoped>
 #navbar {
-  height: 60px;
+  height: calc(var(--navbar-size) - 5px);
   width: 100%;
   background-color: var(--objects);
   display: flex;
@@ -40,7 +40,7 @@ const router = useRouter()
 }
 
 #logo {
-  max-height: 40px;
+  max-height: calc(var(--navbar-size) * 0.6);
   cursor: pointer;
 }
 
@@ -56,7 +56,7 @@ const router = useRouter()
   color: white;
   border: none;
   outline: none;
-  font-size: 16px;
+  font-size: calc(var(--navbar-size) * 0.23);
 }
 
 #search-container div:first-child {
@@ -64,17 +64,17 @@ const router = useRouter()
   border-radius: 0px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
-  max-width: 40px;
+  max-width: calc(var(--navbar-size) * 0.6);
   padding: 0px;
 }
 
 #search-container div {
   display: flex;
   align-items: center;
-  height: 40px;
+  height: calc(var(--navbar-size) * 0.6);
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
-  width: calc(100% - 45px);
+  width: calc(100% - calc(var(--navbar-size) - 20px));
   box-sizing: border-box;
   padding-left: 10px;
   padding-right: 10px;
@@ -85,11 +85,17 @@ const router = useRouter()
 }
 
 #login-button {
-  height: 40px;
+  height: calc(var(--navbar-size) * 0.6);
   width: 100px;
   border-radius: 5px;
   background-color: var(--accent);
   color: var(--background);
   font-weight: bold;
+  font-size: calc(var(--navbar-size) * 0.25);
+}
+
+svg {
+  height: calc(var(--navbar-size) * 0.37);
+  width: calc(var(--navbar-size) * 0.37);
 }
 </style>
