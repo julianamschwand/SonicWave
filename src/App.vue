@@ -3,13 +3,16 @@ import { RouterView } from 'vue-router'
 import TopNavbar from './components/TopNavbar.vue'
 import SideNavbar from './components/SideNavbar.vue'
 </script>
-
 <template>
   <TopNavbar/>
-  <SideNavbar/>
-  <RouterView/>
+  <div id="layout">
+    <SideNavbar/>
+    <RouterView/>
+  </div>
 </template>
-
 <style scoped>
-
+#layout {
+  display: flex;
+  height: calc(100% - 70px);
+}
 </style>
