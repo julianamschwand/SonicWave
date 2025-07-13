@@ -1,8 +1,12 @@
 <script setup>
 </script>
-
 <template>
-  <main>
-    
-  </main>
+  
 </template>
+<style scoped>
+div {
+  width: 100px;
+  height: 100px;
+  background-color: red;
+}
+</style>

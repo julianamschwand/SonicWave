@@ -4,7 +4,7 @@ const router = useRouter()
 </script>
 <template>
   <div id="navbar">
-    <img src="/images/logo.png" alt="SonicWave" id="logo" @click="router.push('/')">
+    <img src="/images/logo.png" alt="SonicWave" draggable="false" id="logo" @click="router.push('/')">
     <div id="search-container">
       <div>
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFF">
@@ -15,7 +15,7 @@ const router = useRouter()
         <input type="text" placeholder="Search for something ...">
       </div>
     </div>
-    <div id="login-button" class="button">
+    <div id="login-button" class="button button-dark-hover">
       Login
     </div>
   </div>
@@ -23,7 +23,7 @@ const router = useRouter()
 </template>
 <style scoped>
 #navbar {
-  height: 65px;
+  height: 60px;
   width: 100%;
   background-color: var(--objects);
   display: flex;

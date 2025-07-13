@@ -9,9 +9,11 @@
   --accent: #2ab9d2;
 }
 
-body {
+html, body, #app {
   background-color: var(--background);
   margin: 0px;
+  height: 100%;
+  width: 100%;
 }
 
 .button {
@@ -22,6 +24,10 @@ body {
   cursor: pointer;
 }
 
-.button:hover {
-  filter: brightness(1.07)
+.button-light-hover:hover {
+  filter: brightness(1.2)
+}
+
+.button-dark-hover:hover {
+  filter: brightness(0.9)
 }
