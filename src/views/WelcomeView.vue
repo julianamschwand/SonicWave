@@ -1,12 +1,17 @@
 <script setup>
-import { loginState } from '@/api/routes/user-routes.js'
 import { useRouter } from 'vue-router'
+import { loginState } from '@/api/routes/user-routes.js'
+import { onMounted } from 'vue'
 
 const router = useRouter()
 
+onMounted(async () => {
+  const response = await loginState()
+  if (response.loggedIn) router.push("/")
+})
 </script>
 <template>
-  <div id="main-container">
+  <div class="main-container">
     <div id="greeting-container">
       <h1>Welcome to SonicWave!</h1>
       <div class="button button-dark-hover" @click="router.push('/login')">Login</div>
@@ -15,14 +20,6 @@ const router = useRouter()
   </div>
 </template>
 <style scoped>
-#main-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 #greeting-container {
   display: flex;
   gap: calc(var(--ui-scale) * 0.1);
@@ -40,6 +37,7 @@ h1 {
   color: var(--background);
   font-weight: bold;
   width: calc(var(--ui-scale) * 3);
-  height: calc(var(--ui-scale) * 0.4)
+  height: calc(var(--ui-scale) * 0.4);
+  font-size: calc(var(--ui-scale) * 0.16);
 }
 </style>
