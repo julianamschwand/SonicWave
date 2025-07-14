@@ -1,12 +1,14 @@
 <script setup>
-import { RouterView } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
 import TopNavbar from './components/TopNavbar.vue'
 import SideNavbar from './components/SideNavbar.vue'
+
+const route = useRoute()
 </script>
 <template>
-  <TopNavbar/>
+  <TopNavbar v-if="route.path !== '/login' && route.path !== '/register'"/>
   <div id="layout">
-    <SideNavbar/>
+    <SideNavbar v-if="route.path !== '/login' && route.path !== '/register'"/>
     <div id="site-content">
       <RouterView/>
     </div>

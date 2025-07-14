@@ -16,6 +16,7 @@ export default async function request(method, url, data = null) {
 
     const { status, data: errorData } = error.response
     console.error(`API Error [${status}]`, errorData)
-    throw errorData
+
+    return errorData
   }
 }

@@ -16,9 +16,7 @@ const router = useRouter()
         <input type="text" placeholder="Search for something ...">
       </div>
     </div>
-    <div id="login-button" class="button button-dark-hover">
-      Login
-    </div>
+    <div id="login-button" class="button button-dark-hover" @click="router.push('/login')">Login</div>
   </div>
   <div id="seperator"></div>
 </template>
