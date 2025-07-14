@@ -39,3 +39,43 @@ header {
 .button-dark-hover:hover {
   filter: brightness(0.9)
 }
+
+/* Search bar */
+.search-container {
+  width: calc(var(--ui-scale) * 3.5);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--ui-scale) * 0.03);
+}
+
+.search-container * {
+  color: white;
+  border: none;
+  outline: none;
+  font-size: calc(var(--ui-scale) * 0.15);
+}
+
+.search-container div:first-child {
+  justify-content: center;
+  border-radius: 0px;
+  border-top-left-radius: calc(var(--ui-scale) * 0.05);
+  border-bottom-left-radius: calc(var(--ui-scale) * 0.05);
+  max-width: calc(var(--ui-scale) * 0.4);
+  padding: 0px;
+}
+
+.search-container div {
+  display: flex;
+  align-items: center;
+  height: calc(var(--ui-scale) * 0.4);
+  border-top-right-radius: calc(var(--ui-scale) * 0.05);
+  border-bottom-right-radius: calc(var(--ui-scale) * 0.05);
+  width: calc(100% - calc(var(--ui-scale) * 0.45));
+  box-sizing: border-box;
+  padding-left:calc(var(--ui-scale) * 0.1);
+  padding-right: calc(var(--ui-scale) * 0.1);
+}
+
+.search-container input {
+  width: 100%;
+}
