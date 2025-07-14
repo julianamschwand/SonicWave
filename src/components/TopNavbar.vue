@@ -6,7 +6,7 @@ const router = useRouter()
 <template>
   <div id="navbar">
     <img src="/images/logo.png" alt="SonicWave" draggable="false" id="logo" @click="router.push('/')">
-    <div id="search-container">
+    <div class="search-container">
       <div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF">
           <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
@@ -43,46 +43,7 @@ const router = useRouter()
 #logo {
   max-height: calc(var(--ui-scale) * 0.4);
   cursor: pointer;
-}
-
-#search-container {
-  width: calc(var(--ui-scale) * 3.5);
-  display: flex;
-  align-items: center;
-  gap: calc(var(--ui-scale) * 0.03);
-}
-
-#search-container * {
-  background-color: var(--background);
-  color: white;
-  border: none;
-  outline: none;
-  font-size: calc(var(--ui-scale) * 0.15);
-}
-
-#search-container div:first-child {
-  justify-content: center;
-  border-radius: 0px;
-  border-top-left-radius: calc(var(--ui-scale) * 0.05);
-  border-bottom-left-radius: calc(var(--ui-scale) * 0.05);
-  max-width: calc(var(--ui-scale) * 0.4);
-  padding: 0px;
-}
-
-#search-container div {
-  display: flex;
-  align-items: center;
-  height: calc(var(--ui-scale) * 0.4);
-  border-top-right-radius: calc(var(--ui-scale) * 0.05);
-  border-bottom-right-radius: calc(var(--ui-scale) * 0.05);
-  width: calc(100% - calc(var(--ui-scale) * 0.45));
-  box-sizing: border-box;
-  padding-left:calc(var(--ui-scale) * 0.1);
-  padding-right: calc(var(--ui-scale) * 0.1);
-}
-
-#search-container input {
-  width: 100%;
+  user-select: none;
 }
 
 #login-button {
@@ -93,6 +54,10 @@ const router = useRouter()
   color: var(--background);
   font-weight: bold;
   font-size: calc(var(--ui-scale) * 0.16);
+}
+
+.search-container * {
+  background-color: var(--background);
 }
 
 svg {
