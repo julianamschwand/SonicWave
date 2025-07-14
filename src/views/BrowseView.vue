@@ -1,7 +1,7 @@
 <script setup>
 </script>
 <template>
-  <header>Home</header>
+  <header>Browse</header>
 </template>
 <style scoped>
 
