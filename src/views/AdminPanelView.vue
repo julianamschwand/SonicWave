@@ -1,7 +1,7 @@
 <script setup>
 </script>
 <template>
-  <header>Home</header>
+  <header>Admin Panel</header>
 </template>
 <style scoped>
 
