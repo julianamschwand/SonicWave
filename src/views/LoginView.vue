@@ -28,7 +28,7 @@ const handleLogin = async () => {
           <input type="email" id="email" placeholder="user@example.com" v-model="email">
           <label for="password">Password:</label>
           <input type="password" id="password" placeholder="Password" v-model="password">
-          <div id="error-message" v-if="errorMessage">{{ errorMessage }}</div>
+          <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
           <button type="submit" class="button button-dark-hover" id="login-button">Login</button>
           <button class="button button-dark-hover" id="register-button" @click="router.push('/register')">Register</button>
         </form>
@@ -99,13 +99,10 @@ input {
 
 label {
   font-weight: bold;
+  font-size: calc(var(--ui-scale) * 0.16);
 }
 
 img {
   width: calc(var(--ui-scale) * 4)
-}
-
-#error-message {
-  color: red;
 }
 </style>

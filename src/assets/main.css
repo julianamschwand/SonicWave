@@ -55,7 +55,6 @@ header {
 }
 
 .search-container * {
-  color: white;
   border: none;
   outline: none;
   font-size: calc(var(--ui-scale) * 0.15);
@@ -99,3 +98,97 @@ header {
   align-items: center;
   justify-content: center;
 }
+
+/* Song table */
+.song-table {
+  width: 100%;
+  border-spacing: 0 calc(var(--ui-scale) * 0.2);
+  font-size: calc(var(--ui-scale) * 0.16);
+}
+
+.song-table img {
+  height: var(--ui-scale);
+  width: var(--ui-scale);
+  border-radius: calc(var(--ui-scale) * 0.05);
+}
+
+.song-table td {
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;   
+}
+
+.song-table td:first-child {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  gap: calc(var(--ui-scale) * 0.4)
+}
+
+.song-table td:last-child {
+  text-align: right;
+}
+
+.song-table svg {
+  height: calc(var(--ui-scale) * 0.35);
+  width: calc(var(--ui-scale) * 0.35);
+  cursor: pointer;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  font-size: calc(var(--ui-scale) * 0.15);
+}
+
+/* Success Message */
+.success-message {
+  color: var(--accent);
+  font-size: calc(var(--ui-scale) * 0.15);
+}
+
+/* Request loader */
+.loader-request {
+  width: calc(var(--ui-scale) * 0.5);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: calc(var(--ui-scale) * 0.08) solid white;
+  animation:
+    l20-1 0.8s infinite linear alternate,
+    l20-2 1.6s infinite linear;
+}
+
+@keyframes l20-1{
+   0%    {clip-path: polygon(50% 50%,0       0,  50%   0%,  50%    0%, 50%    0%, 50%    0%, 50%    0% )}
+   12.5% {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100%   0%, 100%   0%, 100%   0% )}
+   25%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 100% 100%, 100% 100% )}
+   50%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
+   62.5% {clip-path: polygon(50% 50%,100%    0, 100%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
+   75%   {clip-path: polygon(50% 50%,100% 100%, 100% 100%,  100% 100%, 100% 100%, 50%  100%, 0%   100% )}
+   100%  {clip-path: polygon(50% 50%,50%  100%,  50% 100%,   50% 100%,  50% 100%, 50%  100%, 0%   100% )}
+}
+@keyframes l20-2{ 
+  0%    {transform:scaleY(1)  rotate(0deg)}
+  49.99%{transform:scaleY(1)  rotate(135deg)}
+  50%   {transform:scaleY(-1) rotate(0deg)}
+  100%  {transform:scaleY(-1) rotate(-135deg)}
+}
+
+/* Download Loader */
+.loader-download {
+  width: calc(var(--ui-scale) * 0.17);
+  padding: calc(var(--ui-scale) * 0.05);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--accent);
+  --_m: 
+    conic-gradient(#0000 10%,#000),
+    linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+          mask: var(--_m);
+  -webkit-mask-composite: source-out;
+          mask-composite: subtract;
+  animation: l3 1s infinite linear;
+}
+@keyframes l3 {to{transform: rotate(1turn)}}
