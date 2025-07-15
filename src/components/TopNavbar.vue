@@ -57,9 +57,4 @@ const router = useRouter()
 .search-container * {
   background-color: var(--background);
 }
-
-svg {
-  height: calc(var(--ui-scale) * 0.24);
-  width: calc(var(--ui-scale) * 0.24);
-}
 </style>
