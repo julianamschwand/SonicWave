@@ -11,11 +11,15 @@ const loaderVisible = ref(false)
 const greetingVisible = ref(true)
 
 const handleBrowse = async () => {
+  if (!query.value.trim()) return
+
   greetingVisible.value = false
-  const tempQuery = query.value
+
   songs.value = []
   loaderVisible.value = true
-  const response = await browseSongs(tempQuery)
+
+  const response = await browseSongs(query.value)
+
   loaderVisible.value = false
   songs.value = response.songs
 }
@@ -43,7 +47,7 @@ onMounted(async () => {
     </div>
   </header>
   <div id="loader-container" v-if="loaderVisible">
-    <div class="loader"></div>
+    <div class="loader-request"></div>
   </div>
   <table class="song-table">
     <tr v-for="song in songs">
@@ -72,46 +76,10 @@ onMounted(async () => {
   color: var(--background);
   height: calc(var(--ui-scale) * 0.4);
   width: calc(var(--ui-scale) * 0.4);
-  font-size: calc()
 }
 
 .search-container * {
   background-color: var(--objects);
-}
-
-.song-table {
-  width: 100%;
-  border-spacing: 0 calc(var(--ui-scale) * 0.2);
-}
-
-.song-table img {
-  height: var(--ui-scale);
-  width: var(--ui-scale);
-  border-radius: calc(var(--ui-scale) * 0.05);
-}
-
-.song-table td {
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;   
-}
-
-.song-table td:first-child {
-  display: flex;
-  align-items: center;
-  font-weight: bold;
-  gap: calc(var(--ui-scale) * 0.4)
-}
-
-.song-table td:last-child {
-  text-align: right;
-}
-
-.song-table svg {
-  height: calc(var(--ui-scale) * 0.35);
-  width: calc(var(--ui-scale) * 0.35);
-  cursor: pointer;
 }
 
 .main-container {
@@ -122,31 +90,5 @@ onMounted(async () => {
 #loader-container {
   display: flex;
   justify-content: center;
-}
-
-.loader {
-  width: 50px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 8px solid white;
-  animation:
-    l20-1 0.8s infinite linear alternate,
-    l20-2 1.6s infinite linear;
-}
-
-@keyframes l20-1{
-   0%    {clip-path: polygon(50% 50%,0       0,  50%   0%,  50%    0%, 50%    0%, 50%    0%, 50%    0% )}
-   12.5% {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100%   0%, 100%   0%, 100%   0% )}
-   25%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 100% 100%, 100% 100% )}
-   50%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
-   62.5% {clip-path: polygon(50% 50%,100%    0, 100%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
-   75%   {clip-path: polygon(50% 50%,100% 100%, 100% 100%,  100% 100%, 100% 100%, 50%  100%, 0%   100% )}
-   100%  {clip-path: polygon(50% 50%,50%  100%,  50% 100%,   50% 100%,  50% 100%, 50%  100%, 0%   100% )}
-}
-@keyframes l20-2{ 
-  0%    {transform:scaleY(1)  rotate(0deg)}
-  49.99%{transform:scaleY(1)  rotate(135deg)}
-  50%   {transform:scaleY(-1) rotate(0deg)}
-  100%  {transform:scaleY(-1) rotate(-135deg)}
 }
 </style>
