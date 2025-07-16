@@ -8,7 +8,7 @@ export async function browseSongs(query) {
   return request("get", "/songs/browse", { params: { query }});
 }
 
-export async function songs() {
+export async function getSongs() {
   return request("get", "/songs");
 }
 

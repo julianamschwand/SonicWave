@@ -102,28 +102,52 @@ header {
 /* Song table */
 .song-table {
   width: 100%;
-  border-spacing: 0 calc(var(--ui-scale) * 0.2);
   font-size: calc(var(--ui-scale) * 0.16);
+  border-collapse: collapse;
 }
 
 .song-table img {
   height: var(--ui-scale);
   width: var(--ui-scale);
   border-radius: calc(var(--ui-scale) * 0.05);
+  margin-top: calc(var(--ui-scale) * 0.1);
+  margin-bottom: calc(var(--ui-scale) * 0.1);
 }
 
 .song-table td {
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;   
+  text-overflow: ellipsis; 
 }
 
 .song-table td:first-child {
   display: flex;
+  gap: calc(var(--ui-scale) * 0.2);
   align-items: center;
   font-weight: bold;
-  gap: calc(var(--ui-scale) * 0.4)
+  padding-left: calc(var(--ui-scale) * 0.1);
+  padding-right: calc(var(--ui-scale) * 0.1);
+}
+
+.song-table td:first-child > div{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--ui-scale) * 0.2);
+  width: 100%;
+}
+
+.song-table td:first-child > div > div:first-child{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--ui-scale) * 0.2);
+}
+
+.song-table td:last-child {
+  text-align: right;
+  padding-right: calc(var(--ui-scale) * 0.1);
 }
 
 .song-table td:last-child > div {
@@ -137,6 +161,20 @@ header {
   height: calc(var(--ui-scale) * 0.35);
   width: calc(var(--ui-scale) * 0.35);
   cursor: pointer;
+}
+
+.song-table svg:hover {
+  filter: brightness(0.8);
+}
+
+/* Not clickable Button/SVG */¨
+.unclickable {
+  pointer-events: none;
+}
+
+.unclickable:hover {
+  filter: brightness(1) !important;
+  cursor: default !important;
 }
 
 /* Error Message */
