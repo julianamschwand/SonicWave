@@ -66,6 +66,7 @@ const isActive = (path) => route.path === path
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 0px;
 }
 
 .active {
