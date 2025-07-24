@@ -16,7 +16,7 @@ const router = useRouter()
         <input type="text" placeholder="Search for something ...">
       </div>
     </div>
-    <div id="login-button" class="button button-dark-hover" @click="router.push('/login')">Login</div>
+    <button class="button-dark-hover" @click="router.push('/login')">Login</button>
   </div>
   <div id="seperator"></div>
 </template>
@@ -44,7 +44,7 @@ const router = useRouter()
   user-select: none;
 }
 
-#login-button {
+button {
   height: 40px;
   width: 100px;
   border-radius: 5px;

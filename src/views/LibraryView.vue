@@ -87,11 +87,11 @@ onMounted(async () => {
               <img :src="song.cover" alt="">
               {{ song.title }}
             </div>
-            <div class="table-play-button button button-dark-hover">
+            <button class="button-dark-hover">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polygon points="6 3 20 12 6 21 6 3"/>
               </svg>
-            </div>
+            </button>
           </div>
         </td>
         <td>
@@ -151,18 +151,18 @@ td:first-child:hover {
   user-select: none;
 }
 
-td:first-child:hover .table-play-button{
+td:first-child:hover button{
   background-color: var(--accent);
 }
 
-.table-play-button {
+button {
   background-color: var(--background);
   height: 50px;
   width: 50px;
   border-radius: 50%;
 }
 
-.table-play-button svg {
+button svg {
   fill: var(--background);
 }
 </style>
