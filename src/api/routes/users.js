@@ -1,5 +1,9 @@
 import request from '../request.js'
 
+export async function allUsers() {
+  return request("get", "/users")
+}
+
 export async function userdata() {
   return request("get", "/users/userdata");
 }

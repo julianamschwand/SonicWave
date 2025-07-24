@@ -1,12 +1,13 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { loginState } from '@/api/routes/user-routes.js'
+import { loginState } from '@/api/routes/users.js'
 import { onMounted, ref, computed } from 'vue'
-import { getSongs, toggleFavorite, deleteSong } from '@/api/routes/song-routes'
+import { getSongs, toggleFavorite, deleteSong } from '@/api/routes/songs'
 
 const router = useRouter()
 const songs = ref([])
 const query = ref("")
+const loaderVisible = ref(true)
 
 const filteredSongs = computed(() => {
   return songs.value.filter(song => {
@@ -20,7 +21,7 @@ const handleToggleFavorite = async (songId) => {
   const song = songs.value.find(song => song.songId === songId)
   song.isFavorite = !song.isFavorite
 
-  const response = await toggleFavorite(song.songId)
+  const response = await toggleFavorite(songId)
 
   if (!response.success) {
     song.isFavorite = !song.isFavorite
@@ -31,9 +32,11 @@ const handleDeleteSong = async (songId) => {
   const song = songs.value.find(song => song.songId === songId)
   song.isVisible = false
 
-  const response = await deleteSong(song.songId)
+  const response = await deleteSong(songId)
 
-  if (!response.success) {
+  if (response.success) {
+    songs.value = songs.value.filter(song => song.songId !== songId)
+  } else {
     song.isVisible = true
   }
 }
@@ -51,6 +54,8 @@ onMounted(async () => {
       return song
     })
   }
+
+  loaderVisible.value = false
 })
 </script>
 <template>
@@ -67,52 +72,62 @@ onMounted(async () => {
       </div>
     </div>
   </header>
-  <div class="main-container" v-if="songs.length === 0">
+  <div class="main-container" v-if="loaderVisible">
     <div class="loader-request"></div>
   </div>
+  <div class="main-container" v-if="!loaderVisible && songs.length === 0">
+    No songs yet
+  </div>
   <table class="song-table">
-    <tr v-for="song in filteredSongs">
-      <td>
-        <div>
+    <tbody>
+      <tr v-for="song in filteredSongs">
+        <td>
           <div>
-            <img :src="song.cover" alt="">
-            {{ song.title }}
+            <div>
+              <img :src="song.cover" alt="">
+              {{ song.title }}
+            </div>
+            <div class="table-play-button button button-dark-hover">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="6 3 20 12 6 21 6 3"/>
+              </svg>
+            </div>
           </div>
-          <div class="table-play-button button button-dark-hover">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="6 3 20 12 6 21 6 3"/>
-            </svg>
-          </div>
-        </div>
-      </td>
-      <td>{{ song.artist }}</td>
-      <td>{{ song.genre }}</td>
-      <td>{{ song.releaseYear }}</td>
-      <td>{{ song.duration }}</td>
-      <td v-if="!song.isFavorite">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="handleToggleFavorite(song.songId)">
-          <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
-        </svg>
-      </td>
-      <td v-if="song.isFavorite">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff00ae" @click="handleToggleFavorite(song.songId)">
-          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-        </svg>
-      </td>
-      <td>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="router.push(`/edit/song/${song.songId}`)">
-          <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
-        </svg>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="handleDeleteSong(song.songId)">
-          <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
-        </svg>
-      </td>
-    </tr>
+        </td>
+        <td>
+          <span v-for="(artist, index) of song.artists">
+            {{ artist.artistName }}<span v-if="index < song.artists.length - 1">{{ ", " }}</span>
+          </span>
+        </td>
+        <td>{{ song.genre || "(None)" }}</td>
+        <td>{{ song.releaseYear }}</td>
+        <td>{{ song.duration }}</td>
+        <td v-if="!song.isFavorite">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="handleToggleFavorite(song.songId)">
+            <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
+          </svg>
+        </td>
+        <td v-if="song.isFavorite">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff00ae" @click="handleToggleFavorite(song.songId)">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </td>
+        <td>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="router.push(`/edit/song/${song.songId}`)">
+            <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="handleDeleteSong(song.songId)">
+            <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+          </svg>
+        </td>
+      </tr>
+    </tbody>
   </table>
 </template>
 <style scoped>
 .main-container {
-  height: calc(100% - calc(var(--ui-scale) * 0.8));
+  height: calc(100% - 80px);
+  font-size: 25px;
 }
 
 .search-container * {
@@ -120,18 +135,18 @@ onMounted(async () => {
 }
 
 .song-table img {
-  width: calc(var(--ui-scale) * 0.6);
-  height: calc(var(--ui-scale) * 0.6);
+  width: 60px;
+  height: 60px;
 }
 
 .song-table svg {
-  width: calc(var(--ui-scale) * 0.3);
-  height: calc(var(--ui-scale) * 0.3);
+  width: 30px;
+  height: 30px;
 }
 
 td:first-child:hover {
   background-color: var(--objects);
-  border-radius: calc(var(--ui-scale) * 0.05);
+  border-radius: 5px;
   cursor: pointer;
   user-select: none;
 }
@@ -142,8 +157,8 @@ td:first-child:hover .table-play-button{
 
 .table-play-button {
   background-color: var(--background);
-  height: calc(var(--ui-scale) * 0.5);
-  width: calc(var(--ui-scale) * 0.5);
+  height: 50px;
+  width: 50px;
   border-radius: 50%;
 }
 

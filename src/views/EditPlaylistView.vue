@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { loginState } from '@/api/routes/user-routes.js'
+import { loginState } from '@/api/routes/users.js'
 import { onMounted } from 'vue'
 
 const router = useRouter()

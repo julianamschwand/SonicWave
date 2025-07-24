@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { loginState } from '@/api/routes/user-routes.js'
+import { loginState } from '@/api/routes/users.js'
 import { onMounted } from 'vue'
 
 const router = useRouter()
@@ -22,22 +22,22 @@ onMounted(async () => {
 <style scoped>
 #greeting-container {
   display: flex;
-  gap: calc(var(--ui-scale) * 0.1);
+  gap: 10px;
   flex-direction: column;
   align-items: center;
 }
 
 h1 {
-  font-size: calc(var(--ui-scale) * 0.5);
+  font-size: 50px;
 }
 
 .button {
   background-color: var(--accent);
-  border-radius: calc(var(--ui-scale) * 0.05);
+  border-radius: 5px;
   color: var(--background);
   font-weight: bold;
-  width: calc(var(--ui-scale) * 3);
-  height: calc(var(--ui-scale) * 0.4);
-  font-size: calc(var(--ui-scale) * 0.16);
+  width: 300px;
+  height: 40px;
+  font-size: 16px;
 }
 </style>

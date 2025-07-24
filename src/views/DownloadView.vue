@@ -1,8 +1,8 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { loginState } from '@/api/routes/user-routes.js'
+import { loginState } from '@/api/routes/users.js'
 import { onMounted, ref } from 'vue'
-import { downloadSong } from '@/api/routes/song-routes'
+import { downloadSong } from '@/api/routes/songs'
 
 const router = useRouter()
 const url = ref("")
@@ -61,21 +61,21 @@ onMounted(async () => {
 </template>
 <style scoped>
 .main-container {
-  height: calc(100% - calc(var(--ui-scale)) * 0.8 * 2)
+  height: calc(100% - 80px * 2)
 }
 
 #center-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: calc(var(--ui-scale) * 0.1);
+  gap: 10px;
 }
 
 #downloadbar-container {
-  width: calc(var(--ui-scale) * 3.5);
+  width: 350px;
   display: flex;
   align-items: center;
-  gap: calc(var(--ui-scale) * 0.05);
+  gap: 5px;
 }
 
 #downloadbar-container > div{
@@ -84,34 +84,34 @@ onMounted(async () => {
   padding: 0px;
   background-color: var(--objects);
   justify-content: center;
-  width: calc(var(--ui-scale) * 0.4);
-  height: calc(var(--ui-scale) * 0.4);
+  width: 40px;
+  height: 40px;
   box-sizing: border-box;
-  border-radius: calc(var(--ui-scale) * 0.05);
+  border-radius: 5px;
 }
 
 #downloadbar-container > div:first-child {
-  width: calc(100% - calc(var(--ui-scale) * 0.45));
-  padding-left:calc(var(--ui-scale) * 0.1);
-  padding-right: calc(var(--ui-scale) * 0.1);
+  width: calc(100% - 45px);
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 #downloadbar-container input {
   background-color: var(--objects);
-  font-size: calc(var(--ui-scale) * 0.15);
+  font-size: 15px;
   border: none;
   outline: none;
   width: 100%;
 }
 
 svg {
-  height: calc(var(--ui-scale) * 0.24);
-  width: calc(var(--ui-scale) * 0.24);
+  height: 24px;
+  width: 24px;
   fill: var(--background);
 }
 
 h1 {
-  font-size: calc(var(--ui-scale) * 0.27);
+  font-size: 27px;
 }
 
 #download-button {

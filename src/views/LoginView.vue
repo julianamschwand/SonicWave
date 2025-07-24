@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { login } from '@/api/routes/user-routes'
+import { login } from '@/api/routes/users'
 import { ref } from 'vue'
 
 const router = useRouter()
@@ -38,7 +38,7 @@ const handleLogin = async () => {
 </template>
 <style scoped>
 .main-container {
-  height: calc(100% - calc(var(--ui-scale) * 0.4));
+  height: calc(100% - 40px);
 }
 
 #login-container {
@@ -47,62 +47,66 @@ const handleLogin = async () => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: calc(var(--ui-scale) * 0.2);
-  border-radius: calc(var(--ui-scale) * 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  width: 75%;
 }
 
 #center-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: calc(var(--ui-scale) * 0.3)
+  gap: 30px;
 }
 
 form {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--ui-scale) * 0.1)
+  gap: 10px;
+  width: 100%;
 }
 
 input {
   background-color: var(--background);
   outline: none;
   border: none;
-  padding: calc(var(--ui-scale) * 0.1);
-  border-radius: calc(var(--ui-scale) * 0.05);
-  font-size: calc(var(--ui-scale) * 0.15);
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 15px;
 }
 
 .button {
   font-weight: bold;
-  width: calc(var(--ui-scale) * 3);
-  height: calc(var(--ui-scale) * 0.4);
-  font-size: calc(var(--ui-scale) * 0.16);
+  width: 30px;
+  height: 40px;
+  font-size: 16px;
 }
 
 #login-button {
   background-color: var(--accent);
   color: var(--background);
+  width: 100%;
 }
 
 #register-button {
   background-color: var(--objects);
   color: var(--accent);
-  border: calc(var(--ui-scale) * 0.02) solid var(--accent);
+  border: 2px solid var(--accent);
+  width: 100%;
 }
 
 #back-button {
-  width: calc(var(--ui-scale));
+  width: 100px;
   background-color: var(--accent);
   color: var(--background);
 }
 
 label {
   font-weight: bold;
-  font-size: calc(var(--ui-scale) * 0.16);
+  font-size: 16px;
 }
 
 img {
-  width: calc(var(--ui-scale) * 4)
+  width: 400px;
 }
 </style>
