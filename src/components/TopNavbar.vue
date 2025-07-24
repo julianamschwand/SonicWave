@@ -22,36 +22,36 @@ const router = useRouter()
 </template>
 <style scoped>
 #navbar {
-  height: calc(var(--ui-scale) * 0.65 - calc(var(--ui-scale) * 0.05));
+  height: 60px;
   width: 100%;
   background-color: var(--objects);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: calc(var(--ui-scale) * 0.08);
+  padding: 8px;
   box-sizing: border-box;
 }
 
 #seperator {
-  height: calc(var(--ui-scale) * 0.05);
+  height: 5px;
   width: 100%;
   background-color: var(--accent);
 }
 
 #logo {
-  max-height: calc(var(--ui-scale) * 0.4);
+  max-height: 40px;
   cursor: pointer;
   user-select: none;
 }
 
 #login-button {
-  height: calc(var(--ui-scale) * 0.4);
-  width: var(--ui-scale);
-  border-radius: calc(var(--ui-scale) * 0.05);
+  height: 40px;
+  width: 100px;
+  border-radius: 5px;
   background-color: var(--accent);
   color: var(--background);
   font-weight: bold;
-  font-size: calc(var(--ui-scale) * 0.16);
+  font-size: 16px;
 }
 
 .search-container * {

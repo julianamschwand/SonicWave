@@ -17,14 +17,14 @@ const route = useRoute()
 <style scoped>
 #layout {
   display: flex;
-  height: calc(100% - var(--ui-scale) * 0.65);
+  height: calc(100% - 65px);
   width: 100%;
 }
 
 #site-content {
   height: 100%;
   width: 100%;
-  padding: calc(var(--ui-scale) * 0.35);
+  padding: 35px;
   overflow: auto;
   box-sizing: border-box;
 }

@@ -1,8 +1,8 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { loginState } from '@/api/routes/user-routes.js'
+import { loginState } from '@/api/routes/users.js'
 import { onMounted, ref } from 'vue'
-import { browseSongs, downloadSong } from '@/api/routes/song-routes'
+import { browseSongs, downloadSong } from '@/api/routes/songs'
 
 const router = useRouter()
 const query = ref("")
@@ -62,37 +62,39 @@ onMounted(async () => {
     <div class="loader-request"></div>
   </div>
   <table class="song-table">
-    <tr v-for="(song, index) in songs">
-      <td><img :src="song.cover" alt="">{{ song.title }}</td>
-      <td>{{ song.artist }}</td>
-      <td>{{ song.genre }}</td>
-      <td v-if="!song.status">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="handleDownload(song.url, index)">
-            <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/>
-          </svg>
-        </div>
-      </td>
-      <td v-if="song.status === 'downloading'">
-        <div>
-          <div class="loader-download"></div>
-        </div>
-      </td>
-      <td v-if="song.status === 'success'">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" class="unclickable">
-            <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
-          </svg>
-        </div>
-      </td>
-      <td v-if="song.status === 'error'">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" class="unclickable">
-            <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-          </svg>
-        </div>
-      </td>
-    </tr>
+    <tbody>
+      <tr v-for="(song, index) in songs">
+        <td><img :src="song.cover" alt="">{{ song.title }}</td>
+        <td>{{ song.artist }}</td>
+        <td>{{ song.genre }}</td>
+        <td v-if="!song.status">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="handleDownload(song.url, index)">
+              <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/>
+            </svg>
+          </div>
+        </td>
+        <td v-if="song.status === 'downloading'">
+          <div>
+            <div class="loader-download"></div>
+          </div>
+        </td>
+        <td v-if="song.status === 'success'">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" class="unclickable">
+              <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+            </svg>
+          </div>
+        </td>
+        <td v-if="song.status === 'error'">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" class="unclickable">
+              <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+            </svg>
+          </div>
+        </td>
+      </tr>
+    </tbody>
   </table>
   <div class="main-container" v-if="greetingVisible">
     Browse for songs
@@ -101,14 +103,14 @@ onMounted(async () => {
 <style scoped>
 #search-bar-container {
   display: flex;
-  gap: calc(var(--ui-scale) * 0.05);
+  gap: 5px;
 }
 
 #search-button {
   background-color: var(--accent);
   color: var(--background);
-  height: calc(var(--ui-scale) * 0.4);
-  width: calc(var(--ui-scale) * 0.4);
+  height: 40px;
+  width: 40px;
 }
 
 .search-container * {
@@ -116,8 +118,8 @@ onMounted(async () => {
 }
 
 .main-container {
-  height: calc(100% - calc(var(--ui-scale) * 0.8));
-  font-size: calc(var(--ui-scale) * 0.25);
+  height: calc(100% - 80px);
+  font-size: 25px;
 }
 
 #loader-container {
@@ -127,6 +129,6 @@ onMounted(async () => {
 
 .loader-download {
   background-color: white;
-  margin-right: calc(var(--ui-scale) * 0.05);
+  margin-right: 5px;
 }
 </style>
