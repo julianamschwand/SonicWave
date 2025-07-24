@@ -19,7 +19,7 @@ const handleRegister = async () => {
 }
 </script>
 <template>
-  <div class="button button-dark-hover" id="back-button" @click="router.push('/welcome')">🡰 Back</div>
+  <button class="button-dark-hover" id="back-button" @click="router.push('/welcome')">🡰 Back</button>
   <div class="main-container">
     <div id="center-container">
       <img src="/images/logo.png" alt="">
@@ -77,7 +77,7 @@ input {
   font-size: 15px;
 }
 
-.button {
+button {
   font-weight: bold;
   width: 30px;
   height: 40px;
