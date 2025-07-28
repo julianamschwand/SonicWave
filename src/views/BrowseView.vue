@@ -55,7 +55,7 @@ onMounted(async () => {
           <input type="text" placeholder="Search for something ..." v-model="query" @keydown.enter="handleBrowse">
         </div>
       </div>
-      <div class="button button-dark-hover" id="search-button" @click="handleBrowse">🡲</div>
+      <button class="button-dark-hover" @click="handleBrowse">🡲</button>
     </div>
   </header>
   <div class="main-container" v-if="loaderVisible">
@@ -106,7 +106,7 @@ onMounted(async () => {
   gap: 5px;
 }
 
-#search-button {
+button {
   background-color: var(--accent);
   color: var(--background);
   height: 40px;
@@ -129,6 +129,6 @@ onMounted(async () => {
 
 .loader-download {
   background-color: white;
-  margin-right: 5px;
+  margin-right: 4px;
 }
 </style>

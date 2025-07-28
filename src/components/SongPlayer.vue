@@ -1,0 +1,256 @@
+<script setup>
+import { watch, ref, onMounted } from 'vue'
+import { useSongStore } from '@/stores/song.js'
+import { NSlider } from 'naive-ui'
+
+const songStore = useSongStore()
+const songUrl = ref(songStore.songUrl)
+const songData = ref(songStore.songData)
+const audioRef = ref(null)
+const currentTime = ref(0)
+const duration = ref(0)
+const isPlaying = ref(false)
+const volume = ref(100)
+
+const playSong = () => audioRef.value.play()
+const pauseSong = () => audioRef.value.pause()
+const formatSeconds = (seconds) => {
+  return `${Math.floor(seconds / 60)}:${seconds % 60 < 10 ? "0" : ""}${seconds % 60}`
+}
+
+watch(() => songStore.songUrl, (newUrl) => {
+  songUrl.value = newUrl
+  if (newUrl) {
+    audioRef.value.load()
+  }
+})
+
+watch(() => songStore.songData, (newSong) => {
+  songData.value = newSong
+})
+
+onMounted(() => {
+  const audio = audioRef.value
+
+  audio.addEventListener('loadedmetadata', () => duration.value = audio.duration)
+  audio.addEventListener('timeupdate', () => currentTime.value = audio.currentTime )
+  audio.addEventListener('play', () => isPlaying.value = true)
+  audio.addEventListener('pause', () => isPlaying.value = false)
+  audio.addEventListener('ended', () => isPlaying.value = false)
+})
+</script>
+<template>
+  <div id="player-container">
+    <audio :src="songUrl" ref="audioRef" autoplay></audio>
+    <div id="cover-container">
+      <img :src="songData.cover" alt="">
+    </div>
+    <div>
+      <n-slider id="timeline-slider" :tooltip="false" :max="duration" v-model:value="currentTime" @update:value="value => audioRef.currentTime = value"/>
+      <div id="content-container">
+        <div>
+          <div id="title">{{ songData?.title }}</div>
+          <div id="artist">{{ songData?.artists.map(artist => artist.artistName).join(", ") }}</div>
+        </div>
+        <div id="control-buttons">
+          <button>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="19 20 9 12 19 4 19 20"/>
+              <line x1="5" x2="5" y1="19" y2="5"/>
+            </svg>
+          </button>
+          <button v-if="!isPlaying" @click="playSong">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="6 3 20 12 6 21 6 3"/>
+            </svg>
+          </button>
+          <button v-if="isPlaying" @click="pauseSong">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>
+            </svg>
+          </button>
+          <button>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/>
+            </svg>
+          </button>
+        </div>
+        <div id="right-container">
+          <div id="volume-container">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume2-icon lucide-volume-2">
+              <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/>
+              <path d="M16 9a5 5 0 0 1 0 6"/>
+              <path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>
+            </svg>
+            <n-slider id="volume-slider" :tooltip="false" v-model:value="volume" @update:value="value => audioRef.volume = value / 100"/>
+            <div>{{ volume + "%" }}</div>
+          </div>
+          <div>{{ `${formatSeconds(Math.round(currentTime))} / ${songData.duration}` }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<style scoped>
+#player-container {
+  width: calc(100% - 10px);
+  height: 100px;
+  background-color: var(--objects);
+  margin: 5px;
+  border-radius: 5px;
+  display: flex;
+  align-items: start;
+}
+
+#player-container > div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+#cover-container {
+  background-color: var(--accent);
+  border-radius: 5px;
+  border-top-right-radius: 0px;
+  max-width: 100px;
+}
+
+img {
+  width: 100px;
+  height: 100px;
+  border-radius: 5px;
+}
+
+#content-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+#content-container > div {
+  flex: 1;
+  min-width: 0px;
+} 
+
+#title {
+  font-size: 17px;
+  font-weight: bold;
+}
+
+#artist {
+  font-size: 13px;
+}
+
+#title, #artist {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+#timeline-slider {
+  width: 100%;
+  margin-top: -7px;
+}
+
+:deep(#timeline-slider .n-slider-rail) {
+  height: 7px;
+  border-radius: 0px;
+  border-top-right-radius: 5px;
+  background-color: var(--objects);
+}
+
+:deep(#timeline-slider .n-slider-rail__fill) {
+  border-radius: 0px;
+  background-color: var(--accent);
+}
+
+#control-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+#control-buttons button {
+  background-color: var(--accent);
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+}
+
+#control-buttons button:hover {
+  filter: brightness(0.9);
+}
+
+#control-buttons svg {
+  fill: var(--background);
+  stroke: var(--background);
+  width: 25px;
+  height: 25px;
+}
+
+#control-buttons button:not(:first-child, :last-child) {
+  height: 60px;
+  width: 60px;
+}
+
+#control-buttons button:not(:first-child, :last-child) svg {
+  width: 35px;
+  height: 35px;
+}
+
+#right-container {
+  display: flex;
+  justify-content: right;
+  height: 100%;
+  align-items: center;
+  gap: 20px;
+}
+
+#right-container svg {
+  height: 30px;
+  width: 30px;
+  fill: none;
+  stroke: var(--accent);
+}
+
+#right-container > div:last-child {
+  width: 100px;
+  height: 100%;
+  text-align: right;
+  font-size: 14px;
+}
+
+#volume-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 30px;
+}
+
+#volume-container > div:last-child {
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 16px;
+  width: 43px;
+  text-align: right;
+}
+
+#volume-slider {
+  width: 120px;
+}
+
+:deep(#volume-slider .n-slider-rail) {
+  background-color: var(--background);
+}
+
+:deep(#volume-slider .n-slider-rail__fill) {
+  background-color: var(--accent);
+}
+</style>
