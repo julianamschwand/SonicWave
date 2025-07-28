@@ -14,9 +14,11 @@ const volume = ref(100)
 
 const playSong = () => audioRef.value.play()
 const pauseSong = () => audioRef.value.pause()
+const close = () => songStore.clearSong()
 const formatSeconds = (seconds) => {
   return `${Math.floor(seconds / 60)}:${seconds % 60 < 10 ? "0" : ""}${seconds % 60}`
 }
+
 
 watch(() => songStore.songUrl, (newUrl) => {
   songUrl.value = newUrl
@@ -44,6 +46,11 @@ onMounted(() => {
     <audio :src="songUrl" ref="audioRef" autoplay></audio>
     <div id="cover-container">
       <img :src="songData.cover" alt="">
+    </div>
+    <div id="close-box" class="button-light-hover" @click="close">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+      </svg>
     </div>
     <div>
       <n-slider id="timeline-slider" :tooltip="false" :max="duration" v-model:value="currentTime" @update:value="value => audioRef.currentTime = value"/>
@@ -98,8 +105,10 @@ onMounted(() => {
   background-color: var(--objects);
   margin: 5px;
   border-radius: 5px;
+  border-top-right-radius: 0px;
   display: flex;
   align-items: start;
+  position: relative;
 }
 
 #player-container > div {
@@ -252,5 +261,26 @@ img {
 
 :deep(#volume-slider .n-slider-rail__fill) {
   background-color: var(--accent);
+}
+
+#close-box {
+  max-width: 30px;
+  max-height: 30px;
+  background-color: var(--objects);
+  position: absolute;
+  top: -30px;
+  right: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  cursor: pointer;
+}
+
+#close-box svg {
+  fill: white;
+  width: 20px;
+  height: 20px;
 }
 </style>

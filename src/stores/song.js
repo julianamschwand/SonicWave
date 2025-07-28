@@ -7,8 +7,12 @@ export const useSongStore = defineStore('song', {
   }),
   actions: {
     setSong(song) {
-      this.songUrl = `${import.meta.env.VITE_API_URL}/songs/play?songId=${song.songId}`,
+      this.songUrl = `${import.meta.env.VITE_API_URL}/songs/play?songId=${song.songId}`
       this.songData = song
+    },
+    clearSong() {
+      this.songUrl = null
+      this.songData = null
     }
   }
 })
