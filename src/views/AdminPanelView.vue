@@ -7,6 +7,7 @@ const router = useRouter()
 const requests = ref([])
 const users = ref([])
 const isOwner = ref(false)
+const loaderVisible = ref(true)
 
 const filteredRequests = computed(() => {
   return requests.value.filter(request => request.visible)
@@ -89,7 +90,11 @@ onMounted(async () => {
   if (userdataResponse.user.userRole !== "admin" && userdataResponse.user.userRole !== "owner") router.push("/")
   if (userdataResponse.user.userRole === "owner") isOwner.value = true
 
-  const requestResponse = await registerRequests()
+  const [requestResponse, usersResponse] = await Promise.all([
+    registerRequests(),
+    allUsers()
+  ])
+
   if (requestResponse.success) {
     requests.value = requestResponse.requests.map(request => {
       request.visible = true
@@ -97,13 +102,14 @@ onMounted(async () => {
     })
   }
 
-  const usersResponse = await allUsers()
   if (usersResponse.success) {
     users.value = usersResponse.users.map(user => {
       user.visible = true
       return user
     })
   }
+
+  loaderVisible.value = false
 })
 </script>
 <template>
@@ -111,7 +117,10 @@ onMounted(async () => {
     <div>Register requests</div>
     <div v-if="isOwner">User managment</div>
   </header>
-  <div id="split-container">
+  <div class="main-container" v-if="loaderVisible">
+    <div class="loader-request"></div>
+  </div>
+  <div id="split-container" v-if="!loaderVisible">
     <div>
       <div v-for="request of filteredRequests">
         <div>{{ request.username }}</div>
@@ -187,10 +196,17 @@ header div, #split-container > div {
   width: 100%;
 }
 
+#split-container > div > div > div:not(:last-child) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 #split-container > div > div > div:last-child {
   width: 90px;
   padding: 0px;
   background-color: var(--background);
+  
 }
 
 #split-container > div > div div, #split-container button {
@@ -231,11 +247,13 @@ button svg {
 .dark-button {
   background-color: var(--background);
   border: 2px solid var(--accent);
-  height: 40px;
-  width: 40px;
 }
 
 .dark-button svg {
   fill: var(--accent);
+}
+
+.main-container {
+  height: calc(100% - 80px);
 }
 </style>

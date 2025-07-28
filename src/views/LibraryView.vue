@@ -3,8 +3,10 @@ import { useRouter } from 'vue-router'
 import { loginState } from '@/api/routes/users.js'
 import { onMounted, ref, computed } from 'vue'
 import { getSongs, toggleFavorite, deleteSong } from '@/api/routes/songs'
+import { useSongStore } from '@/stores/song'
 
 const router = useRouter()
+const songStore = useSongStore()
 const songs = ref([])
 const query = ref("")
 const loaderVisible = ref(true)
@@ -39,6 +41,10 @@ const handleDeleteSong = async (songId) => {
   } else {
     song.isVisible = true
   }
+}
+
+const playSong = (song) => {
+  songStore.setSong(song)
 }
 
 onMounted(async () => {
@@ -82,7 +88,7 @@ onMounted(async () => {
     <tbody>
       <tr v-for="song in filteredSongs">
         <td>
-          <div>
+          <div @click="playSong(song)">
             <div>
               <img :src="song.cover" alt="">
               {{ song.title }}
@@ -94,11 +100,7 @@ onMounted(async () => {
             </button>
           </div>
         </td>
-        <td>
-          <span v-for="(artist, index) of song.artists">
-            {{ artist.artistName }}<span v-if="index < song.artists.length - 1">{{ ", " }}</span>
-          </span>
-        </td>
+        <td>{{ song.artists.map(artist => artist.artistName).join(", ") }}</td>
         <td>{{ song.genre || "(None)" }}</td>
         <td>{{ song.releaseYear }}</td>
         <td>{{ song.duration }}</td>

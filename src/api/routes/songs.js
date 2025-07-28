@@ -12,11 +12,12 @@ export async function getSongs() {
   return request("get", "/songs");
 }
 
-export async function editSong(songId, title, artist, genre, releaseYear, cover) {
+export async function editSong(songId, title, artistAdd, artistDelete, genre, releaseYear, cover) {
   const formData = new FormData()
   formData.append("songId", songId)
   if (title) formData.append("title", title)
-  if (artist) formData.append("artist", artist)
+  if (artistAdd) formData.append("artistAdd", JSON.stringify(artistAdd))
+  if (artistDelete) formData.append("artistDelete", JSON.stringify(artistDelete))
   if (genre) formData.append("genre", genre)
   if (releaseYear) formData.append("releaseYear", releaseYear)
   if (cover) formData.append("cover", cover)
