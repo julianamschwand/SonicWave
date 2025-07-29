@@ -1,34 +1,39 @@
 <script setup>
-import { watch, ref, onMounted } from 'vue'
-import { useSongStore } from '@/stores/song.js'
+import { watch, ref, onMounted, computed } from 'vue'
+import { useQueueStore } from '@/stores/queue.js'
 import { NSlider } from 'naive-ui'
 
-const songStore = useSongStore()
-const songUrl = ref(songStore.songUrl)
-const songData = ref(songStore.songData)
+const queueStore = useQueueStore()
+const queue = ref(queueStore.queue)
+const queueIndex = ref(queueStore.queueIndex)
 const audioRef = ref(null)
 const currentTime = ref(0)
 const duration = ref(0)
 const isPlaying = ref(false)
 const volume = ref(100)
 
+const songUrl = computed(() => {
+  return `${import.meta.env.VITE_API_URL}/songs/play?songId=${queue.value[queueIndex.value].songId}`
+})
+
+const song = computed(() => {
+  return queue.value[queueIndex.value]
+})
+
 const playSong = () => audioRef.value.play()
 const pauseSong = () => audioRef.value.pause()
-const close = () => songStore.clearSong()
+const close = () => queueStore.clearQueue()
 const formatSeconds = (seconds) => {
   return `${Math.floor(seconds / 60)}:${seconds % 60 < 10 ? "0" : ""}${seconds % 60}`
 }
 
-
-watch(() => songStore.songUrl, (newUrl) => {
-  songUrl.value = newUrl
-  if (newUrl) {
-    audioRef.value.load()
-  }
+watch(() => queueStore.queue, (newQueue) => {
+  queue.value = newQueue
+  audioRef.value.load()
 })
 
-watch(() => songStore.songData, (newSong) => {
-  songData.value = newSong
+watch(() => queueStore.queueIndex, (newQueueIndex) => {
+  queueIndex.value = newQueueIndex
 })
 
 onMounted(() => {
@@ -43,9 +48,9 @@ onMounted(() => {
 </script>
 <template>
   <div id="player-container">
-    <audio :src="songUrl" ref="audioRef" autoplay></audio>
+    <audio :src="songUrl" ref="audioRef" autoplay @ended="queueStore.changeSong('forward')"></audio>
     <div id="cover-container">
-      <img :src="songData.cover" alt="">
+      <img :src="song.cover" alt="">
     </div>
     <div id="close-box" class="button-light-hover" @click="close">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
@@ -56,11 +61,11 @@ onMounted(() => {
       <n-slider id="timeline-slider" :tooltip="false" :max="duration" v-model:value="currentTime" @update:value="value => audioRef.currentTime = value"/>
       <div id="content-container">
         <div>
-          <div id="title">{{ songData?.title }}</div>
-          <div id="artist">{{ songData?.artists.map(artist => artist.artistName).join(", ") }}</div>
+          <div id="title">{{ song.title }}</div>
+          <div id="artist">{{ song.artists.map(artist => artist.artistName).join(", ") }}</div>
         </div>
         <div id="control-buttons">
-          <button>
+          <button @click="queueStore.changeSong('backward')" :class="{ 'disabled-button': queueIndex === 0 }">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="19 20 9 12 19 4 19 20"/>
               <line x1="5" x2="5" y1="19" y2="5"/>
@@ -76,7 +81,7 @@ onMounted(() => {
               <rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>
             </svg>
           </button>
-          <button>
+          <button @click="queueStore.changeSong('forward')" :class="{ 'disabled-button': queueIndex === queue.length - 1 }">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/>
             </svg>
@@ -92,7 +97,7 @@ onMounted(() => {
             <n-slider id="volume-slider" :tooltip="false" v-model:value="volume" @update:value="value => audioRef.volume = value / 100"/>
             <div>{{ volume + "%" }}</div>
           </div>
-          <div>{{ `${formatSeconds(Math.round(currentTime))} / ${songData.duration}` }}</div>
+          <div>{{ `${formatSeconds(Math.round(currentTime))} / ${formatSeconds(Math.round(duration))}` }}</div>
         </div>
       </div>
     </div>
