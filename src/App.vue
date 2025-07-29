@@ -3,15 +3,22 @@ import { RouterView, useRoute } from 'vue-router'
 import TopNavbar from './components/TopNavbar.vue'
 import SideNavbar from './components/SideNavbar.vue'
 import SongPlayer from './components/SongPlayer.vue'
-import { useSongStore } from './stores/song.js'
-import { computed } from 'vue'
+import { useQueueStore } from './stores/queue.js'
+import { getQueue } from './api/routes/queue.js'
+import { computed, onMounted } from 'vue'
 
 const route = useRoute()
-const songStore = useSongStore()
+const queueStore = useQueueStore()
 const siteContentHeight = computed(() => {
-  return songStore.songUrl ? "cut-height" : "full-height"
+  return queueStore.queue?.length ? "cut-height" : "full-height"
 })
 
+onMounted(async () => {
+  const queueResponse = await getQueue()
+  if (queueResponse.success && queueResponse.queue.length) {
+    queueStore.setQueue(queueResponse.queue, queueResponse.queueIndex)
+  }
+}) 
 </script>
 <template>
   <TopNavbar v-if="route.path !== '/login' && route.path !== '/register'"/>
@@ -21,7 +28,7 @@ const siteContentHeight = computed(() => {
       <div id="site-content" :class="siteContentHeight">
         <RouterView/>
       </div>
-      <SongPlayer v-if="songStore.songUrl"/>
+      <SongPlayer v-if="queueStore.queue?.length"/>
     </div>
   </div>
 </template>

@@ -45,6 +45,18 @@ button {
   filter: brightness(0.9)
 }
 
+.disabled-button {
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.5;
+  background-color: red;
+}
+
+.disabled-button:hover {
+  filter: brightness(1) !important;
+  cursor: default !important;
+}
+
 /* Search Container */
 .search-container {
   width: 350px;

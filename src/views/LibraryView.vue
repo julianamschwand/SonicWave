@@ -2,11 +2,11 @@
 import { useRouter } from 'vue-router'
 import { loginState } from '@/api/routes/users.js'
 import { onMounted, ref, computed } from 'vue'
-import { getSongs, toggleFavorite, deleteSong } from '@/api/routes/songs'
-import { useSongStore } from '@/stores/song'
+import { getSongs, toggleFavorite, deleteSong } from '@/api/routes/songs.js'
+import { useQueueStore } from '@/stores/queue.js'
 
 const router = useRouter()
-const songStore = useSongStore()
+const queueStore = useQueueStore()
 const songs = ref([])
 const query = ref("")
 const loaderVisible = ref(true)
@@ -43,8 +43,21 @@ const handleDeleteSong = async (songId) => {
   }
 }
 
-const playSong = (song) => {
-  songStore.setSong(song)
+const playSong = async (songId) => {
+  const queue = JSON.parse(JSON.stringify(songs.value))
+
+  // shuffle songs
+  for (let i = queue.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+
+    [queue[i], queue[j]] = [queue[j], queue[i]];
+  }
+
+  const songIndex = queue.findIndex(song => song.songId === songId)
+  const song = queue.splice(songIndex, 1)
+  queue.unshift(song[0])
+
+  await queueStore.setQueue(queue)
 }
 
 onMounted(async () => {
@@ -88,7 +101,7 @@ onMounted(async () => {
     <tbody>
       <tr v-for="song in filteredSongs">
         <td>
-          <div @click="playSong(song)">
+          <div @click="playSong(song.songId)">
             <div>
               <img :src="song.cover" alt="">
               {{ song.title }}
