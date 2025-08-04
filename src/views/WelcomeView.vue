@@ -14,8 +14,8 @@ onMounted(async () => {
   <div class="main-container">
     <div id="greeting-container">
       <h1>Welcome to SonicWave!</h1>
-      <div class="button button-dark-hover" @click="router.push('/login')">Login</div>
-      <div class="button button-dark-hover" @click="router.push('/register')">Register</div>
+      <button class="button-dark-hover" @click="router.push('/login')">Login</button>
+      <button class="button-dark-hover" @click="router.push('/register')">Register</button>
     </div>
   </div>
 </template>
@@ -31,7 +31,7 @@ h1 {
   font-size: 50px;
 }
 
-.button {
+button {
   background-color: var(--accent);
   border-radius: 5px;
   color: var(--background);

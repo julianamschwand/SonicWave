@@ -26,6 +26,10 @@ const close = () => queueStore.clearQueue()
 const formatSeconds = (seconds) => {
   return `${Math.floor(seconds / 60)}:${seconds % 60 < 10 ? "0" : ""}${seconds % 60}`
 }
+const updateVolume = (value) => {
+  audioRef.value.volume = value / 100
+  localStorage.setItem("volume", value)
+}
 
 watch(() => queueStore.queue, (newQueue) => {
   queue.value = newQueue
@@ -38,6 +42,9 @@ watch(() => queueStore.queueIndex, (newQueueIndex) => {
 
 onMounted(() => {
   const audio = audioRef.value
+
+  volume.value = Number(localStorage.getItem("volume")) || 100
+  audio.volume = volume.value / 100
 
   audio.addEventListener('loadedmetadata', () => duration.value = audio.duration)
   audio.addEventListener('timeupdate', () => currentTime.value = audio.currentTime )
@@ -94,7 +101,7 @@ onMounted(() => {
               <path d="M16 9a5 5 0 0 1 0 6"/>
               <path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>
             </svg>
-            <n-slider id="volume-slider" :tooltip="false" v-model:value="volume" @update:value="value => audioRef.volume = value / 100"/>
+            <n-slider id="volume-slider" :tooltip="false" v-model:value="volume" @update:value="value => updateVolume(value)"/>
             <div>{{ volume + "%" }}</div>
           </div>
           <div>{{ `${formatSeconds(Math.round(currentTime))} / ${formatSeconds(Math.round(duration))}` }}</div>
@@ -133,7 +140,7 @@ onMounted(() => {
 img {
   width: 100px;
   height: 100px;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 #content-container {
