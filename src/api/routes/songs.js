@@ -12,6 +12,10 @@ export async function getSongs() {
   return request("get", "/songs");
 }
 
+export async function singleSong(songId) {
+  return request("get", "/songs/single", { params: { songId }});
+}
+
 export async function editSong(songId, title, artistAdd, artistDelete, genre, releaseYear, cover) {
   const formData = new FormData()
   formData.append("songId", songId)

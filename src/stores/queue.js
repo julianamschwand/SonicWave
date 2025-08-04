@@ -29,11 +29,11 @@ export const useQueueStore = defineStore('song', {
         incrementValue = -1
       }
 
-      this.queueIndex = this.queueIndex + incrementValue
+      this.queueIndex += incrementValue
 
       const response = await changeSong(action)
       if (!response.success) {
-        this.queueIndex = this.queueIndex - incrementValue
+        this.queueIndex -= incrementValue
       }
     }
   }
