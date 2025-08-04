@@ -13,7 +13,7 @@ const loaderVisible = ref(true)
 
 const filteredSongs = computed(() => {
   return songs.value.filter(song => {
-    const songData = (song.title + song.artist + song.genre).toLowerCase()
+    const songData = `${song.title} ${song.artists.map(artist => artist = artist.artistName).join(" ")} ${song.genre}`.toLowerCase()
     const queryIncluded = query.value.split(" ").every(word => songData.includes(word.toLowerCase()))
     return queryIncluded && song.isVisible
   })
