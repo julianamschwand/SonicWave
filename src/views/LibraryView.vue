@@ -4,6 +4,7 @@ import { loginState } from '@/api/routes/users.js'
 import { onMounted, ref, computed } from 'vue'
 import { getSongs, toggleFavorite, deleteSong } from '@/api/routes/songs.js'
 import { useQueueStore } from '@/stores/queue.js'
+import { formatDuration, shuffleArray } from '@/functions.js'
 
 const router = useRouter()
 const queueStore = useQueueStore()
@@ -46,18 +47,13 @@ const handleDeleteSong = async (songId) => {
 const playSong = async (songId) => {
   const queue = JSON.parse(JSON.stringify(songs.value))
 
-  // shuffle songs
-  for (let i = queue.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+  const shuffledQueue = shuffleArray(queue)
 
-    [queue[i], queue[j]] = [queue[j], queue[i]];
-  }
+  const songIndex = shuffledQueue.findIndex(song => song.songId === songId)
+  const song = shuffledQueue.splice(songIndex, 1)
+  shuffledQueue.unshift(song[0])
 
-  const songIndex = queue.findIndex(song => song.songId === songId)
-  const song = queue.splice(songIndex, 1)
-  queue.unshift(song[0])
-
-  await queueStore.setQueue(queue)
+  await queueStore.setQueue(shuffledQueue)
 }
 
 onMounted(async () => {
@@ -68,7 +64,7 @@ onMounted(async () => {
   if (songResponse.success) {
     songs.value = songResponse.songs
     songs.value.map(song => {
-      song.duration = `${Math.floor(song.duration / 60)}:${song.duration % 60 < 10 ? "0" : ""}${song.duration % 60}`
+      song.duration = formatDuration(song.duration)
       song.isVisible = true
       return song
     })
