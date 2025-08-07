@@ -120,8 +120,8 @@ onMounted(async () => {
   <div class="main-container" v-if="loaderVisible">
     <div class="loader-request"></div>
   </div>
-  <div id="split-container" v-if="!loaderVisible">
-    <div>
+  <div id="split-container" v-else>
+    <div v-if="filteredRequests.length">
       <div v-for="request of filteredRequests">
         <div>{{ request.username }}</div>
         <div>{{ request.email }}</div>
@@ -139,7 +139,10 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div v-if="isOwner">
+    <div v-else class="center-container">
+      No register requests
+    </div>
+    <div v-if="isOwner && filteredUsers.length">
       <div v-for="user in filteredUsers">
         <div>{{ user.username }}</div>
         <div>{{ user.email }}</div>
@@ -162,6 +165,9 @@ onMounted(async () => {
         </div>
       </div>
     </div>
+    <div v-if="!filteredUsers.length" class="center-container">
+      No users other than owner
+    </div>
   </div>
 </template>
 <style scoped>
@@ -178,6 +184,7 @@ header div, #split-container > div {
   display: flex;
   width: 100%;
   gap: 30px;
+  height: calc(100% - 80px);
 }
 
 #split-container > div > div {
@@ -255,5 +262,14 @@ button svg {
 
 .main-container {
   height: calc(100% - 80px);
+}
+
+.center-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
 }
 </style>

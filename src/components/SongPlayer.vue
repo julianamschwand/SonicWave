@@ -2,6 +2,7 @@
 import { watch, ref, onMounted, computed } from 'vue'
 import { useQueueStore } from '@/stores/queue.js'
 import { NSlider } from 'naive-ui'
+import { formatDuration } from '@/functions.js'
 
 const queueStore = useQueueStore()
 const queue = ref(queueStore.queue)
@@ -23,9 +24,7 @@ const song = computed(() => {
 const playSong = () => audioRef.value.play()
 const pauseSong = () => audioRef.value.pause()
 const close = () => queueStore.clearQueue()
-const formatSeconds = (seconds) => {
-  return `${Math.floor(seconds / 60)}:${seconds % 60 < 10 ? "0" : ""}${seconds % 60}`
-}
+
 const updateVolume = (value) => {
   audioRef.value.volume = value / 100
   localStorage.setItem("volume", value)
@@ -104,7 +103,7 @@ onMounted(() => {
             <n-slider id="volume-slider" :tooltip="false" v-model:value="volume" @update:value="value => updateVolume(value)"/>
             <div>{{ volume + "%" }}</div>
           </div>
-          <div>{{ `${formatSeconds(Math.round(currentTime))} / ${formatSeconds(Math.round(duration))}` }}</div>
+          <div>{{ `${formatDuration(Math.round(currentTime))} / ${formatDuration(Math.round(duration))}` }}</div>
         </div>
       </div>
     </div>
