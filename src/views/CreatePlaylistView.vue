@@ -69,7 +69,6 @@ onMounted(async () => {
 </template>
 <style scoped>
 .main-container {
-  height: calc(100% - 80px);
   align-items: flex-start;
   justify-content: flex-start;
   gap: 30px;

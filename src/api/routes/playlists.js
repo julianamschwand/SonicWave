@@ -33,6 +33,6 @@ export async function allPlaylists() {
   return request("get", "/playlists");
 }
 
-export async function playlist(playlistId) {
+export async function singlePlaylist(playlistId) {
   return request("get", "/playlists/single", { params: { playlistId }});
 }

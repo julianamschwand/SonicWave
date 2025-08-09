@@ -137,7 +137,6 @@ onMounted(async () => {
 </template>
 <style scoped>
 .main-container {
-  height: calc(100% - 80px);
   font-size: 25px;
 }
 

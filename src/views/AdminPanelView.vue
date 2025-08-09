@@ -260,10 +260,6 @@ button svg {
   fill: var(--accent);
 }
 
-.main-container {
-  height: calc(100% - 80px);
-}
-
 .center-container {
   height: 100%;
   width: 100%;
