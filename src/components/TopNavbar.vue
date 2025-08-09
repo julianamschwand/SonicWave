@@ -39,7 +39,7 @@ const router = useRouter()
 }
 
 #logo {
-  max-height: 40px;
+  max-height: 35px;
   cursor: pointer;
   user-select: none;
 }

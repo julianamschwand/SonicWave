@@ -85,7 +85,7 @@ const router = createRouter({
     {
       path: '/playlists/create',
       name: 'create playlist',
-      component: EditPlaylistView,
+      component: CreatePlaylistView,
     },
   ],
 })
