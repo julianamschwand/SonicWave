@@ -22,7 +22,7 @@ onMounted(async () => {
 <template>
   <header>
     Playlists
-    <button id="add-button" class="button-dark-hover" @click="router.push('/playlists/create')">+</button>
+    <button class="icon-button" @click="router.push('/playlists/create')">+</button>
   </header>
   <div class="main-container" v-if="loaderVisible">
     <div class="loader-request"></div>
@@ -32,25 +32,16 @@ onMounted(async () => {
       <img :src="playlist.cover" alt="">
       <div>
         <div>{{ playlist.songCount + " Songs"}}</div>
-        <div>{{ formatDuration(playlist.playlistLength) }}</div>
+        <div>{{ formatDuration(playlist.playlistDuration) }}</div>
       </div>
       <div>{{ playlist.name }}</div>
     </div>
   </div>
 </template>
 <style scoped>
-#add-button {
-  height: 40px;
-  width: 40px;
-  background-color: var(--accent);
-  color: var(--background);
-  font-weight: bold;
-  font-size: 30px;
-}
-
 #playlist-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 190px);
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   width: 100%;
 }
@@ -95,9 +86,5 @@ onMounted(async () => {
 
 .playlist-item:hover {
   filter: brightness(1.1);
-}
-
-.main-container {
-  height: calc(100% - 80px);
 }
 </style>

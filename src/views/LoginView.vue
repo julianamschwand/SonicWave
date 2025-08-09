@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import { login } from '@/api/routes/users'
 import { ref } from 'vue'
+import BackButton from '@/components/BackButton.vue'
 
 const router = useRouter()
 const email = ref("")
@@ -18,7 +19,7 @@ const handleLogin = async () => {
 }
 </script>
 <template>
-  <button class="button-dark-hover" id="back-button" @click="router.push('/welcome')">🡰 Back</button>
+  <BackButton @click="router.push('/welcome')"/>
   <div class="main-container">
     <div id="center-container">
       <img src="/images/logo.png" alt="">
@@ -37,10 +38,6 @@ const handleLogin = async () => {
   </div>
 </template>
 <style scoped>
-.main-container {
-  height: calc(100% - 40px);
-}
-
 #login-container {
   display: flex;
   background-color: var(--objects);
@@ -93,12 +90,6 @@ button {
   color: var(--accent);
   border: 2px solid var(--accent);
   width: 100%;
-}
-
-#back-button {
-  width: 100px;
-  background-color: var(--accent);
-  color: var(--background);
 }
 
 label {

@@ -90,7 +90,7 @@ onMounted(async () => {
         </div>
         <div id="artist-input-container">
           <input type="text" placeholder="Artist ..." v-model="artist" @keyup.enter="addArtist">
-          <button class="button-dark-hover" @click="addArtist">+</button>
+          <button class="icon-button" @click="addArtist">+</button>
         </div>
       </div>
     </div>
@@ -122,7 +122,6 @@ onMounted(async () => {
 </template>
 <style scoped>
 .main-container {
-  height: calc(100% - 80px);
   align-items: flex-start;
   justify-content: flex-start;
   gap: 30px;
@@ -168,14 +167,5 @@ onMounted(async () => {
 
 #artist-input-container div {
   width: 100%;
-}
-
-#artist-input-container > button {
-  width: 40px;
-  height: 40px;
-  background-color: var(--accent);
-  color: var(--background);
-  font-weight: bold;
-  font-size: 30px;
 }
 </style>
