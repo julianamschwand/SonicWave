@@ -68,21 +68,15 @@ onMounted(async () => {
     <div class="data-input-container">
       <div>
         <div>Title:</div>
-        <div>
-          <input type="text" placeholder="Title ..." v-model="song.title">
-        </div>
+        <input type="text" placeholder="Title ..." v-model="song.title">
       </div>
       <div>
         <div>Genre:</div>
-        <div>
-          <input type="text" placeholder="Genre ..." v-model="song.genre">
-        </div>
+        <input type="text" placeholder="Genre ..." v-model="song.genre">
       </div>
       <div>
         <div>Release year:</div>
-        <div>
-          <input type="text" placeholder="Release year ..." v-model="song.releaseYear">
-        </div>
+        <input type="text" placeholder="Release year ..." v-model="song.releaseYear">
       </div>
       <div>
         <div>Artists:</div>
@@ -95,19 +89,13 @@ onMounted(async () => {
           </div>
         </div>
         <div id="artist-input-container">
-          <div>
-            <input type="text" placeholder="Artist ..." v-model="artist" @keyup.enter="addArtist">
-          </div>
-          <button class="button-dark-hover" @click="addArtist">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-              <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
-            </svg>
-          </button>
+          <input type="text" placeholder="Artist ..." v-model="artist" @keyup.enter="addArtist">
+          <button class="button-dark-hover" @click="addArtist">+</button>
         </div>
       </div>
     </div>
-    <div id="right-container">
-      <div id="image-container" @click="fileInputRef.click()">
+    <div class="cover-input-container">
+      <div @click="fileInputRef.click()">
         <img :src="coverUrl || song.cover" alt="Cover">
         <button>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
@@ -186,79 +174,8 @@ onMounted(async () => {
   width: 40px;
   height: 40px;
   background-color: var(--accent);
-}
-
-#right-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#right-container > button {
-  background-color: var(--accent);
-  height: 40px;
-  width: 100%;
   color: var(--background);
   font-weight: bold;
-  font-size: 18px;
-}
-
-#right-container > button svg{
-  height: 25px;
-  width: 25px;
-}
-
-#image-container {
-  position: relative;
-  width: 300px;
-  height: 300px;
-}
-
-#image-container input {
-  display: none;
-}
-
-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-}
-
-#image-container button {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  font-weight: bold;
-  font-size: 25px;
-  background-color: transparent;
-  flex-direction: column;
-  gap: 0px;
-  color: transparent;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-}
-
-#image-container svg {
-  width: 50px;
-  height: 50px;
-  fill: none;
-}
-
-#image-container:hover img {
-  filter: brightness(0.7);
-}
-
-#image-container:hover button {
-  border: 3px solid white;
-  color: white;
-}
-
-#image-container:hover svg {
-  fill: white;
-}
-
-button {
-  gap: 5px;
+  font-size: 30px;
 }
 </style>
