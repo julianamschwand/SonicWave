@@ -73,12 +73,17 @@ const router = createRouter({
       component: RegisterView,
     },
     {
-      path: '/edit/song/:id',
-      name: 'edit song',
+      path: '/library/edit/song/:songId',
+      name: 'edit library song',
       component: EditSongView,
     },
     {
-      path: '/edit/playlist/:id',
+      path: '/playlists/:playlistId/edit/song/:songId',
+      name: 'edit playlist song',
+      component: EditSongView,
+    },
+    {
+      path: '/playlists/:id/edit/playlist',
       name: 'edit playlist',
       component: EditPlaylistView,
     },
