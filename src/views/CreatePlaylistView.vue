@@ -17,6 +17,8 @@ const handleCoverChange = (event) => {
 }
 
 const handleCreatePlaylist = async () => {
+  if (!name.value) return
+
   const response = await createPlaylist(name.value, description.value, cover)
   if (response.success) {
     router.push("/playlists")

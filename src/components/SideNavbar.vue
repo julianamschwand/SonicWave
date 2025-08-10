@@ -7,7 +7,13 @@ const router = useRouter()
 const route = useRoute()
 const isAdmin = ref(false)
 
-const isActive = (path) => route.path.includes(path)
+const isActive = (path) => {
+  if (path === "/") {
+    return route.path === "/"
+  }
+  
+  return route.path.includes(path)
+}
 
 onMounted(async () => {
   const response = await userdata()

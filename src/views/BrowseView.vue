@@ -61,7 +61,7 @@ onMounted(async () => {
   <div class="main-container" v-if="loaderVisible">
     <div class="loader-request"></div>
   </div>
-  <table class="song-table">
+  <table class="browse-table">
     <tbody>
       <tr v-for="(song, index) in songs">
         <td><img :src="song.cover" alt="">{{ song.title }}</td>

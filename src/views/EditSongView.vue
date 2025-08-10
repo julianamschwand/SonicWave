@@ -14,6 +14,14 @@ let cover = null
 let artistAdd = []
 let artistDelete = []
 
+const goBack = () => {
+  if (route.params.playlistId) {
+    router.push(`/playlists/${route.params.playlistId}`)
+  } else {
+    router.push("/library")
+  }
+}
+
 const addArtist = () => {
   const artistName = artist.value.trim()
 
@@ -48,15 +56,15 @@ const handleCoverChange = (event) => {
 }
 
 const handleEditSong = async () => {
-  await editSong(route.params.id, song.value.title, artistAdd, artistDelete, song.value.genre, song.value.releaseYear, cover)
-  router.push("/library")
+  await editSong(route.params.songId, song.value.title, artistAdd, artistDelete, song.value.genre, song.value.releaseYear, cover)
+  goBack()
 }
 
 onMounted(async () => {
   const response = await loginState()
   if (!response.loggedIn) router.push("/login")
 
-  const songResponse = await singleSong(route.params.id)
+  const songResponse = await singleSong(route.params.songId)
   if (songResponse.success) {
     song.value = songResponse.song
   }
@@ -111,7 +119,7 @@ onMounted(async () => {
         </svg>
         Save
       </button>
-      <button class="button-dark-hover" @click="router.push('/library')">
+      <button class="button-dark-hover" @click="goBack">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
           <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
         </svg>
