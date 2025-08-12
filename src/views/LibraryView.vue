@@ -53,7 +53,7 @@ const playSong = async (songId) => {
   const song = shuffledQueue.splice(songIndex, 1)
   shuffledQueue.unshift(song[0])
 
-  await queueStore.setQueue(shuffledQueue)
+  await queueStore.initQueue(shuffledQueue)
 }
 
 onMounted(async () => {

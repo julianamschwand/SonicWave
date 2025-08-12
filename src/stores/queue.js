@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { setQueue, clearQueue } from '@/api/routes/queue.js'
+import { setQueue, clearQueue, getQueue } from '@/api/routes/queue.js'
 import { changeSong } from '@/api/routes/queue.js'
 
 export const useQueueStore = defineStore('song', {
@@ -8,12 +8,19 @@ export const useQueueStore = defineStore('song', {
     queueIndex: null
   }),
   actions: {
-    async setQueue(queue, queueIndex = 0) {
+    async initQueue(queue, queueIndex = 0) {
       this.queue = queue
       this.queueIndex = queueIndex
       
       const idQueue = queue.map(song => song.songId)
       await setQueue(idQueue)
+    },
+    async loadQueue() {
+      const queueResponse = await getQueue()
+      if (queueResponse.success) {
+        this.queue = queueResponse.queue
+        this.queueIndex = queueResponse.queueIndex
+      }
     },
     async clearQueue() {
       this.queue = null

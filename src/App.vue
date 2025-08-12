@@ -14,10 +14,7 @@ const siteContentHeight = computed(() => {
 })
 
 onMounted(async () => {
-  const queueResponse = await getQueue()
-  if (queueResponse.success && queueResponse.queue.length) {
-    queueStore.setQueue(queueResponse.queue, queueResponse.queueIndex)
-  }
+  await queueStore.loadQueue()
 }) 
 </script>
 <template>
