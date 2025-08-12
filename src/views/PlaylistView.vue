@@ -43,7 +43,7 @@ const playSong = async (shuffle, songId) => {
     shuffledQueue.unshift(song[0])
   }
 
-  await queueStore.setQueue(shuffledQueue || queue)
+  await queueStore.initQueue(shuffledQueue || queue)
 }
 
 const handleDeleteFromPlaylist = async (songId) => {

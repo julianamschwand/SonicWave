@@ -95,7 +95,7 @@ onMounted(async () => {
     <div class="loader-request" v-if="loaderVisible"></div>
     <div v-else>
       <div v-if="!songs.length && !playlistSongIds.size">No songs have been added yet</div>
-      <div v-if="!songs.length && playlistSongIds.size">All songs have already been added to playlist</div>
+      <div v-if="!songs.length && playlistSongIds.size">All songs have already been added to the playlist</div>
       <div v-if="songs.length && !filteredSongs.length">{{ `No results for "${query}"` }}</div>
     </div>
   </div>
