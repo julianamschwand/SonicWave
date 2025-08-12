@@ -22,7 +22,7 @@ export async function editSong(songId, title, artistAdd, artistDelete, genre, re
   if (title) formData.append("title", title)
   if (artistAdd) formData.append("artistAdd", JSON.stringify(artistAdd))
   if (artistDelete) formData.append("artistDelete", JSON.stringify(artistDelete))
-  if (genre) formData.append("genre", genre)
+  if (genre || genre === "") formData.append("genre", genre)
   if (releaseYear) formData.append("releaseYear", releaseYear)
   if (cover) formData.append("cover", cover)
   return request("patch", "/songs/edit", { data: formData });

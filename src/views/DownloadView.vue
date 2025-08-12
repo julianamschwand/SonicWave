@@ -42,9 +42,9 @@ onMounted(async () => {
   <header>Download</header>
   <div class="main-container">
     <div id="center-container">
-      <h1>Enter Song- or Playlist-URL</h1>
+      <h1>Enter Song-URL</h1>
       <div id="downloadbar-container">
-        <div><input type="text" placeholder="URL" v-model="url" @keydown.enter="handleDownload"></div>
+        <div><input type="text" placeholder="URL ..." v-model="url" @keydown.enter="handleDownload"></div>
         <div v-if="downloading">
           <div class="loader-download"></div>
         </div>

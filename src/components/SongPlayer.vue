@@ -68,7 +68,7 @@ onMounted(() => {
       <div id="content-container">
         <div>
           <div id="title">{{ song.title }}</div>
-          <div id="artist">{{ song.artists.map(artist => artist.artistName).join(", ") }}</div>
+          <div id="artist">{{ song.artists.map(artist => artist.artistName).join(", ") || "Unknown Artist"}}</div>
         </div>
         <div id="control-buttons">
           <button @click="queueStore.changeSong('backward')" :class="{ 'disabled-button': queueIndex === 0 }">
