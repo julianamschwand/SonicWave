@@ -56,6 +56,8 @@ const handleCoverChange = (event) => {
 }
 
 const handleEditSong = async () => {
+  if (!song.value.title || !song.value.releaseYear) return
+
   await editSong(route.params.songId, song.value.title, artistAdd, artistDelete, song.value.genre, song.value.releaseYear, cover)
   goBack()
 }

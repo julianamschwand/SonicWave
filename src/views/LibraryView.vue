@@ -87,13 +87,7 @@ onMounted(async () => {
       </div>
     </div>
   </header>
-  <div class="main-container" v-if="loaderVisible">
-    <div class="loader-request"></div>
-  </div>
-  <div class="main-container" v-if="!loaderVisible && songs.length === 0">
-    No songs yet
-  </div>
-  <table class="song-table">
+  <table class="song-table" v-if="!loaderVisible && filteredSongs.length">
     <tbody>
       <tr v-for="song in filteredSongs">
         <td>
@@ -109,7 +103,7 @@ onMounted(async () => {
             </button>
           </div>
         </td>
-        <td>{{ song.artists.map(artist => artist.artistName).join(", ") }}</td>
+        <td>{{ song.artists.map(artist => artist.artistName).join(", ") || "(None)" }}</td>
         <td>{{ song.genre || "(None)" }}</td>
         <td>{{ song.releaseYear }}</td>
         <td>{{ song.duration }}</td>
@@ -134,6 +128,13 @@ onMounted(async () => {
       </tr>
     </tbody>
   </table>
+  <div class="main-container" v-else>
+    <div class="loader-request" v-if="loaderVisible"></div>
+    <div v-else>
+      <div v-if="!songs.length">No songs have been added yet</div>
+      <div v-if="songs.length && !filteredSongs.length">{{ `No results for "${query}"` }}</div>
+    </div>
+  </div>
 </template>
 <style scoped>
 .main-container {

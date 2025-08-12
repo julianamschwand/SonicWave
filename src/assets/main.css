@@ -2,6 +2,7 @@
 * {
   color: white;
   font-family: 'Montserrat';
+  user-select: none;
 }
 
 :root {
@@ -261,7 +262,7 @@ button {
   width: 100px;
 }
 
-.song-table img {
+.song-table img, .select-table img {
   width: 60px;
   height: 60px;
 }

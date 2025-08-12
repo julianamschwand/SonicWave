@@ -13,6 +13,7 @@ import WelcomeView from '@/views/WelcomeView.vue'
 import EditSongView from '@/views/EditSongView.vue'
 import EditPlaylistView from '@/views/EditPlaylistView.vue'
 import CreatePlaylistView from '@/views/CreatePlaylistView.vue'
+import AddPlaylistSongsView from '@/views/AddPlaylistSongsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -91,6 +92,11 @@ const router = createRouter({
       path: '/playlists/create',
       name: 'create playlist',
       component: CreatePlaylistView,
+    },
+    {
+      path: '/playlists/:id/add-songs',
+      name: 'add playlist songs',
+      component: AddPlaylistSongsView,
     },
   ],
 })

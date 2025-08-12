@@ -9,10 +9,11 @@ const route = useRoute()
 const fileInputRef = ref(null)
 const playlist = ref({ name: "", description: "", cover: null})
 const coverUrl = ref("")
+let cover = null
 
 const handleCoverChange = (event) => {
-  playlist.value.cover = event.target.files[0]
-  coverUrl.value = URL.createObjectURL(playlist.value.cover)
+  cover = event.target.files[0]
+  coverUrl.value = URL.createObjectURL(cover)
 }
 
 const handleEditPlaylist = async () => {
