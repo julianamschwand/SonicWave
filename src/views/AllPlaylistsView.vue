@@ -24,10 +24,7 @@ onMounted(async () => {
     Playlists
     <button class="icon-button" @click="router.push('/playlists/create')">+</button>
   </header>
-  <div class="main-container" v-if="loaderVisible">
-    <div class="loader-request"></div>
-  </div>
-  <div id="playlist-container" v-else>
+  <div id="playlist-container" v-if="playlists.length !== 0">
     <div class="playlist-item" v-for="playlist of playlists" @click="router.push(`/playlists/${playlist.playlistId}`)">
       <img :src="playlist.cover" alt="">
       <div>
@@ -36,6 +33,10 @@ onMounted(async () => {
       </div>
       <div>{{ playlist.name }}</div>
     </div>
+  </div>
+  <div class="main-container" v-else>
+    <div class="loader-request" v-if="loaderVisible"></div>
+    <div v-else>No playlists yet</div>
   </div>
 </template>
 <style scoped>
@@ -47,10 +48,10 @@ onMounted(async () => {
 }
 
 .playlist-item {
+  width: calc(12.5% - 70px / 8);
   background-color: var(--objects);
-  width: 190px;
-  height: 280px;
-  padding: 10px;
+  aspect-ratio: 1/1.4;
+  padding: 0.5%;
   border-radius: 5px;
   user-select: none;
   cursor: pointer;
@@ -86,5 +87,9 @@ onMounted(async () => {
 
 .playlist-item:hover {
   filter: brightness(1.1);
+}
+
+.main-container {
+  font-size: 25px;
 }
 </style>
