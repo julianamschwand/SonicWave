@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia'
-import { setQueue, clearQueue, getQueue } from '@/api/routes/queue.js'
-import { changeSong } from '@/api/routes/queue.js'
+import { setQueue, clearQueue, getQueue, changeSong } from '@/api/routes/queue.js'
 
-export const useQueueStore = defineStore('song', {
+export const useQueueStore = defineStore("queue", {
   state: () => ({
     queue: null,
     queueIndex: null
@@ -13,18 +12,27 @@ export const useQueueStore = defineStore('song', {
       this.queueIndex = queueIndex
       
       const idQueue = queue.map(song => song.songId)
-      await setQueue(idQueue)
+      const response = await setQueue(idQueue)
+
+      return response
     },
     async loadQueue() {
-      const queueResponse = await getQueue()
-      if (queueResponse.success) {
-        this.queue = queueResponse.queue
-        this.queueIndex = queueResponse.queueIndex
+      const response = await getQueue()
+      if (response.success) {
+        this.queue = response.queue
+        this.queueIndex = response.queueIndex
       }
+
+      return response
     },
     async clearQueue() {
       this.queue = null
-      await clearQueue()
+      const response = await clearQueue()
+
+      return response
+    },
+    clearLocalQueue() {
+      this.queue = null
     },
     async changeSong(action) {
       let incrementValue = 0
@@ -42,6 +50,8 @@ export const useQueueStore = defineStore('song', {
       if (!response.success) {
         this.queueIndex -= incrementValue
       }
+
+      return response
     }
   }
 })
