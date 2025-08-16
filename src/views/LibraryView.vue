@@ -1,12 +1,12 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { loginState } from '@/api/routes/users.js'
+import router from '@/router'
 import { onMounted, ref, computed } from 'vue'
 import { getSongs, toggleFavorite, deleteSong } from '@/api/routes/songs.js'
 import { useQueueStore } from '@/stores/queue.js'
+import { useUserStore } from '@/stores/user.js'
 import { formatDuration, shuffleArray } from '@/functions.js'
 
-const router = useRouter()
+const userStore = useUserStore()
 const queueStore = useQueueStore()
 const songs = ref([])
 const query = ref("")
@@ -57,8 +57,7 @@ const playSong = async (songId) => {
 }
 
 onMounted(async () => {
-  const loginResponse = await loginState()
-  if (!loginResponse.loggedIn) router.push("/login")
+  await userStore.checkLogin()
 
   const songResponse = await getSongs()
   if (songResponse.success) {

@@ -1,11 +1,12 @@
 <script setup>
-import { useRouter, useRoute } from 'vue-router'
-import { loginState } from '@/api/routes/users.js'
+import router from '@/router'
+import { useRoute } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { singleSong, editSong } from '@/api/routes/songs.js'
+import { useUserStore } from '@/stores/user.js'
 
-const router = useRouter()
 const route = useRoute()
+const userStore = useUserStore()
 const song = ref({title: "", genre: "", releaseYear: 0, artists: [], cover: ""}) 
 const artist = ref("")
 const fileInputRef = ref(null)
@@ -63,8 +64,7 @@ const handleEditSong = async () => {
 }
 
 onMounted(async () => {
-  const response = await loginState()
-  if (!response.loggedIn) router.push("/login")
+  await userStore.checkLogin()
 
   const songResponse = await singleSong(route.params.songId)
   if (songResponse.success) {

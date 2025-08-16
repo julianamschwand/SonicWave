@@ -1,9 +1,7 @@
 <script setup>
 import { loginState } from '@/api/routes/users.js'
 import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
+import router from '@/router'
 
 onMounted(async () => {
   const response = await loginState()

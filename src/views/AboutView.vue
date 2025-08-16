@@ -1,5 +1,3 @@
-<script setup>
-</script>
 <template>
   <header>About</header>
   <div>This project is made and maintained by Julian Amschwand</div>

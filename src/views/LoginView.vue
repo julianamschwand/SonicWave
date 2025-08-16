@@ -1,19 +1,27 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { login } from '@/api/routes/users'
 import { ref } from 'vue'
 import BackButton from '@/components/BackButton.vue'
+import { useUserStore } from '@/stores/user.js'
 
 const router = useRouter()
-const email = ref("")
+const userStore = useUserStore()
+const emailUsername = ref("")
 const password = ref("")
 const errorMessage = ref("")
 
 const handleLogin = async () => {
-  const response = await login(email.value, password.value)
-  if (response.success) {
-    router.push('/')
+  let email = null
+  let username = null
+
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailUsername.value)) {
+    email = emailUsername.value
   } else {
+    username = emailUsername.value
+  }
+
+  const response = await userStore.login(username, email, password.value)
+  if (!response.success) {
     errorMessage.value = response.message
   }
 }
@@ -25,8 +33,8 @@ const handleLogin = async () => {
       <img src="/images/logo.png" alt="">
       <div id="login-container">
         <form @submit.prevent="handleLogin">
-          <label for="email">E-Mail Address:</label>
-          <input type="email" id="email" placeholder="user@example.com" v-model="email">
+          <label for="email-username">E-Mail or Username:</label>
+          <input type="text" id="email-username" placeholder="user@example.com" v-model="emailUsername">
           <label for="password">Password:</label>
           <input type="password" id="password" placeholder="Password" v-model="password">
           <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>

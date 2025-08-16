@@ -1,17 +1,16 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { loginState } from '@/api/routes/users.js'
+import router from '@/router'
 import { onMounted, ref } from 'vue'
 import { allPlaylists } from '@/api/routes/playlists.js'
 import { formatDuration } from '@/functions.js'
+import { useUserStore } from '@/stores/user.js'
 
-const router = useRouter()
+const userStore = useUserStore()
 const playlists = ref([])
 const loaderVisible = ref(true)
 
 onMounted(async () => {
-  const loginResponse = await loginState()
-  if (!loginResponse.loggedIn) router.push("/login")
+  await userStore.checkLogin()
 
   const playlistResponse = await allPlaylists()
   if (playlistResponse.success) playlists.value = playlistResponse.playlists

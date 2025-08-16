@@ -1,10 +1,10 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { loginState } from '@/api/routes/users.js'
+import router from '@/router'
 import { onMounted, ref } from 'vue'
 import { createPlaylist } from '@/api/routes/playlists.js'
+import { useUserStore } from '@/stores/user.js'
 
-const router = useRouter()
+const userStore = useUserStore()
 const fileInputRef = ref(null)
 const name = ref("")
 const description = ref("")
@@ -26,8 +26,7 @@ const handleCreatePlaylist = async () => {
 }
 
 onMounted(async () => {
-  const response = await loginState()
-  if (!response.loggedIn) router.push("/login")
+  await userStore.checkLogin()
 })
 </script>
 <template>

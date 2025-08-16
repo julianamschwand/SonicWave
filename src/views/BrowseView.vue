@@ -1,10 +1,9 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { loginState } from '@/api/routes/users.js'
 import { onMounted, ref } from 'vue'
 import { browseSongs, downloadSong } from '@/api/routes/songs'
+import { useUserStore } from '@/stores/user.js'
 
-const router = useRouter()
+const userStore = useUserStore()
 const query = ref("")
 const songs = ref([])
 const loaderVisible = ref(false)
@@ -37,8 +36,7 @@ const handleDownload = async (url, index) => {
 }
 
 onMounted(async () => {
-  const response = await loginState()
-  if (!response.loggedIn) router.push("/login")
+  await userStore.checkLogin()
 })
 </script>
 <template>

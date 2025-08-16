@@ -1,13 +1,14 @@
 <script setup>
-import { useRouter, useRoute } from 'vue-router'
-import { loginState } from '@/api/routes/users.js'
+import router from '@/router'
+import { useRoute } from 'vue-router'
 import { onMounted, ref, computed } from 'vue'
 import { singlePlaylist, addToPlaylist } from '@/api/routes/playlists.js'
 import { getSongs } from '@/api/routes/songs.js'
 import { formatDuration } from '@/functions'
+import { useUserStore } from '@/stores/user'
 
-const router = useRouter()
 const route = useRoute()
+const userStore = useUserStore()
 const query = ref("")
 const songs = ref([])
 const checkedSongs = ref([])
@@ -40,8 +41,7 @@ const handleAddToPlaylist = async () => {
 }
 
 onMounted(async () => {
-  const loginResponse = await loginState()
-  if (!loginResponse.loggedIn) router.push("/login")
+  await userStore.checkLogin()
 
   const playlistResponse = await singlePlaylist(route.params.id)
   if (playlistResponse.success) {

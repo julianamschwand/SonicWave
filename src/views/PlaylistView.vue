@@ -1,5 +1,6 @@
 <script setup>
-import { useRouter, useRoute } from 'vue-router'
+import router from '@/router'
+import { useRoute } from 'vue-router'
 import { loginState } from '@/api/routes/users.js'
 import { onMounted, ref, computed } from 'vue'
 import { singlePlaylist, deleteFromPlaylist, deletePlaylist } from '@/api/routes/playlists.js'
@@ -7,10 +8,11 @@ import BackButton from '@/components/BackButton.vue'
 import { formatDuration } from '@/functions.js'
 import { toggleFavorite } from '@/api/routes/songs.js'
 import { useQueueStore } from '@/stores/queue.js'
+import { useUserStore } from '@/stores/user.js'
 import { shuffleArray } from '@/functions.js'
 
-const router = useRouter()
 const route = useRoute()
+const userStore = useUserStore()
 const queueStore = useQueueStore()
 const playlist = ref({cover: "", songs: []})
 
@@ -66,8 +68,7 @@ const handleDeletePlaylist = async () => {
 }
 
 onMounted(async () => {
-  const loginResponse = await loginState()
-  if (!loginResponse.loggedIn) router.push("/login")
+  await userStore.checkLogin()
 
   const playlistResponse = await singlePlaylist(route.params.id)
   if (playlistResponse.success) {

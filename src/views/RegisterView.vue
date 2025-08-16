@@ -1,10 +1,9 @@
 <script setup>
+import router from '@/router'
 import { register } from '@/api/routes/users'
-import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import BackButton from '@/components/BackButton.vue'
 
-const router = useRouter()
 const username = ref("")
 const email = ref("")
 const password = ref("")

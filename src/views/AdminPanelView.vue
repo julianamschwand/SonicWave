@@ -1,9 +1,10 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { loginState, userdata, registerRequests, allUsers, approveRegister, denyRegister, makeAdmin, removeAdmin, deleteUser } from '@/api/routes/users.js'
+import router from '@/router'
+import { registerRequests, allUsers, approveRegister, denyRegister, makeAdmin, removeAdmin, deleteUser } from '@/api/routes/users.js'
 import { computed, onMounted, ref } from 'vue'
+import { useUserStore } from '@/stores/user.js'
 
-const router = useRouter()
+const userStore = useUserStore()
 const requests = ref([])
 const users = ref([])
 const isOwner = ref(false)
@@ -83,17 +84,15 @@ const handleDeleteUser = async (userDataId) => {
 }
 
 onMounted(async () => {
-  const loginStateResponse = await loginState()
-  if (!loginStateResponse.loggedIn) router.push("/login")
+  await userStore.checkLogin()
 
-  const userdataResponse = await userdata()
-  if (userdataResponse.user.userRole !== "admin" && userdataResponse.user.userRole !== "owner") router.push("/")
-  if (userdataResponse.user.userRole === "owner") isOwner.value = true
+  await userStore.fetchUserData()
+  if (userStore.userRole !== "admin" && userStore.userRole !== "owner") router.push("/")
+  if (userStore.userRole === "owner") isOwner.value = true
 
-  const [requestResponse, usersResponse] = await Promise.all([
-    registerRequests(),
-    allUsers()
-  ])
+  const apiRequests = [registerRequests(), isOwner.value ? allUsers() : Promise.resolve(null)]
+
+  const [requestResponse, usersResponse] = await Promise.all(apiRequests)
 
   if (requestResponse.success) {
     requests.value = requestResponse.requests.map(request => {
@@ -102,7 +101,7 @@ onMounted(async () => {
     })
   }
 
-  if (usersResponse.success) {
+  if (usersResponse?.success) {
     users.value = usersResponse.users.map(user => {
       user.visible = true
       return user
@@ -165,7 +164,7 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div v-if="!filteredUsers.length" class="center-container">
+    <div v-if="!filteredUsers.length && isOwner" class="center-container">
       No users other than owner
     </div>
   </div>

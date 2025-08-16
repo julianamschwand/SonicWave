@@ -1,13 +1,13 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { loginState } from '@/api/routes/users.js'
+import router from '@/router'
 import { onMounted } from 'vue'
+import { useUserStore } from '@/stores/user.js'
 
-const router = useRouter()
+const userStore = useUserStore()
 
 onMounted(async () => {
-  const response = await loginState()
-  if (response.loggedIn) router.push("/")
+  await userStore.updateLogin()
+  if (userStore.loggedIn) router.push("/")
 })
 </script>
 <template>

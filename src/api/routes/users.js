@@ -12,8 +12,8 @@ export async function register(username, email, password) {
   return request("post", "/users/register", { data: { username, email, password }});
 }
 
-export async function login(email, password) {
-  return request("post", "/users/login", { data: { email, password }});
+export async function login(username, email, password) {
+  return request("post", "/users/login", { data: { username, email, password }});
 }
 
 export async function logout() {

@@ -1,7 +1,17 @@
 <script setup>
-import { useRouter } from 'vue-router'
+import router from '@/router'
+import { onMounted } from 'vue'
+import { useUserStore } from '@/stores/user.js'
 
-const router = useRouter()
+const userStore = useUserStore()
+
+onMounted(async () => {
+  await userStore.updateLogin()
+
+  if (userStore.loggedIn) {
+    await userStore.fetchUserData()
+  }
+})
 </script>
 <template>
   <div id="navbar">
@@ -16,7 +26,15 @@ const router = useRouter()
         <input type="text" placeholder="Search for something ...">
       </div>
     </div>
-    <button class="button-dark-hover" @click="router.push('/login')">Login</button>
+    <button id="login-button" class="button-dark-hover" @click="router.push('/login')" v-if="!userStore.loggedIn">Login</button>
+    <button id="account-button" class="button-light-hover" @click="router.push('/account')" v-else>
+      {{ userStore.username }}
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 20a6 6 0 0 0-12 0"/>
+        <circle cx="12" cy="10" r="4"/>
+        <circle cx="12" cy="12" r="10"/>
+      </svg>
+    </button>
   </div>
   <div id="seperator"></div>
 </template>
@@ -44,7 +62,7 @@ const router = useRouter()
   user-select: none;
 }
 
-button {
+#login-button {
   height: 40px;
   width: 100px;
   border-radius: 5px;
@@ -56,5 +74,21 @@ button {
 
 .search-container * {
   background-color: var(--background);
+}
+
+#account-button {
+  height: 40px;
+  cursor: pointer;
+  background-color: var(--objects);
+  gap: 10px;
+  padding: 10px;
+  padding-right: 5px;
+  font-size: 14px;
+}
+
+#account-button svg{
+  width: 30px;
+  height: 30px;
+  stroke: var(--accent);
 }
 </style>

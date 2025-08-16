@@ -1,11 +1,12 @@
 <script setup>
-import { useRouter, useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
-import { userdata } from '@/api/routes/users.js'
+import router from '@/router'
+import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
+import { loginState } from '@/api/routes/users.js'
+import { useUserStore } from '@/stores/user'
 
-const router = useRouter()
 const route = useRoute()
-const isAdmin = ref(false)
+const userStore = useUserStore()
 
 const isActive = (path) => {
   if (path === "/") {
@@ -16,10 +17,10 @@ const isActive = (path) => {
 }
 
 onMounted(async () => {
-  const response = await userdata()
+  const loginResponse = await loginState()
 
-  if (response.success) {
-    if (response.user.userRole === "admin" || response.user.userRole === "owner") isAdmin.value = true
+  if (loginResponse.loggedIn) {
+    await userStore.fetchUserData()
   }
 })
 </script>
@@ -46,7 +47,7 @@ onMounted(async () => {
           <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/>
         </svg>
       </button>
-      <button class="button-light-hover" :class="{ active: isActive('/admin-panel')}" @click="router.push('/admin-panel')" v-if="isAdmin">
+      <button class="button-light-hover" :class="{ active: isActive('/admin-panel')}" @click="router.push('/admin-panel')" v-if="userStore.userRole === 'admin' || userStore.userRole === 'owner'">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF">
           <path d="M680-280q25 0 42.5-17.5T740-340q0-25-17.5-42.5T680-400q-25 0-42.5 17.5T620-340q0 25 17.5 42.5T680-280Zm0 120q31 0 57-14.5t42-38.5q-22-13-47-20t-52-7q-27 0-52 7t-47 20q16 24 42 38.5t57 14.5ZM480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v227q-19-8-39-14.5t-41-9.5v-147l-240-90-240 90v188q0 47 12.5 94t35 89.5Q310-290 342-254t71 60q11 32 29 61t41 52q-1 0-1.5.5t-1.5.5Zm200 0q-83 0-141.5-58.5T480-280q0-83 58.5-141.5T680-480q83 0 141.5 58.5T880-280q0 83-58.5 141.5T680-80ZM480-494Z"/>
         </svg>
