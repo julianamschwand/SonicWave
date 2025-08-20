@@ -19,3 +19,7 @@ export function shuffleArray(array) {
 
   return array
 }
+
+export function parseNull(string) {
+  return string === "null" ? null : string
+}

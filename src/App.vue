@@ -5,13 +5,24 @@ import SideNavbar from './components/SideNavbar.vue'
 import SongPlayer from './components/SongPlayer.vue'
 import { useQueueStore } from './stores/queue.js'
 import { useUserStore } from './stores/user.js'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onBeforeMount } from 'vue'
+import { parseNull } from './functions.js'
 
 const route = useRoute()
 const userStore = useUserStore()
 const queueStore = useQueueStore()
 const siteContentHeight = computed(() => {
   return queueStore.queue?.length ? "cut-height" : "full-height"
+})
+
+onBeforeMount(() => {
+  const backgroundColor = parseNull(localStorage.getItem("backgroundColor"))
+  const objectsColor = parseNull(localStorage.getItem("objectsColor"))
+  const accentColor = parseNull(localStorage.getItem("accentColor"))
+
+  if (backgroundColor) document.documentElement.style.setProperty("--background", backgroundColor)
+  if (objectsColor) document.documentElement.style.setProperty("--objects", objectsColor)
+  if (accentColor) document.documentElement.style.setProperty("--accent", accentColor)
 })
 
 onMounted(async () => {

@@ -7,9 +7,15 @@ import BackButton from '@/components/BackButton.vue'
 const username = ref("")
 const email = ref("")
 const password = ref("")
+const confirmPassword = ref("")
 const errorMessage = ref("")
 
 const handleRegister = async () => {
+  if (password.value !== confirmPassword.value) {
+    errorMessage.value = "Passwords are not the same"
+    return
+  }
+
   const response = await register(username.value, email.value, password.value)
   if (response.success) {
     router.push('/')
@@ -26,11 +32,13 @@ const handleRegister = async () => {
       <div id="login-container">
         <form @submit.prevent="handleRegister">
           <label for="username">Username:</label>
-          <input type="text" id="username" placeholder="exampleUser" v-model="username">
+          <input type="text" id="username" placeholder="Username ..." v-model="username">
           <label for="email">E-Mail Address:</label>
-          <input type="email" id="email" placeholder="user@example.com" v-model="email">
+          <input type="email" id="email" placeholder="E-Mail Adress ..." v-model="email">
           <label for="password">Password:</label>
-          <input type="password" id="password" placeholder="Password" v-model="password">
+          <input type="password" id="password" placeholder="Password ..." v-model="password">
+          <label for="password">Confirm Password:</label>
+          <input type="password" id="confirm-password" placeholder="Confirm Password ..." v-model="confirmPassword">
           <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
           <button type="submit" class="button button-dark-hover" id="register-button">Register</button>
           <button class="button button-dark-hover" id="login-button" @click="router.push('/login')">Login</button>
