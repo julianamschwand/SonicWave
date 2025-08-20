@@ -27,6 +27,10 @@ header {
   height: 40px;
 }
 
+input {
+  outline: none;
+}
+
 #site-content {
   display: flex;
   flex-direction: column;

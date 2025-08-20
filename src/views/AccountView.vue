@@ -1,13 +1,54 @@
 <script setup>
 import { useUserStore } from '@/stores/user.js'
 import { onMounted, ref } from 'vue'
+import { changePassword } from '@/api/routes/users.js'
+import { parseNull } from '@/functions.js'
 
 const userStore = useUserStore()
 const selectedPage = ref("accountInfo")
+const oldPassword = ref("")
+const newPassword = ref("")
+const confirmNewPassword = ref("")
+const passwordErrorMessage = ref("")
+const passwordSuccessMessage = ref("")
+const backgroundColor = ref("")
+const objectsColor = ref("")
+const accentColor = ref("")
+
+const handleChangePassword = async () => {
+  if (newPassword.value !== confirmNewPassword.value) {
+    passwordErrorMessage.value = "New Passwords are not the same"
+    return
+  }
+
+  const response = await changePassword(null, oldPassword.value, newPassword.value)
+
+  if (response.success) {
+    passwordErrorMessage.value = ""
+    passwordSuccessMessage.value = response.message
+  } else {
+    passwordSuccessMessage.value = ""
+    passwordErrorMessage.value = response.message
+  }
+}
+
+const saveColors = () => {
+  localStorage.setItem("backgroundColor", backgroundColor.value)
+  localStorage.setItem("objectsColor", objectsColor.value)
+  localStorage.setItem("accentColor", accentColor.value)
+
+  document.documentElement.style.setProperty("--background", backgroundColor.value)
+  document.documentElement.style.setProperty("--objects", objectsColor.value)
+  document.documentElement.style.setProperty("--accent", accentColor.value)
+}
 
 onMounted(async () => {
   await userStore.checkLogin()
   await userStore.fetchUserData()
+
+  backgroundColor.value =  parseNull(localStorage.getItem("backgroundColor")) || "#00172b"
+  objectsColor.value = parseNull(localStorage.getItem("objectsColor")) || "#002646"
+  accentColor.value = parseNull(localStorage.getItem("accentColor")) || "#2ab9d2"
 })
 </script>
 <template>
@@ -50,7 +91,70 @@ onMounted(async () => {
       </div>
     </div>
     <div>
-
+      <div class="site-content" v-if="selectedPage === 'accountInfo'">
+        <div>Account Info</div>
+        <table>
+          <tbody>
+            <tr>
+              <td>User Id:</td>
+              <td>{{ userStore.userDataId }}</td>
+            </tr>
+            <tr>
+              <td>Username:</td>
+              <td>{{ userStore.username }}</td>
+            </tr>
+            <tr>
+              <td>Email:</td>
+              <td>{{ userStore.email }}</td>
+            </tr>
+            <tr>
+              <td>User Role:</td>
+              <td>{{ userStore.userRole }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="site-content" v-if="selectedPage === 'password'">
+        <div>Password</div>
+        <form @submit.prevent="handleChangePassword">
+          <label for="old-password">Old Password:</label>
+          <input type="password" id="old-password" placeholder="Old Password ..." v-model="oldPassword">
+          <label for="new-password">New Password:</label>
+          <input type="password" id="new-password" placeholder="New Password ..." v-model="newPassword">
+          <label for="confirm-new-password">Confirm New Password:</label>
+          <input type="password" id="confirm-new-password" placeholder="Confirm New Password ..." v-model="confirmNewPassword">
+          <div class="error-message" v-if="passwordErrorMessage">{{ passwordErrorMessage }}</div>
+          <div class="success-message" v-if="passwordSuccessMessage">{{ passwordSuccessMessage }}</div>
+          <button type="submit" class="button-dark-hover">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+              <path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/>
+            </svg>
+            Change Password
+          </button>
+        </form>
+      </div>
+      <div class="site-content" v-if="selectedPage === 'customize'">
+        <div>Customize</div>
+        <div id="customize-container">
+          <div>
+            <div :style="{ backgroundColor: backgroundColor }"></div>
+            <input type="text" placeholder="Background Color ..." v-model="backgroundColor">
+            <button class="button-dark-hover" @click="backgroundColor = '#00172b'">Reset to default</button>
+            <div :style="{ backgroundColor: objectsColor }"></div>
+            <input type="text" placeholder="Object Color ..." v-model="objectsColor">
+            <button class="button-dark-hover" @click="objectsColor = '#002646'">Reset to default</button>
+            <div :style="{ backgroundColor: accentColor }"></div>
+            <input type="text" placeholder="Accent Color ..." v-model="accentColor">
+            <button class="button-dark-hover" @click="accentColor = '#2ab9d2'">Reset to default</button>
+          </div>
+          <button class="button-dark-hover" @click="saveColors">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+              <path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/>
+            </svg>
+            Save
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -64,12 +168,12 @@ onMounted(async () => {
 #split-container > div {
   height: 100%;
   box-sizing: border-box;
+  padding: 10px;
 }
 
 #split-container > div:first-child {
   min-width: 250px;
   border-right: 3px solid var(--objects);
-  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -80,6 +184,7 @@ onMounted(async () => {
   height: 50px;
   background-color: var(--background);
   gap: 10px;
+  font-size: 16px;
 }
 
 #split-container > div:first-child button:hover:not(.risky-action-button) {
@@ -90,10 +195,6 @@ onMounted(async () => {
   height: 30px;
   width: 30px;
   fill: white;
-}
-
-#split-container > div:last-child {
-  width: 100%;
 }
 
 .risky-action-button {
@@ -111,5 +212,96 @@ onMounted(async () => {
 
 .selected-page {
   background-color: var(--objects) !important;
+}
+
+#split-container > div:last-child {
+  width: 100%;
+}
+
+.site-content > div:first-child{
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.site-content > div:last-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-content > div:last-child *, .site-content table {
+  font-size: 15px;
+}
+
+.site-content tr > td:first-child {
+  font-weight: bold;
+}
+
+.site-content tr > td:last-child {
+  padding-left: 20px;
+}
+
+.site-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 500px;
+}
+
+.site-content label {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.site-content input {
+  background-color: var(--objects);
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 15px;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.site-content button {
+  background-color: var(--accent);
+  color: var(--background);
+  height: 40px;
+  font-weight: bold;
+  width: 100%;
+  gap: 5px;
+}
+
+.site-content button svg {
+  width: 25px;
+  height: 25px;
+  fill: var(--background);
+}
+
+#customize-container > div {
+  display: grid;
+  grid-template-columns: 40px auto 150px;
+  grid-template-rows: auto;
+  gap: 10px;
+  width: 100%;
+}
+
+#customize-container > div div {
+  height: 40px;
+  width: 40px;
+  border: 2px solid white;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+#customize-container > div button {
+  width: 150px;
+}
+
+#customize-container {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 </style>

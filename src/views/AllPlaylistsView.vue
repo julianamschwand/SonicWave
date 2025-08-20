@@ -35,7 +35,7 @@ onMounted(async () => {
   </div>
   <div class="main-container" v-else>
     <div class="loader-request" v-if="loaderVisible"></div>
-    <div v-else>No playlists yet</div>
+    <div v-else>No playlists have been added yet</div>
   </div>
 </template>
 <style scoped>

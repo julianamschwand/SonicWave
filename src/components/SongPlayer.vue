@@ -1,12 +1,10 @@
 <script setup>
-import { watch, ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useQueueStore } from '@/stores/queue.js'
 import { NSlider } from 'naive-ui'
 import { formatDuration } from '@/functions.js'
 
 const queueStore = useQueueStore()
-const queue = ref(queueStore.queue)
-const queueIndex = ref(queueStore.queueIndex)
 const audioRef = ref(null)
 const currentTime = ref(0)
 const duration = ref(0)
@@ -14,11 +12,11 @@ const isPlaying = ref(false)
 const volume = ref(100)
 
 const songUrl = computed(() => {
-  return `${import.meta.env.VITE_API_URL}/songs/play?songId=${queue.value[queueIndex.value].songId}`
+  return `${import.meta.env.VITE_API_URL}/songs/play?songId=${queueStore.queue[queueStore.queueIndex].songId}`
 })
 
 const song = computed(() => {
-  return queue.value[queueIndex.value]
+  return queueStore.queue[queueStore.queueIndex]
 })
 
 const playSong = () => audioRef.value.play()
@@ -29,15 +27,6 @@ const updateVolume = (value) => {
   audioRef.value.volume = value / 100
   localStorage.setItem("volume", value)
 }
-
-watch(() => queueStore.queue, (newQueue) => {
-  queue.value = newQueue
-  audioRef.value.load()
-})
-
-watch(() => queueStore.queueIndex, (newQueueIndex) => {
-  queueIndex.value = newQueueIndex
-})
 
 onMounted(() => {
   const audio = audioRef.value
@@ -71,7 +60,7 @@ onMounted(() => {
           <div id="artist">{{ song.artists.map(artist => artist.artistName).join(", ") || "Unknown Artist"}}</div>
         </div>
         <div id="control-buttons">
-          <button @click="queueStore.changeSong('backward')" :class="{ 'disabled-button': queueIndex === 0 }">
+          <button @click="queueStore.changeSong('backward')" :class="{ 'disabled-button': queueStore.queueIndex === 0 }">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="19 20 9 12 19 4 19 20"/>
               <line x1="5" x2="5" y1="19" y2="5"/>
@@ -87,7 +76,7 @@ onMounted(() => {
               <rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>
             </svg>
           </button>
-          <button @click="queueStore.changeSong('forward')" :class="{ 'disabled-button': queueIndex === queue.length - 1 }">
+          <button @click="queueStore.changeSong('forward')" :class="{ 'disabled-button': queueStore.queueIndex === queueStore.queue.length - 1 }">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/>
             </svg>
