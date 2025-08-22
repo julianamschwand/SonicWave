@@ -98,7 +98,7 @@ onMounted(async () => {
     Browse for songs
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 #search-bar-container {
   display: flex;
   gap: 5px;
@@ -127,5 +127,19 @@ button {
 .loader-download {
   background-color: white;
   margin-right: 4px;
+}
+
+.browse-table {
+  @include song-table-template;
+
+  img {
+    height: 100px;
+    width: 100px;
+  }
+
+  svg {
+    width: 35px;
+    height: 35px;
+  }
 }
 </style>

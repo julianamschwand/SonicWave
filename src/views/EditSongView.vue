@@ -130,7 +130,7 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 .main-container {
   align-items: flex-start;
   justify-content: flex-start;
@@ -146,36 +146,36 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 5px;
-}
 
-#artists-container div {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 5px;
-  border-radius: 5px;
-  background-color: var(--objects);
-  width: fit-content;
-}
+  div {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: var(--objects);
+    width: fit-content;
+  }
 
-#artists-container svg {
-  fill: white;
-  height: 20px;
-  width: 20px;
-  cursor: pointer;
-}
+  svg {
+    fill: white;
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
 
-#artists-container svg:hover {
-  filter: brightness(0.8);
+    &:hover {
+      filter: brightness(0.8);
+    }
+  }
 }
 
 #artist-input-container {
   display: flex;
   align-items: center;
   gap: 5px;
-}
 
-#artist-input-container div {
-  width: 100%;
+  div {
+    width: 100%;
+  }
 }
 </style>

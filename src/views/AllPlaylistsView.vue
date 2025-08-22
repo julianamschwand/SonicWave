@@ -38,7 +38,7 @@ onMounted(async () => {
     <div v-else>No playlists have been added yet</div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 #playlist-container {
   display: flex;
   flex-wrap: wrap;
@@ -55,37 +55,39 @@ onMounted(async () => {
   user-select: none;
   cursor: pointer;
   box-sizing: border-box;
-}
 
-.playlist-item img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 5px;
-}
+  &:hover {
+    filter: brightness(1.1);
+  }
 
-.playlist-item > div:not(:last-child) {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14.5px;
-}
+  img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 5px;
+  }
 
-.playlist-item > div:last-child {
-  display: -webkit-box;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 25px;
-  max-height: 50px; 
-  font-weight: bold;
-  font-size: 20px;
-  margin-top: 10px;
-  word-break: break-word;
-}
+  > div {
+    &:not(:last-child) {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14.5px;
+    }
 
-.playlist-item:hover {
-  filter: brightness(1.1);
+    &:last-child {
+      display: -webkit-box;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 25px;
+      max-height: 50px; 
+      font-weight: bold;
+      font-size: 20px;
+      margin-top: 10px;
+      word-break: break-word;
+    }
+  }
 }
 
 .main-container {

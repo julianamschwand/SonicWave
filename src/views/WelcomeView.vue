@@ -19,7 +19,7 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 #greeting-container {
   display: flex;
   gap: 10px;

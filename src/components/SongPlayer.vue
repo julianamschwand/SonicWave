@@ -98,7 +98,7 @@ onMounted(() => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 #player-container {
   width: calc(100% - 10px);
   height: 100px;
@@ -109,13 +109,13 @@ onMounted(() => {
   display: flex;
   align-items: start;
   position: relative;
-}
 
-#player-container > div {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+  > div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 #cover-container {
@@ -139,12 +139,12 @@ img {
   justify-content: space-between;
   padding: 10px;
   box-sizing: border-box;
-}
 
-#content-container > div {
-  flex: 1;
-  min-width: 0px;
-} 
+  > div {
+    flex: 1;
+    min-width: 0px;
+  }
+}
 
 #title {
   font-size: 17px;
@@ -165,18 +165,18 @@ img {
 #timeline-slider {
   width: 100%;
   margin-top: -7px;
-}
 
-:deep(#timeline-slider .n-slider-rail) {
-  height: 7px;
-  border-radius: 0px;
-  border-top-right-radius: 5px;
-  background-color: var(--objects);
-}
+  :deep(.n-slider-rail) {
+    height: 7px;
+    border-radius: 0px;
+    border-top-right-radius: 5px;
+    background-color: var(--objects);
+  }
 
-:deep(#timeline-slider .n-slider-rail__fill) {
-  border-radius: 0px;
-  background-color: var(--accent);
+  :deep(.n-slider-rail__fill) {
+    border-radius: 0px;
+    background-color: var(--accent);
+  }
 }
 
 #control-buttons {
@@ -184,34 +184,34 @@ img {
   justify-content: center;
   align-items: center;
   gap: 10px;
-}
 
-#control-buttons button {
-  background-color: var(--accent);
-  border-radius: 50%;
-  height: 45px;
-  width: 45px;
-}
+  button {
+    background-color: var(--accent);
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
 
-#control-buttons button:hover {
-  filter: brightness(0.9);
-}
+    &:hover {
+      filter: brightness(0.9);
+    }
 
-#control-buttons svg {
-  fill: var(--background);
-  stroke: var(--background);
-  width: 25px;
-  height: 25px;
-}
+    &:not(:first-child, :last-child) {
+      height: 60px;
+      width: 60px;
 
-#control-buttons button:not(:first-child, :last-child) {
-  height: 60px;
-  width: 60px;
-}
+      svg {
+        width: 35px;
+        height: 35px;
+      }
+    }
+  }
 
-#control-buttons button:not(:first-child, :last-child) svg {
-  width: 35px;
-  height: 35px;
+  svg {
+    fill: var(--background);
+    stroke: var(--background);
+    width: 25px;
+    height: 25px;
+  } 
 }
 
 #right-container {
@@ -220,20 +220,20 @@ img {
   height: 100%;
   align-items: center;
   gap: 20px;
-}
 
-#right-container svg {
-  height: 30px;
-  width: 30px;
-  fill: none;
-  stroke: var(--accent);
-}
+  svg {
+    height: 30px;
+    width: 30px;
+    fill: none;
+    stroke: var(--accent);
+  }
 
-#right-container > div:last-child {
-  width: 100px;
-  height: 100%;
-  text-align: right;
-  font-size: 14px;
+  > div:last-child {
+    width: 100px;
+    height: 100%;
+    text-align: right;
+    font-size: 14px;
+  }
 }
 
 #volume-container {
@@ -241,26 +241,26 @@ img {
   align-items: center;
   gap: 10px;
   height: 30px;
-}
 
-#volume-container > div:last-child {
-  color: var(--accent);
-  font-weight: bold;
-  font-size: 16px;
-  width: 43px;
-  text-align: right;
+  > div:last-child {
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 16px;
+    width: 43px;
+    text-align: right;
+  }
 }
 
 #volume-slider {
   width: 120px;
-}
 
-:deep(#volume-slider .n-slider-rail) {
-  background-color: var(--background);
-}
+  :deep(.n-slider-rail) {
+    background-color: var(--background);
+  }
 
-:deep(#volume-slider .n-slider-rail__fill) {
-  background-color: var(--accent);
+  :deep(.n-slider-rail__fill) {
+    background-color: var(--accent);
+  }
 }
 
 #close-box {
@@ -276,11 +276,11 @@ img {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   cursor: pointer;
-}
 
-#close-box svg {
-  fill: white;
-  width: 20px;
-  height: 20px;
+  svg {
+    fill: white;
+    width: 20px;
+    height: 20px;
+  } 
 }
 </style>

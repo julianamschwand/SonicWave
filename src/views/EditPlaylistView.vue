@@ -70,7 +70,7 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 .main-container {
   align-items: flex-start;
   justify-content: flex-start;

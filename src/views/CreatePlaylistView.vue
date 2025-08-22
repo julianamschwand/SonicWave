@@ -68,19 +68,21 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 .main-container {
   align-items: flex-start;
   justify-content: flex-start;
   gap: 30px;
 }
 
-.upload-visible button {
-  border: 3px solid white;
-}
+.upload-visible {
+  * {
+    fill: white;
+    color: white !important;
+  }
 
-.upload-visible * {
-  fill: white;
-  color: white !important;
+  button {
+    border: 3px solid white;
+  }
 }
 </style>

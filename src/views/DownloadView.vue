@@ -57,7 +57,7 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 .main-container {
   height: calc(100% - 80px * 2)
 }
@@ -74,32 +74,32 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 5px;
-}
 
-#downloadbar-container > div{
-  display: flex;
-  align-items: center;
-  padding: 0px;
-  background-color: var(--objects);
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  box-sizing: border-box;
-  border-radius: 5px;
-}
+  div {
+    display: flex;
+    align-items: center;
+    padding: 0px;
+    background-color: var(--objects);
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    border-radius: 5px;
+  }
 
-#downloadbar-container > div:first-child {
-  width: calc(100% - 45px);
-  padding-left: 10px;
-  padding-right: 10px;
-}
+  > div:first-child {
+    width: calc(100% - 45px);
+    padding-left: 10px;
+    padding-right: 10px;
+  } 
 
-#downloadbar-container input {
-  background-color: var(--objects);
-  font-size: 15px;
-  border: none;
-  outline: none;
-  width: 100%;
+  input {
+    background-color: var(--objects);
+    font-size: 15px;
+    border: none;
+    outline: none;
+    width: 100%;
+  }
 }
 
 svg {

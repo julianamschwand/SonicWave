@@ -22,7 +22,7 @@
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 div {
   font-size: 20px;
 }
@@ -32,12 +32,12 @@ div {
   flex-direction: column;
   margin-top: 100px;
   gap: 10px;
-}
 
-#github-container div:first-child {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
 #github-text {

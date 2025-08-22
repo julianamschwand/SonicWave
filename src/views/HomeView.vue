@@ -11,6 +11,6 @@ onMounted(async () => {
 <template>
   <header>Home</header>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 
 </style>

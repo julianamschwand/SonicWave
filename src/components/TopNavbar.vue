@@ -47,7 +47,7 @@ onMounted(async () => {
   </div>
   <div id="seperator"></div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 #navbar {
   height: 60px;
   width: 100%;

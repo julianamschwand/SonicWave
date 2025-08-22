@@ -158,144 +158,132 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 #split-container {
   width: 100%;
   height: 100%;
   display: flex;
-}
 
-#split-container > div {
-  height: 100%;
-  box-sizing: border-box;
-  padding: 10px;
-}
+  > div {
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+  }
 
-#split-container > div:first-child {
-  min-width: 250px;
-  border-right: 3px solid var(--objects);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+  > div:first-child {
+    min-width: 250px;
+    border-right: 3px solid var(--objects);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-#split-container > div:first-child button {
-  width: 100%;
-  height: 50px;
-  background-color: var(--background);
-  gap: 10px;
-  font-size: 16px;
-}
+    button {
+      width: 100%;
+      height: 50px;
+      background-color: var(--background);
+      gap: 10px;
+      font-size: 16px;
+    }
 
-#split-container > div:first-child button:hover:not(.risky-action-button) {
-  filter: brightness(1.25);
-}
+    svg {
+      height: 30px;
+      width: 30px;
+      fill: white;
+    }
 
-#split-container > div:first-child svg {
-  height: 30px;
-  width: 30px;
-  fill: white;
+    button:hover:not(.risky-action-button) {
+      filter: brightness(1.25);
+    }
+  }
+
+  > div:last-child {
+    width: 100%;
+  }
 }
 
 .risky-action-button {
   color: rgb(215, 36, 36);
   font-weight: bold;
-}
 
-.risky-action-button svg {
-  fill: rgb(215, 36, 36) !important;
-}
+  &:hover {
+    background-color: rgb(58, 23, 23) !important;
+  }
 
-.risky-action-button:hover {
-  background-color: rgb(58, 23, 23) !important;
+  svg {
+    fill: rgb(215, 36, 36) !important;
+  }
 }
 
 .selected-page {
   background-color: var(--objects) !important;
 }
 
-#split-container > div:last-child {
-  width: 100%;
-}
+.site-content {
+  > div:first-child {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
 
-.site-content > div:first-child{
-  font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
+    * {
+      font-size: 15px;
+    }
+  }
 
-.site-content > div:last-child {
-  display: flex;
-  flex-direction: column;
-}
+  > div:last-child {
+    display: flex;
+    flex-direction: column;
+  }
 
-.site-content > div:last-child *, .site-content table {
-  font-size: 15px;
-}
+  table {
+    font-size: 15px;
 
-.site-content tr > td:first-child {
-  font-weight: bold;
-}
+    tr {
+      > td:first-child {
+        font-weight: bold;
+      }
 
-.site-content tr > td:last-child {
-  padding-left: 20px;
-}
+      > td:last-child {
+        padding-left: 20px;
+      }
+    }
+  }
 
-.site-content form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 500px;
-}
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 500px;
+  }
 
-.site-content label {
-  font-weight: bold;
-  font-size: 15px;
-}
+  label {
+    font-weight: bold;
+    font-size: 15px;
+  } 
 
-.site-content input {
-  background-color: var(--objects);
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 15px;
-  height: 40px;
-  box-sizing: border-box;
-}
+  input {
+    background-color: var(--objects);
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 15px;
+    height: 40px;
+    box-sizing: border-box;
+  }
 
-.site-content button {
-  background-color: var(--accent);
-  color: var(--background);
-  height: 40px;
-  font-weight: bold;
-  width: 100%;
-  gap: 5px;
-}
+  button {
+    background-color: var(--accent);
+    color: var(--background);
+    height: 40px;
+    font-weight: bold;
+    width: 100%;
+    gap: 5px;
 
-.site-content button svg {
-  width: 25px;
-  height: 25px;
-  fill: var(--background);
-}
-
-#customize-container > div {
-  display: grid;
-  grid-template-columns: 40px auto 150px;
-  grid-template-rows: auto;
-  gap: 10px;
-  width: 100%;
-}
-
-#customize-container > div div {
-  height: 40px;
-  width: 40px;
-  border: 2px solid white;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-#customize-container > div button {
-  width: 150px;
+    svg {
+      width: 25px;
+      height: 25px;
+      fill: var(--background);
+    }
+  }
 }
 
 #customize-container {
@@ -303,5 +291,25 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  > div {
+    display: grid;
+    grid-template-columns: 40px auto 150px;
+    grid-template-rows: auto;
+    gap: 10px;
+    width: 100%;
+
+    div {
+      height: 40px;
+      width: 40px;
+      border: 2px solid white;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 150px;
+    }
+  }
 }
 </style>
