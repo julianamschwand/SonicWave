@@ -169,14 +169,14 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 header {
   justify-content: flex-start;
   gap: 30px;
-}
 
-header div, #split-container > div {
-  width: 100%;
+  div {
+    width: 100%;
+  }
 }
 
 #split-container {
@@ -184,79 +184,79 @@ header div, #split-container > div {
   width: 100%;
   gap: 30px;
   height: calc(100% - 80px);
-}
 
-#split-container > div > div {
-  width: 100%;
-  display: flex;
-}
+  > div {
+    width: 100%;
 
-#split-container > div > div > div {
-  background-color: var(--objects);
-  height: 40px;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
+    > div {
+      width: 100%;
+      display: flex;
+      margin-bottom: 10px;
 
-#split-container > div > div > div:not(:last-child) {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+      &:last-child {
+        margin-bottom: 0px;
+      }
 
-#split-container > div > div > div:last-child {
-  width: 90px;
-  padding: 0px;
-  background-color: var(--background);
-  
-}
+      > div {
+        background-color: var(--objects);
+        height: 40px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        width: 100%;
 
-#split-container > div > div div, #split-container button {
-  margin-right: 5px;
-}
+        &:not(:last-child) {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
 
-#split-container > div > div div:last-child, #split-container button:last-child {
-  margin-right: 0px;
-}
+        &:last-child {
+          width: 90px;
+          padding: 0px;
+          background-color: var(--background);
+        }
+      }
+    }
+  }
 
-#split-container > div > div {
-  margin-bottom: 10px;
-}
+  > div > div div, button {
+    margin-right: 5px;
+  }
 
-#split-container > div > div:last-child {
-  margin-bottom: 0px;
+  > div > div div:last-child, button:last-child {
+    margin-right: 0px;
+  }
 }
 
 button {
   height: 40px;
   width: 40px;
   padding: 0px;
-}
 
-button svg {
-  height: 30px;
-  width: 30px;
+  svg {
+    height: 30px;
+    width: 30px;
+  }
 }
 
 .light-button {
   background-color: var(--accent);
-}
 
-.light-button svg {
-  fill: var(--background);
+  svg {
+    fill: var(--background);
+  }
 }
 
 .dark-button {
   background-color: var(--background);
   border: 2px solid var(--accent);
-}
 
-.dark-button svg {
-  fill: var(--accent);
+  svg {
+    fill: var(--accent);
+  }
 }
 
 .center-container {

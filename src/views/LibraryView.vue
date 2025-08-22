@@ -86,7 +86,7 @@ onMounted(async () => {
       </div>
     </div>
   </header>
-  <table class="song-table" v-if="!loaderVisible && filteredSongs.length">
+  <table class="library-table" v-if="!loaderVisible && filteredSongs.length">
     <tbody>
       <tr v-for="song in filteredSongs">
         <td>
@@ -135,7 +135,7 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 .main-container {
   font-size: 25px;
 }

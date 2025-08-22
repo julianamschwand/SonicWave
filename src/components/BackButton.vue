@@ -1,7 +1,7 @@
 <template>
   <button class="button-dark-hover" id="back-button">🡰 Back</button>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 #back-button {
   width: 100px;
   height: 40px;

@@ -67,7 +67,7 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 #navbar {
   height: 100%;
   width: 65px;

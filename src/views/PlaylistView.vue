@@ -132,7 +132,7 @@ onMounted(async () => {
     </div>
     <div id="description-container" v-if="playlist.description">{{ playlist.description }}</div>
     <div class="main-container" v-if="!filteredSongs.length">No songs have been added yet</div>
-    <table class="song-table" v-else>
+    <table class="library-table" v-else>
       <tbody>
         <tr v-for="song in filteredSongs">
           <td>
@@ -175,47 +175,47 @@ onMounted(async () => {
     </table>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 #nav-button-container {
   display: flex;
   gap: 3px;
-}
 
-#nav-button-container button {
-  border-radius: 0px;
-}
+  button {
+    border-radius: 0px;
 
-#nav-button-container button:first-child {
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-}
+    &:first-child {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
 
-#nav-button-container button:last-child {
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+    &:last-child {
+      border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    }
+  }
 }
 
 #info-container {
   display: flex;
   width: 100%;
   height: 180px;
-}
 
-#info-container img {
-  height: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 5px;
-}
+  img {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 5px;
+  }
 
-#info-container > div {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  box-sizing: border-box;
-  font-weight: bold;
-  padding-right: 0px;
+  > div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-sizing: border-box;
+    font-weight: bold;
+    padding-right: 0px;
+  }
 }
 
 #info-head-container {
@@ -232,41 +232,41 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
 
-#title-container div:first-child {
-  max-width: calc(100% - 130px);
-  overflow: hidden;
-  text-overflow: ellipsis;
+  div:first-child {
+    max-width: calc(100% - 130px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 #play-button-container {
   display: flex;
   gap: 10px;
-}
 
-#play-button-container button{
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: var(--accent);
-}
+  button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--accent);
 
-#play-button-container button:first-child {
-  background-color: var(--background);
-  border: 3px solid var(--accent);
-}
+    &:first-child {
+      background-color: var(--background);
+      border: 3px solid var(--accent);
 
-#play-button-container svg {
-  fill: var(--background);
-  stroke: var(--background);
-  width: 35px;
-  height: 35px;
-} 
+      svg {
+        fill: none;
+        stroke: var(--accent);
+      }
+    }
+  }
 
-#play-button-container button:first-child svg {
-  fill: none;
-  stroke: var(--accent);
+  svg {
+    fill: var(--background);
+    stroke: var(--background);
+    width: 35px;
+    height: 35px;
+  }
 }
 
 #description-container {
@@ -278,7 +278,7 @@ onMounted(async () => {
   box-sizing: border-box;
 }
 
-.song-table {
+.library-table {
   margin-top: 10px;
 }
 

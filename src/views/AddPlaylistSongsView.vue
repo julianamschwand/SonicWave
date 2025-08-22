@@ -70,8 +70,8 @@ onMounted(async () => {
       </div>
     </div>
   </header>
-  <div class="select-table" v-if="filteredSongs.length && !loaderVisible">
-    <table class="browse-table">
+  <div id="table-container" v-if="filteredSongs.length && !loaderVisible">
+    <table class="select-table">
       <tbody>
         <tr v-for="song in filteredSongs" :class="{ 'checked': checkedSongs.includes(song.songId) }" @click="toggleSong(song.songId)">
           <td>
@@ -114,7 +114,7 @@ onMounted(async () => {
     </button>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 .search-container * {
   background-color: var(--objects);
 }
@@ -125,34 +125,28 @@ onMounted(async () => {
   background-color: var(--background) !important;
   border: 2px solid var(--accent);
   padding: 0px;
-}
 
-.checkbox svg {
-  fill: var(--background);
-  width: 100%;
-  height: 100%;
+  svg {
+    fill: var(--background);
+    width: 100%;
+    height: 100%;
+  }
 }
 
 tr {
   cursor: pointer;
-}
 
-tr:hover td {
-  background-color: var(--objects);
+  &:hover td {
+    background-color: var(--objects);
+  }
 }
 
 .checked {
   background-color: var(--objects);
-}
 
-.checked button {
-  background-color: var(--accent) !important;
-}
-
-.select-table {
-  height: 100%;
-  max-height: 100%;
-  overflow: auto;
+  button {
+    background-color: var(--accent) !important;
+  }
 }
 
 #button-container {
@@ -161,25 +155,40 @@ tr:hover td {
   gap: 10px;
   width: 100%;
   justify-content: space-between;
-}
 
-#button-container button {
-  background-color: var(--accent);
-  height: 40px;
-  width: 200px;
-  color: var(--background);
-  font-weight: bold;
-  font-size: 18px;
-  gap: 5px;
-}
+  button {
+    background-color: var(--accent);
+    height: 40px;
+    width: 200px;
+    color: var(--background);
+    font-weight: bold;
+    font-size: 18px;
+    gap: 5px;
+  }
 
-#button-container svg {
-  fill: var(--background);
-  width: 25px;
-  height: 25px;
+  svg {
+    fill: var(--background);
+    width: 25px;
+    height: 25px;
+  }
 }
 
 .main-container {
   font-size: 25px;
+}
+
+#table-container {
+  height: 100%;
+  max-height: 100%;
+  overflow: auto;
+}
+
+.select-table {
+  @include song-table-template;
+
+  img {
+    width: 60px;
+    height: 60px;
+  }
 }
 </style>

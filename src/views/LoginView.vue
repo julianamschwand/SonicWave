@@ -45,7 +45,7 @@ const handleLogin = async () => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 #login-container {
   display: flex;
   background-color: var(--objects);
