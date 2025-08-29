@@ -1,7 +1,7 @@
 <script setup>
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { editPlaylist, singlePlaylist } from '@/api/routes/playlists.js'
 import { useUserStore } from '@/stores/user.js'
 
@@ -24,9 +24,11 @@ const handleEditPlaylist = async () => {
   }
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await userStore.checkLogin()
+})
 
+onMounted(async () => {
   const playlistResponse = await singlePlaylist(route.params.id)
   if (playlistResponse.success) playlist.value = playlistResponse.playlist
 })

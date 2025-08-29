@@ -1,6 +1,6 @@
 <script setup>
 import router from '@/router'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, onBeforeMount } from 'vue'
 import { getSongs, toggleFavorite, deleteSong } from '@/api/routes/songs.js'
 import { useQueueStore } from '@/stores/queue.js'
 import { useUserStore } from '@/stores/user.js'
@@ -56,9 +56,11 @@ const playSong = async (songId) => {
   await queueStore.initQueue(shuffledQueue)
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await userStore.checkLogin()
+})
 
+onMounted(async () => {
   const songResponse = await getSongs()
   if (songResponse.success) {
     songs.value = songResponse.songs

@@ -1,7 +1,7 @@
 <script setup>
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, onBeforeMount } from 'vue'
 import { singlePlaylist, addToPlaylist } from '@/api/routes/playlists.js'
 import { getSongs } from '@/api/routes/songs.js'
 import { formatDuration } from '@/functions'
@@ -40,9 +40,11 @@ const handleAddToPlaylist = async () => {
   }
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await userStore.checkLogin()
+})
 
+onMounted(async () => {
   const playlistResponse = await singlePlaylist(route.params.id)
   if (playlistResponse.success) {
     playlistSongIds.value = new Set(playlistResponse.playlist.songs.map(song => song.songId))

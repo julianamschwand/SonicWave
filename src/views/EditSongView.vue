@@ -1,7 +1,7 @@
 <script setup>
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { singleSong, editSong } from '@/api/routes/songs.js'
 import { useUserStore } from '@/stores/user.js'
 
@@ -63,9 +63,11 @@ const handleEditSong = async () => {
   goBack()
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await userStore.checkLogin()
+})
 
+onMounted(async () => {
   const songResponse = await singleSong(route.params.songId)
   if (songResponse.success) {
     song.value = songResponse.song
