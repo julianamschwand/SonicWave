@@ -1,17 +1,19 @@
 <script setup>
 import router from '@/router'
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { allPlaylists } from '@/api/routes/playlists.js'
-import { formatDuration } from '@/functions.js'
 import { useUserStore } from '@/stores/user.js'
+import PlaylistItem from '@/components/PlaylistItem.vue'
 
 const userStore = useUserStore()
 const playlists = ref([])
 const loaderVisible = ref(true)
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await userStore.checkLogin()
+})
 
+onMounted(async () => {
   const playlistResponse = await allPlaylists()
   if (playlistResponse.success) playlists.value = playlistResponse.playlists
   
@@ -24,13 +26,8 @@ onMounted(async () => {
     <button class="icon-button" @click="router.push('/playlists/create')">+</button>
   </header>
   <div id="playlist-container" v-if="playlists.length !== 0">
-    <div class="playlist-item" v-for="playlist of playlists" @click="router.push(`/playlists/${playlist.playlistId}`)">
-      <img :src="playlist.cover" alt="">
-      <div>
-        <div>{{ playlist.songCount + " Songs"}}</div>
-        <div>{{ formatDuration(playlist.playlistDuration) }}</div>
-      </div>
-      <div>{{ playlist.name }}</div>
+    <div v-for="playlist of playlists">
+      <PlaylistItem :playlist="playlist" @click="router.push(`/playlists/${playlist.playlistId}`)"/>
     </div>
   </div>
   <div class="main-container" v-else>
@@ -44,49 +41,9 @@ onMounted(async () => {
   flex-wrap: wrap;
   gap: 10px;
   width: 100%;
-}
-
-.playlist-item {
-  width: calc(12.5% - 70px / 8);
-  background-color: var(--objects);
-  aspect-ratio: 1/1.4;
-  padding: 0.5%;
-  border-radius: 5px;
-  user-select: none;
-  cursor: pointer;
-  box-sizing: border-box;
-
-  &:hover {
-    filter: brightness(1.1);
-  }
-
-  img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border-radius: 5px;
-  }
 
   > div {
-    &:not(:last-child) {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14.5px;
-    }
-
-    &:last-child {
-      display: -webkit-box;
-      line-clamp: 2;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 25px;
-      max-height: 50px; 
-      font-weight: bold;
-      font-size: 20px;
-      margin-top: 10px;
-      word-break: break-word;
-    }
+    width: calc(12.5% - 70px / 8);
   }
 }
 

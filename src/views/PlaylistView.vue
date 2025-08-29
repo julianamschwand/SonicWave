@@ -2,7 +2,7 @@
 import router from '@/router'
 import { useRoute } from 'vue-router'
 import { loginState } from '@/api/routes/users.js'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, onBeforeMount } from 'vue'
 import { singlePlaylist, deleteFromPlaylist, deletePlaylist } from '@/api/routes/playlists.js'
 import BackButton from '@/components/BackButton.vue'
 import { formatDuration } from '@/functions.js'
@@ -67,9 +67,11 @@ const handleDeletePlaylist = async () => {
   }
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await userStore.checkLogin()
+})
 
+onMounted(async () => {
   const playlistResponse = await singlePlaylist(route.params.id)
   if (playlistResponse.success) {
     playlist.value = playlistResponse.playlist

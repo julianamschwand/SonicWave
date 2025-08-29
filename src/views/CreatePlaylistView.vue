@@ -1,6 +1,6 @@
 <script setup>
 import router from '@/router'
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { createPlaylist } from '@/api/routes/playlists.js'
 import { useUserStore } from '@/stores/user.js'
 
@@ -25,7 +25,7 @@ const handleCreatePlaylist = async () => {
   }
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await userStore.checkLogin()
 })
 </script>

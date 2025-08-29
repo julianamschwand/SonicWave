@@ -1,13 +1,13 @@
 <script setup>
 import router from '@/router'
-import { onMounted } from 'vue'
+import { onBeforeMount } from 'vue'
 import { useUserStore } from '@/stores/user.js'
 
 const userStore = useUserStore()
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await userStore.updateLogin()
-  if (userStore.loggedIn) router.push("/")
+  if (userStore.loggedIn) router.push("/home")
 })
 </script>
 <template>

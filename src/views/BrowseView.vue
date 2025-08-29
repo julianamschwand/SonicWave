@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { browseSongs, downloadSong } from '@/api/routes/songs'
 import { useUserStore } from '@/stores/user.js'
 
@@ -35,7 +35,7 @@ const handleDownload = async (url, index) => {
   }
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await userStore.checkLogin()
 })
 </script>

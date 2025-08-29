@@ -54,12 +54,15 @@ onMounted(async () => {
 }
 
 #main-content {
+  flex: 1;
   height: 100%;
   width: 100%;
+  min-width: 0;
 }
 
 #site-content {
   width: 100%;
+  max-width: 100%;
   padding: 35px;
   overflow: auto;
   box-sizing: border-box;

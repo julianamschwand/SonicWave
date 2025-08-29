@@ -1,7 +1,7 @@
 <script setup>
 import router from '@/router'
 import { registerRequests, allUsers, approveRegister, denyRegister, makeAdmin, removeAdmin, deleteUser } from '@/api/routes/users.js'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user.js'
 
 const userStore = useUserStore()
@@ -83,9 +83,11 @@ const handleDeleteUser = async (userDataId) => {
   }
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await userStore.checkLogin()
+})
 
+onMounted(async () => {
   await userStore.fetchUserData()
   if (userStore.userRole !== "admin" && userStore.userRole !== "owner") router.push("/")
   if (userStore.userRole === "owner") isOwner.value = true
