@@ -16,6 +16,8 @@ import CreatePlaylistView from '@/views/CreatePlaylistView.vue'
 import AddPlaylistSongsView from '@/views/AddPlaylistSongsView.vue'
 import AccountView from '@/views/AccountView.vue'
 import LanderView from '@/views/LanderView.vue'
+import ArtistView from '@/views/ArtistView.vue'
+import EditArtistView from '@/views/EditArtistView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -96,6 +98,11 @@ const router = createRouter({
       component: EditSongView,
     },
     {
+      path: '/artist/:artistId/edit/song/:songId',
+      name: 'edit artist song',
+      component: EditSongView,
+    },
+    {
       path: '/playlists/:id/edit/playlist',
       name: 'edit playlist',
       component: EditPlaylistView,
@@ -109,6 +116,16 @@ const router = createRouter({
       path: '/playlists/:id/add-songs',
       name: 'add playlist songs',
       component: AddPlaylistSongsView,
+    },
+    {
+      path: '/artist/:id',
+      name: 'artist',
+      component: ArtistView,
+    },
+    {
+      path: '/artist/:id/edit/artist',
+      name: 'edit artist',
+      component: EditArtistView,
     },
   ],
 })
