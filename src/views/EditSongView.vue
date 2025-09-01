@@ -17,9 +17,14 @@ let artistDelete = []
 
 const goBack = () => {
   if (route.params.playlistId) {
-    router.push(`/playlists/${route.params.playlistId}`)
+    if (cover) window.location.href = `${window.location.protocol}//${window.location.host}/playlists/${route.params.playlistId}`
+    else router.push(`/playlists/${route.params.playlistId}`)
+  } else if (route.params.artistId) {
+    if (cover) window.location.href = `${window.location.protocol}//${window.location.host}/artist/${route.params.artistId}`
+    else router.push(`/artist/${route.params.artistId}`)
   } else {
-    router.push("/library")
+    if (cover) window.location.href = `${window.location.protocol}//${window.location.host}/library`
+    else router.push("/library")
   }
 }
 

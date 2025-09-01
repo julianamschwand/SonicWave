@@ -14,4 +14,5 @@ export async function editArtist(artistId, name, description, image) {
   if (name) formData.append("name", name)
   if (description || description === "") formData.append("description", description)
   if (image) formData.append("image", image)
+  return request("patch", "/artists/edit", { data: formData });
 }

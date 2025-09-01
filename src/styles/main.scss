@@ -314,6 +314,94 @@ button {
   font-size: 15px;
 }
 
+// Playlist head
+.playlist-head-container {
+  display: flex;
+  width: 100%;
+  height: 180px;
+
+  img {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 5px;
+  }
+
+  > div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-sizing: border-box;
+    font-weight: bold;
+    padding-right: 0px;
+
+    > div:first-child {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+    }
+
+    > div:last-child {
+      width: 100%;
+      height: 100%;
+      font-size: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      > div:first-child {
+        max-width: calc(100% - 130px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      > div:last-child {
+        display: flex;
+        gap: 10px;
+
+        button {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background-color: var(--accent);
+
+          &:first-child {
+            background-color: var(--background);
+            border: 3px solid var(--accent);
+
+            svg {
+              fill: none;
+              stroke: var(--accent);
+            }
+          }
+        }
+
+        svg {
+          fill: var(--background);
+          stroke: var(--background);
+          width: 35px;
+          height: 35px;
+        }
+      }
+    }
+  }
+}
+
+#play-button-container {
+  
+}
+
+.playlist-description-container {
+  background-color: var(--objects);
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
 // Request loader
 .loader-request {
   width: 50px;

@@ -21,6 +21,7 @@ const playlistPageIndex = ref(0)
 const artistPageIndex = ref(0)
 const userStore = useUserStore()
 const queueStore = useQueueStore()
+const loaderVisible = ref(true)
 let isScrolling = false
 
 const scroll = (container, direction) => {
@@ -69,40 +70,46 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-  const songResponse = await lastPlayed()
+  const [songResponse, playlistResponse, artistResponse] = await Promise.all([
+    lastPlayed(),
+    allPlaylists(),
+    allArtists()
+  ])
+  
   if (songResponse.success) {
     songs.value = songResponse.songs
-    const fillerSongCount = 8 - songs.value.length % 8
+    const fillerSongCount = 8 - (songs.value.length % 8 || 8)
 
     for (let i = 0; i < fillerSongCount; i++) {
       songs.value.push({songId: 0, title: "", cover: "", artists: []})
     }
   }
-
-  const playlistResponse = await allPlaylists()
   if (playlistResponse.success) {
     playlists.value = playlistResponse.playlists
-    const fillerPlaylistCount = 10 - playlists.value.length % 10
+    const fillerPlaylistCount = 10 - (playlists.value.length % 10 || 10)
 
     for (let i = 0; i < fillerPlaylistCount; i++) {
       playlists.value.push({playlistId: 0, name: "", songCount: 0, playlistDuration: 0})
     }
   }
-  
-  const artistResponse = await allArtists()
   if (artistResponse.success) {
     artists.value = artistResponse.artists
-    const fillerArtistCount = 10 - artists.value.length % 10
+    const fillerArtistCount = 10 - (artists.value.length % 10 || 10)
 
     for (let i = 0; i < fillerArtistCount; i++) {
       artists.value.push({artistId: 0, name: ""})
     }
   } 
+
+  loaderVisible.value = false
 })
 </script>
 <template>
-  <div id="site-layout">
-    <section>
+  <div class="main-container" v-if="loaderVisible">
+    <div class="loader-request"></div>
+  </div>
+  <div id="site-layout" v-else>
+    <section v-if="songs.length">
       <div>Recently Played</div>
       <div id="song-container" ref="songContainerRef">
         <div v-for="song in songs" :style="{ 'visibility': song.songId == 0 ? 'hidden' : 'visible'}" @click="playSong(song)">
@@ -133,7 +140,7 @@ onMounted(async () => {
         </button>
       </div>
     </section>
-    <section>
+    <section v-if="playlists.length">
       <div>Playlists</div>
       <div id="playlist-container" ref="playlistContainerRef">
         <div v-for="playlist of playlists" :style="{ 'visibility': playlist.playlistId == 0 ? 'hidden' : 'visible'}">
@@ -153,11 +160,11 @@ onMounted(async () => {
         </button>
       </div>
     </section>
-    <section>
+    <section v-if="artists.length">
       <div>Artists</div>
       <div id="artist-container" ref="artistContainerRef">
         <div v-for="artist of artists" :style="{ 'visibility': artist.artistId == 0 ? 'hidden' : 'visible'}">
-          <ArtistItem :artist="artist"/>
+          <ArtistItem :artist="artist" @click="router.push(`/artist/${artist.artistId}`)"/>
         </div>
       </div>
       <div class="scroll-container" v-if="artists.length > 10">
