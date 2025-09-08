@@ -85,7 +85,7 @@ onMounted(async () => {
             <img :src="song.cover" alt="">
             {{ song.title }}
           </td>
-          <td>{{ song.artists.map(artist => artist.artistName).join(", ") || "(None)"}}</td>
+          <td>{{ song.artists.map(artist => artist.name).join(", ") || "(None)"}}</td>
           <td>{{ song.genre || "(None)"}}</td>
           <td>{{ song.releaseYear }}</td>
           <td>{{ formatDuration(song.duration) }}</td>

@@ -1,18 +1,23 @@
 import { defineStore } from 'pinia'
 import { setQueue, clearQueue, getQueue, changeSong } from '@/api/routes/queue.js'
+import { useSongStore } from './songs.js'
 
 export const useQueueStore = defineStore("queue", {
   state: () => ({
-    queue: null,
-    queueIndex: null
+    queue: [],
+    queueIndex: null,
+    songIsPlaying: true
   }),
   actions: {
     async initQueue(queue, queueIndex = 0) {
+      if (queue[0].songId) queue = queue.map(song => song.songId)
       this.queue = queue
       this.queueIndex = queueIndex
       
-      const idQueue = queue.map(song => song.songId)
-      const response = await setQueue(idQueue)
+      const response = await setQueue(queue)
+      this.songIsPlaying = true
+      
+      useSongStore().updateRecentSongs()
 
       return response
     },
@@ -21,18 +26,19 @@ export const useQueueStore = defineStore("queue", {
       if (response.success) {
         this.queue = response.queue
         this.queueIndex = response.queueIndex
+        this.songIsPlaying = true
       }
 
       return response
     },
     async clearQueue() {
-      this.queue = null
+      this.queue = []
       const response = await clearQueue()
 
       return response
     },
     clearLocalQueue() {
-      this.queue = null
+      this.queue = []
     },
     async changeSong(action) {
       let incrementValue = 0
@@ -45,6 +51,7 @@ export const useQueueStore = defineStore("queue", {
       }
 
       this.queueIndex += incrementValue
+      useSongStore().updateRecentSongs()
 
       const response = await changeSong(action)
       if (!response.success) {
@@ -52,6 +59,16 @@ export const useQueueStore = defineStore("queue", {
       }
 
       return response
+    },
+    songPlaying(songId) {
+      if (this.queue) return this.queue[this.queueIndex]?.songId == songId && this.songIsPlaying
+      return false
+    },
+    getSong() {
+      const songStore = useSongStore()
+
+      if (!songStore.songs.length || !this.queue.length) return {}
+      return this.queue.map(queueSong => songStore.songs.find(song => song.songId == queueSong))[this.queueIndex]
     }
   }
 })

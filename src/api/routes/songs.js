@@ -40,6 +40,6 @@ export async function resetSong(songId) {
   return request("put", "/songs/reset", { data: { songId }});
 }
 
-export async function lastPlayed() {
+export async function recentlyPlayed() {
   return request("get", "/songs/recently-played")
 }

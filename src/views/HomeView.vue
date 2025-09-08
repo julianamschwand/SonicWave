@@ -1,14 +1,13 @@
 <script setup>
-import { loginState } from '@/api/routes/users.js'
 import { onBeforeMount, onMounted, ref } from 'vue'
 import router from '@/router'
-import { lastPlayed } from '@/api/routes/songs'
-import { allPlaylists } from '@/api/routes/playlists'
-import { allArtists } from '@/api/routes/artists'
+import { allPlaylists } from '@/api/routes/playlists.js'
+import { allArtists } from '@/api/routes/artists.js'
 import PlaylistItem from '@/components/PlaylistItem.vue'
 import ArtistItem from '@/components/ArtistItem.vue'
-import { useUserStore } from '@/stores/user'
-import { useQueueStore } from '@/stores/queue'
+import { useUserStore } from '@/stores/user.js'
+import { useQueueStore } from '@/stores/queue.js'
+import { useSongStore } from '@/stores/songs.js'
 
 const songs = ref([])
 const playlists = ref([])
@@ -21,7 +20,7 @@ const playlistPageIndex = ref(0)
 const artistPageIndex = ref(0)
 const userStore = useUserStore()
 const queueStore = useQueueStore()
-const loaderVisible = ref(true)
+const songStore = useSongStore()
 let isScrolling = false
 
 const scroll = (container, direction) => {
@@ -71,19 +70,11 @@ onBeforeMount(async () => {
 
 onMounted(async () => {
   const [songResponse, playlistResponse, artistResponse] = await Promise.all([
-    lastPlayed(),
+    songStore.fetchRecentlyPlayed(),
     allPlaylists(),
     allArtists()
   ])
-  
-  if (songResponse.success) {
-    songs.value = songResponse.songs
-    const fillerSongCount = 8 - (songs.value.length % 8 || 8)
 
-    for (let i = 0; i < fillerSongCount; i++) {
-      songs.value.push({songId: 0, title: "", cover: "", artists: []})
-    }
-  }
   if (playlistResponse.success) {
     playlists.value = playlistResponse.playlists
     const fillerPlaylistCount = 10 - (playlists.value.length % 10 || 10)
@@ -100,24 +91,22 @@ onMounted(async () => {
       artists.value.push({artistId: 0, name: ""})
     }
   } 
-
-  loaderVisible.value = false
 })
 </script>
 <template>
-  <div class="main-container" v-if="loaderVisible">
+  <div class="main-container" v-if="songStore.loading">
     <div class="loader-request"></div>
   </div>
   <div id="site-layout" v-else>
-    <section v-if="songs.length">
+    <section v-if="songStore.getRecentlyPlayed().length">
       <div>Recently Played</div>
       <div id="song-container" ref="songContainerRef">
-        <div v-for="song in songs" :style="{ 'visibility': song.songId == 0 ? 'hidden' : 'visible'}" @click="playSong(song)">
+        <div v-for="song in songStore.getRecentlyPlayed()" :style="{ 'visibility': song.songId == 0 ? 'hidden' : 'visible'}" @click="playSong(song)">
           <img :src="song.cover" alt="">
           <div>
             <div>
               <div>{{ song.title }}</div>
-              <div>{{ song.artists.map(artist => artist.artistName).join(", ") || "(None)" }}</div>
+              <div>{{ song.artists.map(artist => artist.name).join(", ") || "(None)" }}</div>
             </div>
             <button class="button-dark-hover">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -127,13 +116,13 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <div class="scroll-container" v-if="songs.length > 8" >
+      <div class="scroll-container" v-if="songStore.getRecentlyPlayed().length > 8" >
         <button class="icon-button" :class="{ 'disabled-button': songPageIndex === 0 }" @click="scroll('songs', 'left')">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
             <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
           </svg>
         </button>
-        <button class="icon-button" :class="{ 'disabled-button': songPageIndex === songs.length / 8 - 1}" @click="scroll('songs', 'right')">
+        <button class="icon-button" :class="{ 'disabled-button': songPageIndex === songStore.getRecentlyPlayed().length / 8 - 1}" @click="scroll('songs', 'right')">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
             <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
           </svg>

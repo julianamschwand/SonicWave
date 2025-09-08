@@ -92,6 +92,11 @@ onMounted(async () => {
               <div>
                 <img :src="song.cover" alt="">
                 {{ song.title }}
+                <div class="music-playing-animation" v-if="queueStore.songPlaying(song.songId)">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
               </div>
               <button class="button-dark-hover">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -100,7 +105,7 @@ onMounted(async () => {
               </button>
             </div>
           </td>
-          <td>{{ song.artists.map(artist => artist.artistName).join(", ") }}</td>
+          <td>{{ song.artists.map(artist => artist.name).join(", ") || "(None)" }}</td>
           <td>{{ song.genre || "(None)" }}</td>
           <td>{{ song.releaseYear }}</td>
           <td>{{ formatDuration(song.duration) }}</td>
