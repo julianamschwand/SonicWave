@@ -10,18 +10,22 @@ const currentTime = ref(0)
 const duration = ref(0)
 const isPlaying = ref(false)
 const volume = ref(100)
+const song = ref(queueStore.getSong)
 
 const songUrl = computed(() => {
-  return `${import.meta.env.VITE_API_URL}/songs/play?songId=${queueStore.queue[queueStore.queueIndex].songId}`
+  return `${import.meta.env.VITE_API_URL}/songs/play?songId=${song.value().songId}`
 })
 
-const song = computed(() => {
-  return queueStore.queue[queueStore.queueIndex]
-})
 
-const playSong = () => audioRef.value.play()
-const pauseSong = () => audioRef.value.pause()
-const close = () => queueStore.clearQueue()
+const playSong = () => {
+  audioRef.value.play()
+  queueStore.songIsPlaying = true
+} 
+
+const pauseSong = () => {
+  audioRef.value.pause()
+  queueStore.songIsPlaying = false
+} 
 
 const updateVolume = (value) => {
   audioRef.value.volume = value / 100
@@ -45,9 +49,9 @@ onMounted(() => {
   <div id="player-container">
     <audio :src="songUrl" ref="audioRef" autoplay @ended="queueStore.changeSong('forward')"></audio>
     <div id="cover-container">
-      <img :src="song.cover" alt="">
+      <img :src="song().cover" alt="">
     </div>
-    <div id="close-box" class="button-light-hover" @click="close">
+    <div id="close-box" class="button-light-hover" @click="queueStore.clearQueue()">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
         <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
       </svg>
@@ -56,8 +60,8 @@ onMounted(() => {
       <n-slider id="timeline-slider" :tooltip="false" :max="duration" v-model:value="currentTime" @update:value="value => audioRef.currentTime = value"/>
       <div id="content-container">
         <div>
-          <div id="title">{{ song.title }}</div>
-          <div id="artist">{{ song.artists.map(artist => artist.artistName).join(", ") || "Unknown Artist"}}</div>
+          <div id="title">{{ song().title }}</div>
+          <div id="artist">{{ song().artists.map(artist => artist.name).join(", ") || "Unknown Artist"}}</div>
         </div>
         <div id="control-buttons">
           <button @click="queueStore.changeSong('backward')" :class="{ 'disabled-button': queueStore.queueIndex === 0 }">
@@ -92,7 +96,7 @@ onMounted(() => {
             <n-slider id="volume-slider" :tooltip="false" v-model:value="volume" @update:value="value => updateVolume(value)"/>
             <div>{{ volume + "%" }}</div>
           </div>
-          <div>{{ `${formatDuration(Math.round(currentTime))} / ${formatDuration(Math.round(duration))}` }}</div>
+          <div>{{`${formatDuration(Math.round(currentTime))} / ${formatDuration(Math.round(duration))}` }}</div>
         </div>
       </div>
     </div>

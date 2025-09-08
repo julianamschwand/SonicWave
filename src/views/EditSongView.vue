@@ -4,9 +4,11 @@ import { useRoute } from 'vue-router'
 import { onBeforeMount, onMounted, ref } from 'vue'
 import { singleSong, editSong } from '@/api/routes/songs.js'
 import { useUserStore } from '@/stores/user.js'
+import { useSongStore } from '@/stores/songs.js'
 
 const route = useRoute()
 const userStore = useUserStore()
+const songStore = useSongStore()
 const song = ref({title: "", genre: "", releaseYear: 0, artists: [], cover: ""}) 
 const artist = ref("")
 const fileInputRef = ref(null)
@@ -33,9 +35,9 @@ const addArtist = () => {
 
   if (!artistName) return
   if (artistAdd.some(artist => artist.toLowerCase() === artistName.toLowerCase())) return
-  if (song.value.artists.some(artist => artist.artistName.toLowerCase() === artistName.toLowerCase())) return
+  if (song.value.artists.some(artist => artist.name.toLowerCase() === artistName.toLowerCase())) return
 
-  song.value.artists.push({artistName: artistName})
+  song.value.artists.push({name: artistName})
 
   if (artistDelete.some(artist => artist.toLowerCase() === artistName.toLowerCase())) {
     artistDelete = artistDelete.filter(artist => artist.toLowerCase() !== artistName)
@@ -47,7 +49,7 @@ const addArtist = () => {
 }
 
 const deleteArtist = (artistName) => {
-  song.value.artists = song.value.artists.filter(artist => artist.artistName !== artistName)
+  song.value.artists = song.value.artists.filter(artist => artist.name !== artistName)
   
   if (artistAdd.includes(artistName)) {
     artistAdd = artistAdd.filter(artist => artist !== artistName)
@@ -64,7 +66,7 @@ const handleCoverChange = (event) => {
 const handleEditSong = async () => {
   if (!song.value.title || !song.value.releaseYear) return
 
-  await editSong(route.params.songId, song.value.title, artistAdd, artistDelete, song.value.genre, song.value.releaseYear, cover)
+  await songStore.editSong(route.params.songId, song.value.title, artistAdd, artistDelete, song.value.genre, song.value.releaseYear, cover)
   goBack()
 }
 
@@ -73,10 +75,9 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-  const songResponse = await singleSong(route.params.songId)
-  if (songResponse.success) {
-    song.value = songResponse.song
-  }
+  if (!songStore.songs) await songStore.getSongs()
+  song.value = songStore.songs.find(song => song.songId == route.params.songId)
+  await songStore.getSingleSong(route.params.songId)
 })
 </script>
 <template>
@@ -99,8 +100,8 @@ onMounted(async () => {
         <div>Artists:</div>
         <div id="artists-container">
           <div v-for="artist of song.artists">
-            {{ artist.artistName }}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" @click="deleteArtist(artist.artistName)">
+            {{ artist.name }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" @click="deleteArtist(artist.name)">
               <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
             </svg>
           </div>

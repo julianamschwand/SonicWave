@@ -5,12 +5,14 @@ import SideNavbar from './components/SideNavbar.vue'
 import SongPlayer from './components/SongPlayer.vue'
 import { useQueueStore } from './stores/queue.js'
 import { useUserStore } from './stores/user.js'
+import { useSongStore } from './stores/songs.js'
 import { computed, onMounted, onBeforeMount } from 'vue'
 import { parseNull } from './functions.js'
 
 const route = useRoute()
 const userStore = useUserStore()
 const queueStore = useQueueStore()
+const songStore = useSongStore()
 const siteContentHeight = computed(() => {
   return queueStore.queue?.length ? "cut-height" : "full-height"
 })
@@ -29,8 +31,10 @@ onMounted(async () => {
   await userStore.updateLogin()
 
   if (userStore.loggedIn) {
-    await queueStore.loadQueue()
     await userStore.fetchUserData()
+    await songStore.getSongs()
+    await queueStore.loadQueue()
+    await songStore.fetchRecentlyPlayed()
   }
 }) 
 </script>
@@ -42,7 +46,7 @@ onMounted(async () => {
       <div id="site-content" :class="siteContentHeight">
         <RouterView/>
       </div>
-      <SongPlayer v-if="queueStore.queue?.length && route.path !== '/login' && route.path !== '/register'"/>
+      <SongPlayer v-if="queueStore.queue.length !== 0 && route.path !== '/login' && route.path !== '/register'"/>
     </div>
   </div>
 </template>
