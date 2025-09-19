@@ -6,6 +6,7 @@ import SongPlayer from './components/SongPlayer.vue'
 import { useQueueStore } from './stores/queue.js'
 import { useUserStore } from './stores/user.js'
 import { useSongStore } from './stores/songs.js'
+import { usePlaylistStore } from './stores/playlists.js'
 import { computed, onMounted, onBeforeMount } from 'vue'
 import { parseNull } from './functions.js'
 
@@ -13,6 +14,7 @@ const route = useRoute()
 const userStore = useUserStore()
 const queueStore = useQueueStore()
 const songStore = useSongStore()
+const playlistStore = usePlaylistStore()
 const siteContentHeight = computed(() => {
   return queueStore.queue?.length ? "cut-height" : "full-height"
 })
@@ -35,6 +37,7 @@ onMounted(async () => {
     await songStore.getSongs()
     await queueStore.loadQueue()
     await songStore.fetchRecentlyPlayed()
+    await playlistStore.getPlaylists()
   }
 }) 
 </script>
