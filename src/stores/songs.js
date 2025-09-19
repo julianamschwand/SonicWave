@@ -113,7 +113,6 @@ export const useSongStore = defineStore("songs", {
     },
     formatSongs(songs) {
       return songs.map(song => {
-        song.duration = formatDuration(song.duration)
         song.isVisible = true
         return song
       })

@@ -2,13 +2,16 @@
 import router from '@/router'
 import { useRoute } from 'vue-router'
 import { onMounted, ref, computed, onBeforeMount } from 'vue'
-import { singlePlaylist, addToPlaylist } from '@/api/routes/playlists.js'
-import { getSongs } from '@/api/routes/songs.js'
+import { addToPlaylist } from '@/api/routes/playlists.js'
 import { formatDuration } from '@/functions'
 import { useUserStore } from '@/stores/user'
+import { usePlaylistStore } from '@/stores/playlists'
+import { useSongStore } from '@/stores/songs'
 
 const route = useRoute()
 const userStore = useUserStore()
+const playlistStore = usePlaylistStore()
+const songStore = useSongStore()
 const query = ref("")
 const songs = ref([])
 const checkedSongs = ref([])
@@ -34,7 +37,7 @@ const toggleSong = (songId) => {
 const handleAddToPlaylist = async () => {
   if (!checkedSongs.value.length) return
 
-  const response = await addToPlaylist(route.params.id, checkedSongs.value)
+  const response = await playlistStore.addToPlaylist(route.params.id, checkedSongs.value)
   if (response.success) {
     router.push(`/playlists/${route.params.id}`)
   }
@@ -45,17 +48,10 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-  const playlistResponse = await singlePlaylist(route.params.id)
-  if (playlistResponse.success) {
-    playlistSongIds.value = new Set(playlistResponse.playlist.songs.map(song => song.songId))
-
-    const songResponse = await getSongs()
-    if (songResponse.success) {
-      songs.value = songResponse.songs.filter(song => !playlistSongIds.value.has(song.songId))
-    }
-  }
-
-  loaderVisible.value = false
+  if (!playlistStore.playlists.length) await playlistStore.getPlaylists()
+  if (!songStore.songs.length) await songStore.getSongs()
+  playlistSongIds.value = new Set(playlistStore.playlists.find(playlist => playlist.playlistId == route.params.id).songs)
+  songs.value = songStore.songs.filter(song => !playlistSongIds.value.has(song.songId)) 
 })
 </script>
 <template>
@@ -72,7 +68,7 @@ onMounted(async () => {
       </div>
     </div>
   </header>
-  <div id="table-container" v-if="filteredSongs.length && !loaderVisible">
+  <div id="table-container" v-if="filteredSongs.length && !songStore.loading">
     <table class="select-table">
       <tbody>
         <tr v-for="song in filteredSongs" :class="{ 'checked': checkedSongs.includes(song.songId) }" @click="toggleSong(song.songId)">
@@ -94,10 +90,10 @@ onMounted(async () => {
     </table>
   </div>
   <div class="main-container" v-else>
-    <div class="loader-request" v-if="loaderVisible"></div>
+    <div class="loader-request" v-if="songStore.songsLoading"></div>
     <div v-else>
-      <div v-if="!songs.length && !playlistSongIds.size">No songs have been added yet</div>
-      <div v-if="!songs.length && playlistSongIds.size">All songs have already been added to the playlist</div>
+      <div v-if="!songs.length && !playlistSongIds?.size">No songs have been added yet</div>
+      <div v-if="!songs.length && playlistSongIds?.size">All songs have already been added to the playlist</div>
       <div v-if="songs.length && !filteredSongs.length">{{ `No results for "${query}"` }}</div>
     </div>
   </div>

@@ -1,16 +1,18 @@
 <script setup>
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import { onBeforeMount, onMounted, ref } from 'vue'
-import { editPlaylist, singlePlaylist } from '@/api/routes/playlists.js'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user.js'
+import { usePlaylistStore } from '@/stores/playlists'
 
 const route = useRoute()
 const userStore = useUserStore()
+const playlistStore = usePlaylistStore()
 const fileInputRef = ref(null)
-const playlist = ref({ name: "", description: "", cover: null})
 const coverUrl = ref("")
 let cover = null
+
+const playlist = computed(() => playlistStore.playlists.find(playlist => playlist.playlistId == route.params.id))
 
 const handleCoverChange = (event) => {
   cover = event.target.files[0]
@@ -18,7 +20,10 @@ const handleCoverChange = (event) => {
 }
 
 const handleEditPlaylist = async () => {
-  const response = await editPlaylist(route.params.id, playlist.value.name, playlist.value.description, cover)
+  if (!playlist.value.name) return
+
+  const response = await playlistStore.editPlaylist(route.params.id, playlist.value.name, playlist.value.description, cover)
+
   if (response.success) {
     if (cover) window.location.href = `${window.location.protocol}//${window.location.host}/playlists/${route.params.id}`
     else router.push(`/playlists/${route.params.id}`)
@@ -30,8 +35,7 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-  const playlistResponse = await singlePlaylist(route.params.id)
-  if (playlistResponse.success) playlist.value = playlistResponse.playlist
+  await playlistStore.getSinglePlaylist(route.params.id)
 })
 </script>
 <template>

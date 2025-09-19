@@ -1,16 +1,14 @@
 <script setup>
-import { onBeforeMount, onMounted, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import router from '@/router'
-import { allPlaylists } from '@/api/routes/playlists.js'
 import { allArtists } from '@/api/routes/artists.js'
 import PlaylistItem from '@/components/PlaylistItem.vue'
 import ArtistItem from '@/components/ArtistItem.vue'
 import { useUserStore } from '@/stores/user.js'
 import { useQueueStore } from '@/stores/queue.js'
 import { useSongStore } from '@/stores/songs.js'
+import { usePlaylistStore } from '@/stores/playlists.js'
 
-const songs = ref([])
-const playlists = ref([])
 const artists = ref([])
 const songContainerRef = ref(null)
 const playlistContainerRef = ref(null)
@@ -21,7 +19,21 @@ const artistPageIndex = ref(0)
 const userStore = useUserStore()
 const queueStore = useQueueStore()
 const songStore = useSongStore()
+const playlistStore = usePlaylistStore()
+const songs = ref(songStore.getRecentlyPlayed)
 let isScrolling = false
+
+const playlists = computed(() => {
+  const playlists = [...playlistStore.playlists]
+  
+  const fillerPlaylistCount = 10 - (playlists.length % 10 || 10)
+
+  for (let i = 0; i < fillerPlaylistCount; i++) {
+    playlists.push({playlistId: 0, name: "", songCount: 0, playlistDuration: 0})
+  }
+
+  return playlists
+})
 
 const scroll = (container, direction) => {
   if (isScrolling) return
@@ -71,18 +83,10 @@ onBeforeMount(async () => {
 onMounted(async () => {
   const [songResponse, playlistResponse, artistResponse] = await Promise.all([
     songStore.fetchRecentlyPlayed(),
-    allPlaylists(),
+    playlistStore.getPlaylists(),
     allArtists()
   ])
 
-  if (playlistResponse.success) {
-    playlists.value = playlistResponse.playlists
-    const fillerPlaylistCount = 10 - (playlists.value.length % 10 || 10)
-
-    for (let i = 0; i < fillerPlaylistCount; i++) {
-      playlists.value.push({playlistId: 0, name: "", songCount: 0, playlistDuration: 0})
-    }
-  }
   if (artistResponse.success) {
     artists.value = artistResponse.artists
     const fillerArtistCount = 10 - (artists.value.length % 10 || 10)
@@ -98,10 +102,10 @@ onMounted(async () => {
     <div class="loader-request"></div>
   </div>
   <div id="site-layout" v-else>
-    <section v-if="songStore.getRecentlyPlayed().length">
+    <section v-if="songs().length">
       <div>Recently Played</div>
       <div id="song-container" ref="songContainerRef">
-        <div v-for="song in songStore.getRecentlyPlayed()" :style="{ 'visibility': song.songId == 0 ? 'hidden' : 'visible'}" @click="playSong(song)">
+        <div v-for="song in songs()" :style="{ 'visibility': song.songId == 0 ? 'hidden' : 'visible'}" @click="playSong(song)">
           <img :src="song.cover" alt="">
           <div>
             <div>
@@ -116,13 +120,13 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <div class="scroll-container" v-if="songStore.getRecentlyPlayed().length > 8" >
+      <div class="scroll-container" v-if="songs().length > 8" >
         <button class="icon-button" :class="{ 'disabled-button': songPageIndex === 0 }" @click="scroll('songs', 'left')">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
             <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
           </svg>
         </button>
-        <button class="icon-button" :class="{ 'disabled-button': songPageIndex === songStore.getRecentlyPlayed().length / 8 - 1}" @click="scroll('songs', 'right')">
+        <button class="icon-button" :class="{ 'disabled-button': songPageIndex === songs().length / 8 - 1}" @click="scroll('songs', 'right')">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
             <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
           </svg>

@@ -3,8 +3,10 @@ import router from '@/router'
 import { onBeforeMount, ref } from 'vue'
 import { createPlaylist } from '@/api/routes/playlists.js'
 import { useUserStore } from '@/stores/user.js'
+import { usePlaylistStore } from '@/stores/playlists'
 
 const userStore = useUserStore()
+const playlistStore = usePlaylistStore()
 const fileInputRef = ref(null)
 const name = ref("")
 const description = ref("")
@@ -19,7 +21,7 @@ const handleCoverChange = (event) => {
 const handleCreatePlaylist = async () => {
   if (!name.value) return
 
-  const response = await createPlaylist(name.value, description.value, cover)
+  const response = await playlistStore.createPlaylist(name.value, description.value, cover)
   if (response.success) {
     router.push("/playlists")
   }

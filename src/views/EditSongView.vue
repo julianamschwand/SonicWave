@@ -1,21 +1,21 @@
 <script setup>
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import { onBeforeMount, onMounted, ref } from 'vue'
-import { singleSong, editSong } from '@/api/routes/songs.js'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user.js'
 import { useSongStore } from '@/stores/songs.js'
 
 const route = useRoute()
 const userStore = useUserStore()
 const songStore = useSongStore()
-const song = ref({title: "", genre: "", releaseYear: 0, artists: [], cover: ""}) 
 const artist = ref("")
 const fileInputRef = ref(null)
 const coverUrl = ref("")
 let cover = null
 let artistAdd = []
 let artistDelete = []
+
+const song = computed(() => songStore.songs.find(song => song.songId == route.params.songId))
 
 const goBack = () => {
   if (route.params.playlistId) {
@@ -66,8 +66,8 @@ const handleCoverChange = (event) => {
 const handleEditSong = async () => {
   if (!song.value.title || !song.value.releaseYear) return
 
-  await songStore.editSong(route.params.songId, song.value.title, artistAdd, artistDelete, song.value.genre, song.value.releaseYear, cover)
-  goBack()
+  const response = await songStore.editSong(route.params.songId, song.value.title, artistAdd, artistDelete, song.value.genre, song.value.releaseYear, cover)
+  if (response.success) goBack()
 }
 
 onBeforeMount(async () => {
@@ -75,8 +75,6 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-  if (!songStore.songs) await songStore.getSongs()
-  song.value = songStore.songs.find(song => song.songId == route.params.songId)
   await songStore.getSingleSong(route.params.songId)
 })
 </script>
