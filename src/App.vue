@@ -9,12 +9,14 @@ import { useSongStore } from './stores/songs.js'
 import { usePlaylistStore } from './stores/playlists.js'
 import { computed, onMounted, onBeforeMount } from 'vue'
 import { parseNull } from './functions.js'
+import { useOtherUsersStore } from './stores/otherUsers'
 
 const route = useRoute()
 const userStore = useUserStore()
 const queueStore = useQueueStore()
 const songStore = useSongStore()
 const playlistStore = usePlaylistStore()
+const otherUsersStore = useOtherUsersStore()
 const siteContentHeight = computed(() => {
   return queueStore.queue?.length ? "cut-height" : "full-height"
 })
@@ -38,6 +40,13 @@ onMounted(async () => {
     await queueStore.loadQueue()
     await songStore.fetchRecentlyPlayed()
     await playlistStore.getPlaylists()
+
+    if (userStore.userRole === "admin" || userStore.userRole === "owner") {
+      const isOwner = userStore.userRole === "owner"
+
+      const apiRequests = [otherUsersStore.getRegisterRequests(), isOwner ? otherUsersStore.getOtherUsers() : Promise.resolve()]
+      await Promise.all(apiRequests)
+    }
   }
 }) 
 </script>
