@@ -74,7 +74,7 @@ onMounted(async () => {
       <div>
         <div>
           <div>{{ playlist.songCount + " Songs" }}</div>
-          <div>{{ formatDuration(playlist.playlistDuration) }}</div>
+          <div>{{ formatDuration(playlist.duration) }}</div>
         </div>
         <div>
           <div>{{ playlist.name }}</div>

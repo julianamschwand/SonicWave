@@ -1,16 +1,19 @@
 <script setup>
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import { onBeforeMount, onMounted, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user.js'
 import { editArtist, singleArtist } from '@/api/routes/artists.js'
+import { useArtistStore } from '@/stores/artists'
 
 const route = useRoute()
 const userStore = useUserStore()
+const artistStore = useArtistStore()
 const fileInputRef = ref(null)
-const artist = ref({ name: "", description: "", cover: null})
 const imageUrl = ref("")
 let image = null
+
+const artist = computed(() => artistStore.artists.find(artist => artist.artistId == route.params.id))
 
 const handleImageChange = (event) => {
   image = event.target.files[0]
@@ -18,7 +21,7 @@ const handleImageChange = (event) => {
 }
 
 const handleEditArtist = async () => {
-  const response = await editArtist(route.params.id, artist.value.name, artist.value.description, image)
+  const response = await artistStore.editArtist(route.params.id, artist.value.name, artist.value.description, image)
 
   if (response.success) {
     if (image) window.location.href = `${window.location.protocol}//${window.location.host}/artist/${route.params.id}`
@@ -31,8 +34,7 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-  const response = await singleArtist(route.params.id)
-  if (response.success) artist.value = response.artist
+  await artistStore.getSingleArtist(route.params.id)
 })
 </script>
 <template>

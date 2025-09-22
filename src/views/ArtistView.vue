@@ -1,18 +1,25 @@
 <script setup>
-import { onBeforeMount, onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, computed } from 'vue'
 import { useUserStore } from '@/stores/user.js'
 import { useQueueStore } from '@/stores/queue.js'
 import { useRoute } from 'vue-router'
-import { singleArtist } from '@/api/routes/artists'
 import BackButton from '@/components/BackButton.vue'
 import router from '@/router'
 import { formatDuration, shuffleArray } from '@/functions.js'
-
+import { useArtistStore } from '@/stores/artists'
+import { useSongStore } from '@/stores/songs'
 
 const route = useRoute()
 const userStore = useUserStore()
 const queueStore = useQueueStore()
-const artist = ref({})
+const artistStore = useArtistStore()
+const songStore = useSongStore()
+
+const artist = computed(() => artistStore.artists.find(artist => artist.artistId == route.params.id)) 
+const songs = computed(() => {
+  if (!artist.value) return []
+  return artist.value.songs.map(songId => songStore.songs.find(song => song.songId == songId))
+})
 
 const playSong = async (shuffle, songId) => {
   const queue = JSON.parse(JSON.stringify(artist.value.songs))
@@ -37,8 +44,7 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-  const response = await singleArtist(route.params.id)
-  if (response.success) artist.value = response.artist
+  await artistStore.getSingleArtist(route.params.id)
 })
 </script>
 <template>
@@ -50,7 +56,7 @@ onMounted(async () => {
       </svg>
     </button>
   </header>
-  <div class="main-container" v-if="!artist.name">
+  <div class="main-container" v-if="!artist?.name">
     <div class="loader-request"></div>
   </div>
   <div id="content-container" v-else>
@@ -83,10 +89,10 @@ onMounted(async () => {
       </div>
     </div>
     <div id="description-container" v-if="artist.description">{{ artist.description }}</div>
-    <div class="main-container" v-if="!artist.songs.length">Artist doesn't currently have any songs</div>
+    <div class="main-container" v-if="!songs.length">Artist doesn't currently have any songs</div>
     <table class="library-table" v-else>
       <tbody>
-        <tr v-for="song in artist.songs">
+        <tr v-for="song in songs">
           <td>
             <div @click="playSong(true, song.songId)">
               <div>

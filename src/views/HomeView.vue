@@ -1,15 +1,14 @@
 <script setup>
 import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import router from '@/router'
-import { allArtists } from '@/api/routes/artists.js'
 import PlaylistItem from '@/components/PlaylistItem.vue'
 import ArtistItem from '@/components/ArtistItem.vue'
 import { useUserStore } from '@/stores/user.js'
 import { useQueueStore } from '@/stores/queue.js'
 import { useSongStore } from '@/stores/songs.js'
 import { usePlaylistStore } from '@/stores/playlists.js'
+import { useArtistStore } from '@/stores/artists'
 
-const artists = ref([])
 const songContainerRef = ref(null)
 const playlistContainerRef = ref(null)
 const artistContainerRef = ref(null)
@@ -20,6 +19,7 @@ const userStore = useUserStore()
 const queueStore = useQueueStore()
 const songStore = useSongStore()
 const playlistStore = usePlaylistStore()
+const artistStore = useArtistStore()
 const songs = ref(songStore.getRecentlyPlayed)
 let isScrolling = false
 
@@ -33,6 +33,18 @@ const playlists = computed(() => {
   }
 
   return playlists
+})
+
+const artists = computed(() => {
+  const artists = [...artistStore.artists]
+  
+  const fillerPlaylistCount = 10 - (artists.length % 10 || 10)
+
+  for (let i = 0; i < fillerPlaylistCount; i++) {
+    artists.push({artistId: 0, name: ""})
+  }
+
+  return artists
 })
 
 const scroll = (container, direction) => {
@@ -81,20 +93,11 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-  const [songResponse, playlistResponse, artistResponse] = await Promise.all([
+  await Promise.all([
     songStore.fetchRecentlyPlayed(),
     playlistStore.getPlaylists(),
-    allArtists()
+    artistStore.getArtists()
   ])
-
-  if (artistResponse.success) {
-    artists.value = artistResponse.artists
-    const fillerArtistCount = 10 - (artists.value.length % 10 || 10)
-
-    for (let i = 0; i < fillerArtistCount; i++) {
-      artists.value.push({artistId: 0, name: ""})
-    }
-  } 
 })
 </script>
 <template>
