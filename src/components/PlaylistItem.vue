@@ -30,7 +30,7 @@ onBeforeUnmount(() => {
     <img :src="playlist.cover" alt="">
     <div :style="`font-size: ${infoFontSize}px;`">
       <div>{{ playlist.songCount + " Songs"}}</div>
-      <div>{{ formatDuration(playlist.playlistDuration) }}</div>
+      <div>{{ formatDuration(playlist.duration) }}</div>
     </div>
     <div :style="`font-size: ${nameFontSize}px; margin-top: ${infoFontSize / 2}px; line-height: ${nameFontSize + 5}px; max-height: ${nameFontSize * 2 + 10}px`">
       {{ playlist.name }}
