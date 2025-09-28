@@ -9,6 +9,7 @@ import { useUserStore } from '@/stores/user.js'
 import { usePlaylistStore } from '@/stores/playlists.js'
 import { useSongStore } from '@/stores/songs.js'
 import { shuffleArray } from '@/functions.js'
+import PlayButton from '@/components/PlayButton.vue'
 
 const route = useRoute()
 const userStore = useUserStore()
@@ -113,11 +114,7 @@ onMounted(async () => {
                   <span></span>
                 </div>
               </div>
-              <button class="button-dark-hover">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="6 3 20 12 6 21 6 3"/>
-                </svg>
-              </button>
+              <PlayButton :size="50" :songId="song.songId"/>
             </div>
           </td>
           <td>{{ song.artists.map(artist => artist.name).join(", ") || "(None)" }}</td>

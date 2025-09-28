@@ -6,7 +6,7 @@ export const useQueueStore = defineStore("queue", {
   state: () => ({
     queue: [],
     queueIndex: null,
-    songIsPlaying: true
+    songIsPlaying: false
   }),
   actions: {
     async initQueue(queue, queueIndex = 0) {
@@ -15,7 +15,6 @@ export const useQueueStore = defineStore("queue", {
       this.queueIndex = queueIndex
       
       const response = await setQueue(queue)
-      this.songIsPlaying = true
       
       useSongStore().updateRecentSongs()
 
@@ -26,7 +25,6 @@ export const useQueueStore = defineStore("queue", {
       if (response.success) {
         this.queue = response.queue
         this.queueIndex = response.queueIndex
-        this.songIsPlaying = true
       }
 
       return response
@@ -61,14 +59,8 @@ export const useQueueStore = defineStore("queue", {
       return response
     },
     songPlaying(songId) {
-      if (this.queue) return this.queue[this.queueIndex]?.songId == songId && this.songIsPlaying
+      if (this.queue) return this.queue[this.queueIndex] == songId && this.songIsPlaying
       return false
-    },
-    getSong() {
-      const songStore = useSongStore()
-
-      if (!songStore.songs.length || !this.queue.length) return {}
-      return this.queue.map(queueSong => songStore.songs.find(song => song.songId == queueSong))[this.queueIndex]
     }
   }
 })

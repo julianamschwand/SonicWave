@@ -267,16 +267,14 @@ button {
     height: 30px;
   }
 
-  button {
-    background-color: var(--background);
-    height: 50px;
-    width: 50px;
-    border-radius: 50%;
-  }
 
   td:first-child {
     svg {
       fill: var(--background);
+    }
+
+    > div > div:last-child {
+      display: none;
     }
     
     &:hover {
@@ -285,8 +283,8 @@ button {
       cursor: pointer;
       user-select: none;
 
-      button {
-        background-color: var(--accent);
+      > div > div:last-child {
+        display: flex;
       }
     }
   }

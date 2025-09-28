@@ -3,28 +3,28 @@ import { ref, onMounted, computed } from 'vue'
 import { useQueueStore } from '@/stores/queue.js'
 import { NSlider } from 'naive-ui'
 import { formatDuration } from '@/functions.js'
+import PlayButton from './PlayButton.vue'
+import { useSongStore } from '@/stores/songs'
 
 const queueStore = useQueueStore()
+const songStore = useSongStore()
 const audioRef = ref(null)
 const currentTime = ref(0)
 const duration = ref(0)
-const isPlaying = ref(false)
 const volume = ref(100)
-const song = ref(queueStore.getSong)
+
+const song = computed(() => {
+  return songStore.songs.find(song => song.songId == queueStore.queue[queueStore.queueIndex])
+})
 
 const songUrl = computed(() => {
-  return `${import.meta.env.VITE_API_URL}/songs/play?songId=${song.value().songId}`
+  return `${import.meta.env.VITE_API_URL}/songs/play?songId=${song.value.songId}`
 })
 
 
-const playSong = () => {
-  audioRef.value.play()
-  queueStore.songIsPlaying = true
-} 
-
-const pauseSong = () => {
-  audioRef.value.pause()
-  queueStore.songIsPlaying = false
+const playPauseSong = () => {
+  if (queueStore.songIsPlaying) audioRef.value.pause()
+  else audioRef.value.play()
 } 
 
 const updateVolume = (value) => {
@@ -39,17 +39,17 @@ onMounted(() => {
   audio.volume = volume.value / 100
 
   audio.addEventListener('loadedmetadata', () => duration.value = audio.duration)
-  audio.addEventListener('timeupdate', () => currentTime.value = audio.currentTime )
-  audio.addEventListener('play', () => isPlaying.value = true)
-  audio.addEventListener('pause', () => isPlaying.value = false)
-  audio.addEventListener('ended', () => isPlaying.value = false)
+  audio.addEventListener('timeupdate', () => currentTime.value = audio.currentTime)
+  audio.addEventListener('play', () => queueStore.songIsPlaying = true)
+  audio.addEventListener('pause', () => queueStore.songIsPlaying = false)
+  audio.addEventListener('ended', () => queueStore.songIsPlaying = false)
 })
 </script>
 <template>
   <div id="player-container">
     <audio :src="songUrl" ref="audioRef" autoplay @ended="queueStore.changeSong('forward')"></audio>
     <div id="cover-container">
-      <img :src="song().cover" alt="">
+      <img :src="song.cover" alt="">
     </div>
     <div id="close-box" class="button-light-hover" @click="queueStore.clearQueue()">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
@@ -60,8 +60,8 @@ onMounted(() => {
       <n-slider id="timeline-slider" :tooltip="false" :max="duration" v-model:value="currentTime" @update:value="value => audioRef.currentTime = value"/>
       <div id="content-container">
         <div>
-          <div id="title">{{ song().title }}</div>
-          <div id="artist">{{ song().artists.map(artist => artist.name).join(", ") || "Unknown Artist"}}</div>
+          <div id="title">{{ song.title }}</div>
+          <div id="artist">{{ song.artists.map(artist => artist.name).join(", ") || "Unknown Artist"}}</div>
         </div>
         <div id="control-buttons">
           <button @click="queueStore.changeSong('backward')" :class="{ 'disabled-button': queueStore.queueIndex === 0 }">
@@ -70,16 +70,7 @@ onMounted(() => {
               <line x1="5" x2="5" y1="19" y2="5"/>
             </svg>
           </button>
-          <button v-if="!isPlaying" @click="playSong">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="6 3 20 12 6 21 6 3"/>
-            </svg>
-          </button>
-          <button v-if="isPlaying" @click="pauseSong">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>
-            </svg>
-          </button>
+          <PlayButton :size="60" :songId="song.songId" @click="playPauseSong"/>
           <button @click="queueStore.changeSong('forward')" :class="{ 'disabled-button': queueStore.queueIndex === queueStore.queue.length - 1 }">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/>
@@ -189,7 +180,7 @@ img {
   align-items: center;
   gap: 10px;
 
-  button {
+  > button {
     background-color: var(--accent);
     border-radius: 50%;
     height: 45px;
@@ -197,16 +188,6 @@ img {
 
     &:hover {
       filter: brightness(0.9);
-    }
-
-    &:not(:first-child, :last-child) {
-      height: 60px;
-      width: 60px;
-
-      svg {
-        width: 35px;
-        height: 35px;
-      }
     }
   }
 
