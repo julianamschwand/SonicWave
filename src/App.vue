@@ -40,7 +40,6 @@ onMounted(async () => {
     await userStore.fetchUserData()
     await songStore.getSongs()
     await queueStore.loadQueue()
-    await songStore.fetchRecentlyPlayed()
     await playlistStore.getPlaylists()
     await artistStore.getArtists()
 

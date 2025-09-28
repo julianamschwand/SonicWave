@@ -1,14 +1,12 @@
 import { defineStore } from 'pinia'
 import { formatDuration } from '@/functions.js'
-import { deleteSong, editSong, getSongs, singleSong, toggleFavorite, recentlyPlayed } from '@/api/routes/songs.js'
-import { useQueueStore } from './queue.js'
+import { deleteSong, editSong, getSongs, singleSong, toggleFavorite } from '@/api/routes/songs.js'
+import { useQueueStore } from './queue'
 
 export const useSongStore = defineStore("songs", {
   state: () => ({
     songs: [],
-    recentlyPlayedSongs: null,
-    songsLoading: true,
-    recentLoading: true
+    songsLoading: true
   }),
   actions: {
     async getSongs() {
@@ -88,28 +86,14 @@ export const useSongStore = defineStore("songs", {
     
       return response
     },
-    getRecentlyPlayed() {
-      if (!this.recentlyPlayedSongs) return []
-      return this.recentlyPlayedSongs.map(recentSong => this.songs.find(song => song.songId == recentSong) || {songId: 0, artists: []})
-    },
-    addFillerSongs() {
-      const fillerSongCount = 8 - (this.recentlyPlayedSongs.length % 8 || 8)
+    async updateLastPlayed() {
+      if (!this.songs.length) await this.getSongs()
 
-      for (let i = 0; i < fillerSongCount; i++) {
-        this.recentlyPlayedSongs.push(0)
-      }
-    },
-    updateRecentSongs() {
       const queueStore = useQueueStore()
-      const newSong = queueStore.queue[queueStore.queueIndex]
-            
-      const songInRecent = this.recentlyPlayedSongs.findIndex(song => song == newSong)
-      if (songInRecent > 0) this.recentlyPlayedSongs.splice(songInRecent, 1)
-      this.recentlyPlayedSongs = this.recentlyPlayedSongs.filter(song => song !== 0)
+      const songId = queueStore.queue[queueStore.queueIndex]
 
-      this.recentlyPlayedSongs.unshift(newSong)
-      if (this.recentlyPlayedSongs.length > 20) this.recentlyPlayedSongs.pop()
-      this.addFillerSongs()
+      const song = this.songs.find(song => song.songId == songId)
+      song.lastPlayed = new Date().toISOString()
     },
     formatSongs(songs) {
       return songs.map(song => {
