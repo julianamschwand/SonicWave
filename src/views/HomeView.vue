@@ -8,6 +8,7 @@ import { useQueueStore } from '@/stores/queue.js'
 import { useSongStore } from '@/stores/songs.js'
 import { usePlaylistStore } from '@/stores/playlists.js'
 import { useArtistStore } from '@/stores/artists'
+import PlayButton from '@/components/PlayButton.vue'
 
 const songContainerRef = ref(null)
 const playlistContainerRef = ref(null)
@@ -101,7 +102,7 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <div class="main-container" v-if="songStore.loading">
+  <div class="main-container" v-if="songStore.songsLoading || playlistStore.playlistsLoading || artistStore.artistsLoading">
     <div class="loader-request"></div>
   </div>
   <div id="site-layout" v-else>
@@ -115,11 +116,7 @@ onMounted(async () => {
               <div>{{ song.title }}</div>
               <div>{{ song.artists.map(artist => artist.name).join(", ") || "(None)" }}</div>
             </div>
-            <button class="button-dark-hover">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="6 3 20 12 6 21 6 3"/>
-              </svg>
-            </button>
+            <PlayButton :size="50" :songId="song.songId"/>
           </div>
         </div>
       </div>
@@ -220,8 +217,8 @@ section {
     &:hover {
       background-color: var(--objects);
 
-      button {
-        background-color: var(--accent);
+      > div > div:last-child {
+        display: flex;
       }
     }
 
@@ -240,7 +237,7 @@ section {
       flex-grow: 1;
       min-width: 0;
 
-      > div {
+      > div:not(:last-child) {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
@@ -262,19 +259,8 @@ section {
         }
       }
       
-      > button {
-        height: 50px;
-        width: 50px;
-        flex-shrink: 0;
-        border-radius: 50%;
-        background-color: var(--background);
-        margin-left: 10px;
-
-        svg {
-          height: 30px;
-          width: 30px;
-          fill: var(--background);
-        }
+      > div:last-child {
+        display: none;
       }
     }
   }

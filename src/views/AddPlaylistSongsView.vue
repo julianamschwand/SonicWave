@@ -2,7 +2,6 @@
 import router from '@/router'
 import { useRoute } from 'vue-router'
 import { onMounted, ref, computed, onBeforeMount } from 'vue'
-import { addToPlaylist } from '@/api/routes/playlists.js'
 import { formatDuration } from '@/functions'
 import { useUserStore } from '@/stores/user'
 import { usePlaylistStore } from '@/stores/playlists'
@@ -15,12 +14,11 @@ const songStore = useSongStore()
 const query = ref("")
 const songs = ref([])
 const checkedSongs = ref([])
-const loaderVisible = ref(true)
 const playlistSongIds = ref(null)
 
 const filteredSongs = computed(() => {
   return songs.value.filter(song => {
-    const songData = `${song.title} ${song.artists.map(artist => artist = artist.artistName).join(" ")} ${song.genre}`.toLowerCase()
+    const songData = `${song.title} ${song.artists.map(artist => artist = artist.name).join(" ")} ${song.genre}`.toLowerCase()
     const queryIncluded = query.value.split(" ").every(word => songData.includes(word.toLowerCase()))
     return queryIncluded
   })

@@ -1,9 +1,34 @@
 <script setup>
 import router from '@/router'
-import { onMounted } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user.js'
+import SearchDropdown from './SearchDropdown.vue'
 
 const userStore = useUserStore()
+const searchQuery = ref("")
+const dropdownRef = ref(null)
+const searchbarRef = ref(null)
+const showDropdown = ref(false)
+
+const handleClick = (event) => {
+  const clickedOutsideSearchbar = !searchbarRef.value.contains(event.target)
+  const clickedOutsideDropdown = !dropdownRef.value || !dropdownRef.value.$el.contains(event.target)
+
+  if (clickedOutsideSearchbar && clickedOutsideDropdown) {
+    showDropdown.value = false
+  } else {
+    showDropdown.value = true
+  }
+}
+
+const handleSelectedSearch = (path) => {
+  searchQuery.value = ""
+  if (path) router.push(path)
+}
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClick)
+})
 
 onMounted(async () => {
   await userStore.updateLogin()
@@ -11,6 +36,8 @@ onMounted(async () => {
   if (userStore.loggedIn) {
     await userStore.fetchUserData()
   }
+
+  document.addEventListener("click", handleClick)
 })
 </script>
 <template>
@@ -25,15 +52,18 @@ onMounted(async () => {
         <path style="stroke:none;" d="M315 0C333.543 65.3417 345.821 131.944 345.821 200C345.821 249.525 339 298.526 329 347L345 347C349.194 314.527 356.664 282.807 358.91 250C362.773 193.591 359.554 136.734 350.247 81C346.886 60.8716 342.608 40.6261 337 21C335.547 15.9169 334.703 4.34842 330.297 1.02777C326.923 -1.51501 319.045 0 315 0z"/>
       </svg>
     </div>
-    <div class="search-container">
-      <div>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF">
-          <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
-        </svg>
+    <div id="navbar-search-container">
+      <div class="search-container">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF">
+            <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+          </svg>
+        </div>
+        <div>
+          <input type="text" placeholder="Search for something ..." v-model="searchQuery" ref="searchbarRef">
+        </div>
       </div>
-      <div>
-        <input type="text" placeholder="Search for something ...">
-      </div>
+      <SearchDropdown :query="searchQuery" v-if="searchQuery && showDropdown" ref="dropdownRef" @selected="handleSelectedSearch"/>
     </div>
     <button id="login-button" class="button-dark-hover" @click="router.push('/login')" v-if="!userStore.loggedIn">Login</button>
     <button id="account-button" class="button-light-hover" @click="router.push('/account')" v-else>
@@ -94,6 +124,18 @@ onMounted(async () => {
 .search-container * {
   background-color: var(--background);
 }
+
+#navbar-search-container {
+  width: 450px;
+  display: flex;
+  justify-content: center;
+
+  > div:not(.search-container) {
+    position: absolute;
+    top: 70px;
+  }
+}
+
 
 #account-button {
   height: 40px;
