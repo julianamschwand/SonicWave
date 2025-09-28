@@ -21,8 +21,19 @@ const queueStore = useQueueStore()
 const songStore = useSongStore()
 const playlistStore = usePlaylistStore()
 const artistStore = useArtistStore()
-const songs = ref(songStore.getRecentlyPlayed)
 let isScrolling = false
+
+const songs = computed(() => {
+  const songs = [...songStore.songs].filter(song => song.lastPlayed).sort((a, b) => new Date(b.lastPlayed) - new Date(a.lastPlayed))
+    
+  const fillerSongCount = 8 - (songs.length % 8 || 8)
+
+  for (let i = 0; i < fillerSongCount; i++) {
+    songs.push({songId: 0, title: "", artists: []})
+  }
+
+  return songs
+})
 
 const playlists = computed(() => {
   const playlists = [...playlistStore.playlists]
@@ -95,7 +106,7 @@ onBeforeMount(async () => {
 
 onMounted(async () => {
   await Promise.all([
-    songStore.fetchRecentlyPlayed(),
+    songStore.getSongs(),
     playlistStore.getPlaylists(),
     artistStore.getArtists()
   ])
@@ -106,10 +117,10 @@ onMounted(async () => {
     <div class="loader-request"></div>
   </div>
   <div id="site-layout" v-else>
-    <section v-if="songs().length">
+    <section v-if="songs.length">
       <div>Recently Played</div>
       <div id="song-container" ref="songContainerRef">
-        <div v-for="song in songs()" :style="{ 'visibility': song.songId == 0 ? 'hidden' : 'visible'}" @click="playSong(song)">
+        <div v-for="song in songs" :style="{ 'visibility': song.songId == 0 ? 'hidden' : 'visible'}" @click="playSong(song)">
           <img :src="song.cover" alt="">
           <div>
             <div>
@@ -120,13 +131,13 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <div class="scroll-container" v-if="songs().length > 8" >
+      <div class="scroll-container" v-if="songs.length > 8" >
         <button class="icon-button" :class="{ 'disabled-button': songPageIndex === 0 }" @click="scroll('songs', 'left')">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
             <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
           </svg>
         </button>
-        <button class="icon-button" :class="{ 'disabled-button': songPageIndex === songs().length / 8 - 1}" @click="scroll('songs', 'right')">
+        <button class="icon-button" :class="{ 'disabled-button': songPageIndex === songs.length / 8 - 1}" @click="scroll('songs', 'right')">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
             <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
           </svg>

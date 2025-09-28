@@ -89,7 +89,7 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div id="description-container" v-if="artist.description">{{ artist.description }}</div>
+    <div class="playlist-description-container" v-if="artist.description">{{ artist.description }}</div>
     <div class="main-container" v-if="!songs.length">Artist doesn't currently have any songs</div>
     <table class="library-table" v-else>
       <tbody>

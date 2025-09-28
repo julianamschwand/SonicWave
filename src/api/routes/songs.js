@@ -39,7 +39,3 @@ export async function toggleFavorite(songId) {
 export async function resetSong(songId) {
   return request("put", "/songs/reset", { data: { songId }});
 }
-
-export async function recentlyPlayed() {
-  return request("get", "/songs/recently-played")
-}

@@ -15,9 +15,8 @@ export const useQueueStore = defineStore("queue", {
       this.queueIndex = queueIndex
       
       const response = await setQueue(queue)
+      useSongStore().updateLastPlayed()
       
-      useSongStore().updateRecentSongs()
-
       return response
     },
     async loadQueue() {
@@ -49,7 +48,7 @@ export const useQueueStore = defineStore("queue", {
       }
 
       this.queueIndex += incrementValue
-      useSongStore().updateRecentSongs()
+      useSongStore().updateLastPlayed()
 
       const response = await changeSong(action)
       if (!response.success) {
