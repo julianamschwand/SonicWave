@@ -253,43 +253,6 @@ button {
   justify-content: center;
 }
 
-// Library table
-.library-table {
-  @include song-table-template;
-
-  img {
-    width: 60px;
-    height: 60px;
-  }
-
-  svg {
-    width: 30px;
-    height: 30px;
-  }
-
-
-  td:first-child {
-    svg {
-      fill: var(--background);
-    }
-
-    > div > div:last-child {
-      display: none;
-    }
-    
-    &:hover {
-      background-color: var(--objects);
-      border-radius: 5px;
-      cursor: pointer;
-      user-select: none;
-
-      > div > div:last-child {
-        display: flex;
-      }
-    }
-  }
-}
-
 // Not clickable Button/SVG
 .unclickable {
   pointer-events: none;
@@ -448,6 +411,7 @@ button {
   justify-content: space-between;
   width: 13px;
   height: 13px;
+  flex-shrink: 0;
 
   span {
     width: 3px;
