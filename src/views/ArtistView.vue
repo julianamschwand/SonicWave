@@ -8,7 +8,7 @@ import router from '@/router'
 import { formatDuration, shuffleArray } from '@/functions.js'
 import { useArtistStore } from '@/stores/artists'
 import { useSongStore } from '@/stores/songs'
-import PlayButton from '@/components/PlayButton.vue'
+import SongTable from '@/components/SongTable.vue'
 
 const route = useRoute()
 const userStore = useUserStore()
@@ -23,7 +23,7 @@ const songs = computed(() => {
 })
 
 const playSong = async (shuffle, songId) => {
-  const queue = JSON.parse(JSON.stringify(artist.value.songs))
+  const queue = JSON.parse(JSON.stringify(songs.value))
 
   let shuffledQueue = null
   if (shuffle) {
@@ -91,45 +91,7 @@ onMounted(async () => {
     </div>
     <div class="playlist-description-container" v-if="artist.description">{{ artist.description }}</div>
     <div class="main-container" v-if="!songs.length">Artist doesn't currently have any songs</div>
-    <table class="library-table" v-else>
-      <tbody>
-        <tr v-for="song in songs">
-          <td>
-            <div @click="playSong(true, song.songId)">
-              <div>
-                <img :src="song.cover" alt="">
-                {{ song.title }}
-                <div class="music-playing-animation" v-if="queueStore.songPlaying(song.songId)">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-              <PlayButton :size="50" :songId="song.songId"/>
-            </div>
-          </td>
-          <td>{{ song.artists.map(artist => artist.name).join(", ") || "(None)" }}</td>
-          <td>{{ song.genre || "(None)" }}</td>
-          <td>{{ song.releaseYear }}</td>
-          <td>{{ song.formDuration }}</td>
-          <td v-if="!song.isFavorite">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="handleToggleFavorite(song.songId)">
-              <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
-            </svg>
-          </td>
-          <td v-if="song.isFavorite">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff00ae" @click="handleToggleFavorite(song.songId)">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
-          </td>
-          <td>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="router.push(`/artist/${route.params.id}/edit/song/${song.songId}`)">
-              <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
-            </svg>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <SongTable :songs="songs" :enableSongPlay="true" :artistId="route.params.id" :enabledComponents="['artists', 'genre', 'releaseYear', 'favorite', 'edit']" v-else @playSong="(songId) => playSong(true, songId)"/>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -137,15 +99,15 @@ onMounted(async () => {
   border-radius: 50%;
 }
 
-.library-table {
-  margin-top: 10px;
-}
-
 #content-container {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
+
+  > div:last-child {
+    margin-top: 10px;
+  }
 }
 
 .main-container {

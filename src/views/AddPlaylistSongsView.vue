@@ -2,10 +2,10 @@
 import router from '@/router'
 import { useRoute } from 'vue-router'
 import { onMounted, ref, computed, onBeforeMount } from 'vue'
-import { formatDuration } from '@/functions'
 import { useUserStore } from '@/stores/user'
 import { usePlaylistStore } from '@/stores/playlists'
 import { useSongStore } from '@/stores/songs'
+import SongTable from '@/components/SongTable.vue'
 
 const route = useRoute()
 const userStore = useUserStore()
@@ -24,14 +24,6 @@ const filteredSongs = computed(() => {
   })
 })
 
-const toggleSong = (songId) => {
-  if (checkedSongs.value.includes(songId)) {
-    checkedSongs.value = checkedSongs.value.filter(id => id !== songId)
-  } else {
-    checkedSongs.value.push(songId)
-  }
-}
-
 const handleAddToPlaylist = async () => {
   if (!checkedSongs.value.length) return
 
@@ -40,6 +32,15 @@ const handleAddToPlaylist = async () => {
     router.push(`/playlists/${route.params.id}`)
   }
 }
+
+const toggleSong = (songId) => {
+  if (checkedSongs.value.includes(songId)) {
+    checkedSongs.value = checkedSongs.value.filter(id => id !== songId)
+  } else {
+    checkedSongs.value.push(songId)
+  }
+}
+
 
 onBeforeMount(async () => {
   await userStore.checkLogin()
@@ -67,25 +68,7 @@ onMounted(async () => {
     </div>
   </header>
   <div id="table-container" v-if="filteredSongs.length && !songStore.loading">
-    <table class="select-table">
-      <tbody>
-        <tr v-for="song in filteredSongs" :class="{ 'checked': checkedSongs.includes(song.songId) }" @click="toggleSong(song.songId)">
-          <td>
-            <button class="checkbox checked">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-                <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
-              </svg>
-            </button>
-            <img :src="song.cover" alt="">
-            {{ song.title }}
-          </td>
-          <td>{{ song.artists.map(artist => artist.name).join(", ") || "(None)"}}</td>
-          <td>{{ song.genre || "(None)"}}</td>
-          <td>{{ song.releaseYear }}</td>
-          <td>{{ formatDuration(song.duration) }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <SongTable :songs="songs" :enableSelect="true" :checkedSongs="checkedSongs" :enabledComponents="['artists','genre','releaseYear','duration']" @toggleSong="toggleSong"/>
   </div>
   <div class="main-container" v-else>
     <div class="loader-request" v-if="songStore.songsLoading"></div>
@@ -113,36 +96,6 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .search-container * {
   background-color: var(--objects);
-}
-
-.checkbox {
-  height: 20px;
-  width: 20px;
-  background-color: var(--background) !important;
-  border: 2px solid var(--accent);
-  padding: 0px;
-
-  svg {
-    fill: var(--background);
-    width: 100%;
-    height: 100%;
-  }
-}
-
-tr {
-  cursor: pointer;
-
-  &:hover td {
-    background-color: var(--objects);
-  }
-}
-
-.checked {
-  background-color: var(--objects);
-
-  button {
-    background-color: var(--accent) !important;
-  }
 }
 
 #button-container {
@@ -177,14 +130,5 @@ tr {
   height: 100%;
   max-height: 100%;
   overflow: auto;
-}
-
-.select-table {
-  @include song-table-template;
-
-  img {
-    width: 60px;
-    height: 60px;
-  }
 }
 </style>

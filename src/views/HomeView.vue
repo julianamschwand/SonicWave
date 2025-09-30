@@ -247,6 +247,7 @@ section {
       align-items: center;
       flex-grow: 1;
       min-width: 0;
+      gap: 10px;
 
       > div:not(:last-child) {
         display: flex;

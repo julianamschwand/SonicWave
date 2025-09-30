@@ -41,11 +41,11 @@ export const usePlaylistStore = defineStore("playlists", {
 
       if (response.success) {
         const playlist = this.playlists.find(playlist => playlist.playlistId == playlistId)
-        playlist.songs = [...playlist.songs, ...songIds]
-        playlist.songCount += songIds.length
 
         const songStore = useSongStore()
-        playlist.playlistDuration += songIds.reduce((acc, songId) => acc + songStore.songs.find(song => song.songId == songId).duration, 0)
+        playlist.songs = [...playlist.songs, ...songIds]
+        playlist.songCount += songIds.length
+        playlist.duration += songIds.reduce((acc, songId) => acc + songStore.songs.find(song => song.songId == songId).duration, 0)
       }
 
       return response
@@ -54,8 +54,9 @@ export const usePlaylistStore = defineStore("playlists", {
       const song = useSongStore().songs.find(song => song.songId == songId)
       const playlist = this.playlists.find(playlist => playlist.playlistId == playlistId)
       song.isVisible = false
+
       playlist.songCount -= 1
-      playlist.playlistDuration -= song.duration
+      playlist.duration -= song.duration
 
       const response = await deleteFromPlaylist(playlistId, songId)
 
@@ -63,9 +64,10 @@ export const usePlaylistStore = defineStore("playlists", {
         playlist.songs = playlist.songs.filter(song => song != songId)
       } else {
         playlist.songCount += 1
-        song.isVisible = true
         playlist.playlistDuration += song.duration
       }
+
+      song.isVisible = true
 
       return response
     },
