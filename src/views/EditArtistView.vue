@@ -13,7 +13,7 @@ const fileInputRef = ref(null)
 const imageUrl = ref("")
 let image = null
 
-const artist = computed(() => artistStore.artists.find(artist => artist.artistId == route.params.id))
+const artist = computed(() => artistStore.artists.find(artist => artist.artistId == route.params.id) || {name: "", description: ""})
 
 const handleImageChange = (event) => {
   image = event.target.files[0]
