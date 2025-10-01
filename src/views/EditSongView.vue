@@ -15,7 +15,7 @@ let cover = null
 let artistAdd = []
 let artistDelete = []
 
-const song = computed(() => songStore.songs.find(song => song.songId == route.params.songId))
+const song = computed(() => songStore.songs.find(song => song.songId == route.params.songId) || {title: "", genre: "", releaseYear: "", artists: []})
 
 const goBack = () => {
   if (route.params.playlistId) {

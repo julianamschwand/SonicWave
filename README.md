@@ -1,29 +1,44 @@
-# SonicWave
+<div style="display: flex; justify-content: center; margin: 50px">
+  <img src="./images/Logo/SonicWaveLogo3.png" style="width: 500px"/>
+</div>
 
-This template should help get you started developing with Vue 3 in Vite.
+---
 
-## Recommended IDE Setup
+<div style="display: flex; justify-content: center; margin: 50px">
+  SonicWave is self hosted music streaming service with song download capibility  
+</div>
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+# Features
+## Songs
+  - Download songs using [yt-dlp](https://github.com/yt-dlp/yt-dlp) and save them per account
+  - Browse songs in the internet
+  - Stream songs (m4a)
+  - Edit song metadata
+  - Delete songs
 
-## Customize configuration
+## Playlists
+  - Create playlists
+  - Edit playlists
+  - Delete playlists
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## Artists
+  - Automatically get added with songs
+  - Edit artists
 
-## Project Setup
+## Users
+  - Register new users
+  - Register requests instead of unconditional registration
+  - User managment
+  - User roles (owner, admin, user)
+  - Change password
 
-```sh
-npm install
-```
+## Other
+  - Change the site colors in the settings
+  - Global search in the top navbar
+  - Home page with recently played songs, playlists and artists
 
-### Compile and Hot-Reload for Development
+<div style="width: 100px; height: 50px"></div>
 
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+# Screenshots
+![library](./images/screenshots/library.png)
+![home](./images/screenshots/home.png)

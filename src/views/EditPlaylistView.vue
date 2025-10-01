@@ -12,7 +12,7 @@ const fileInputRef = ref(null)
 const coverUrl = ref("")
 let cover = null
 
-const playlist = computed(() => playlistStore.playlists.find(playlist => playlist.playlistId == route.params.id))
+const playlist = computed(() => playlistStore.playlists.find(playlist => playlist.playlistId == route.params.id) || {name: "", description: ""})
 
 const handleCoverChange = (event) => {
   cover = event.target.files[0]

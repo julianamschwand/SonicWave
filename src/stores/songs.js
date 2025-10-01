@@ -21,13 +21,10 @@ export const useSongStore = defineStore("songs", {
     async getSingleSong(songId) {
       if (!this.songs.length) await this.getSongs()
       const response = await singleSong(songId)
+    
       if (response.success) {
-        const song = response.song
-        song.duration = formatDuration(song.duration)
-        song.isVisible = true
-
         const songIndex = this.songs.findIndex(song => song.songId == songId)
-        this.songs[songIndex] = { songId: this.songs[songIndex].songId, ...song}
+        this.songs[songIndex] = this.formatSongs([response.song])[0]
       }
 
       return response
