@@ -60,7 +60,7 @@ onMounted(async () => {
           </svg>
         </div>
         <div>
-          <input type="text" placeholder="Search for something ..." v-model="searchQuery" ref="searchbarRef">
+          <input type="text" placeholder="Search for something ..." v-model="searchQuery" ref="searchbarRef" @keydown.escape="showDropdown = false">
         </div>
       </div>
       <SearchDropdown :query="searchQuery" v-if="searchQuery && showDropdown" ref="dropdownRef" @selected="handleSelectedSearch"/>

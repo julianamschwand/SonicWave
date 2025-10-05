@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
-import { formatDuration } from '@/functions.js'
-import { deleteSong, editSong, getSongs, singleSong, toggleFavorite } from '@/api/routes/songs.js'
+import { deleteSong, editSong, getSongs, resetSong, singleSong, toggleFavorite } from '@/api/routes/songs.js'
 import { useQueueStore } from './queue'
 
 export const useSongStore = defineStore("songs", {
@@ -61,28 +60,6 @@ export const useSongStore = defineStore("songs", {
 
       return response
     },
-    async fetchRecentlyPlayed() {
-      if (!this.songs.length) await this.getSongs()
-
-      const response = await recentlyPlayed()
-
-      if (response.success) {
-        const songs = this.formatSongs(response.songs)
-
-        for (const song of songs) {
-          const songIndex = this.songs.findIndex(currentSong => currentSong.songId == song.songId)
-          this.songs[songIndex] =  song
-        }
-
-        this.recentlyPlayedSongs = response.songs.map(song => song.songId)
-        this.addFillerSongs()
-
-        this.recentLoading = false
-      }
-
-    
-      return response
-    },
     async updateLastPlayed() {
       if (!this.songs.length) await this.getSongs()
 
@@ -91,6 +68,16 @@ export const useSongStore = defineStore("songs", {
 
       const song = this.songs.find(song => song.songId == songId)
       song.lastPlayed = new Date().toISOString()
+    },
+    async resetSong(songId) {
+      const response = await resetSong(songId)
+
+      if (response.success) {
+        const songIndex = this.songs.findIndex(song => song.songId == songId)
+        this.songs[songIndex] = this.formatSongs([response.song])[0]
+      }
+
+      return response
     },
     formatSongs(songs) {
       return songs.map(song => {

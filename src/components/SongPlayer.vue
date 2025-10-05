@@ -5,6 +5,7 @@ import { NSlider } from 'naive-ui'
 import { formatDuration } from '@/functions.js'
 import PlayButton from './PlayButton.vue'
 import { useSongStore } from '@/stores/songs'
+import router from '@/router'
 
 const queueStore = useQueueStore()
 const songStore = useSongStore()
@@ -61,7 +62,10 @@ onMounted(() => {
       <div id="content-container">
         <div>
           <div id="title">{{ song.title }}</div>
-          <div id="artist">{{ song.artists.map(artist => artist.name).join(", ") || "Unknown Artist"}}</div>
+          <div id="artist">
+            <div v-for="(artist, index) in song.artists" @click="router.push(`/artist/${artist.artistId}`)">{{ artist.name + (index < song.artists.length - 1 ? "," : "") }}</div>
+            <div id="unknown-artist" v-if="!song.artists.length">Unknown Artist</div>
+          </div>
         </div>
         <div id="control-buttons">
           <button @click="queueStore.changeSong('backward')" :class="{ 'disabled-button': queueStore.queueIndex === 0 }">
@@ -148,6 +152,13 @@ img {
 
 #artist {
   font-size: 13px;
+  display: flex;
+  gap: 3px;
+
+  > div:not(#unknown-artist):hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }
 
 #title, #artist {

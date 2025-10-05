@@ -3,7 +3,6 @@ import router from '@/router'
 import { useRoute } from 'vue-router'
 import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user.js'
-import { editArtist, singleArtist } from '@/api/routes/artists.js'
 import { useArtistStore } from '@/stores/artists'
 
 const route = useRoute()

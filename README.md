@@ -1,10 +1,10 @@
-<div style="display: flex; justify-content: center; margin: 50px">
+<div align="center" style="margin: 50px">
   <img src="./images/Logo/SonicWaveLogo3.png" style="width: 500px"/>
 </div>
 
 ---
 
-<div style="display: flex; justify-content: center; margin: 50px">
+<div align="center" style="margin: 50px">
   SonicWave is self hosted music streaming service with song download capibility  
 </div>
 

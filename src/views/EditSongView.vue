@@ -17,16 +17,16 @@ let artistDelete = []
 
 const song = computed(() => songStore.songs.find(song => song.songId == route.params.songId) || {title: "", genre: "", releaseYear: "", artists: []})
 
-const goBack = () => {
+const goBack = (reset) => {
   if (route.params.playlistId) {
-    if (cover) window.location.href = `${window.location.protocol}//${window.location.host}/playlists/${route.params.playlistId}`
-    else router.push(`/playlists/${route.params.playlistId}`)
+    if (!cover && !reset) router.push(`/playlists/${route.params.playlistId}`)
+    else window.location.href = `${window.location.protocol}//${window.location.host}/playlists/${route.params.playlistId}`
   } else if (route.params.artistId) {
-    if (cover) window.location.href = `${window.location.protocol}//${window.location.host}/artist/${route.params.artistId}`
-    else router.push(`/artist/${route.params.artistId}`)
+    if (!cover && !reset) router.push(`/artist/${route.params.artistId}`)
+    else window.location.href = `${window.location.protocol}//${window.location.host}/artist/${route.params.artistId}`
   } else {
-    if (cover) window.location.href = `${window.location.protocol}//${window.location.host}/library`
-    else router.push("/library")
+    if (!cover && !reset) router.push("/library")
+    else window.location.href = `${window.location.protocol}//${window.location.host}/library`
   }
 }
 
@@ -67,7 +67,12 @@ const handleEditSong = async () => {
   if (!song.value.title || !song.value.releaseYear) return
 
   const response = await songStore.editSong(route.params.songId, song.value.title, artistAdd, artistDelete, song.value.genre, song.value.releaseYear, cover)
-  if (response.success) goBack()
+  if (response.success) goBack(false)
+}
+
+const handleResetSong = async () => {
+  const response = await songStore.resetSong(route.params.songId)
+  if (response.success) goBack(true)
 }
 
 onBeforeMount(async () => {
@@ -127,11 +132,17 @@ onMounted(async () => {
         </svg>
         Save
       </button>
-      <button class="button-dark-hover" @click="goBack">
+      <button class="button-dark-hover" @click="goBack(false)">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
           <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
         </svg>
         Cancel
+      </button>
+      <button class="button-dark-hover" @click="handleResetSong">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+          <path d="M480-80q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T120-440h80q0 117 81.5 198.5T480-160q117 0 198.5-81.5T760-440q0-117-81.5-198.5T480-720h-6l62 62-56 58-160-160 160-160 56 58-62 62h6q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-440q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-80Z"/>
+        </svg>
+        Reset Metadata
       </button>
     </div>
   </div>
