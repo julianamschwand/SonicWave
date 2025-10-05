@@ -181,6 +181,7 @@ const artists = computed(() => {
     align-items: center;
     height: 100px;
     font-size: 14px;
+    background-color: var(--background);
   }
 }
 </style>

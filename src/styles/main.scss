@@ -141,6 +141,16 @@ button {
       height: 25px;
       width: 25px;
     }
+
+    &:last-child {
+      background-color: var(--background);
+      color: var(--accent);
+      border: 2px solid var(--accent);
+
+      svg {
+        fill: var(--accent);
+      }
+    }
   }
 
   > div:first-child {
