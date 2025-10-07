@@ -34,8 +34,26 @@ export const useSongStore = defineStore("songs", {
 
       const response = await deleteSong(songId)
 
-      if (response.success) this.songs = this.songs.filter(song => song.songId !== songId)
-      else song.isVisible = true
+      if (response.success) {
+        const queueStore = useQueueStore()
+        const queueSongId = queueStore.queue[queueStore.queueIndex]
+
+        if (queueSongId == songId) {
+          if (queueStore.queue.length === 1) {
+            queueStore.clearQueue()
+          } else {
+            if (queueStore.queueIndex === queueStore.queue.length - 1) {
+              queueStore.queueIndex--
+            }
+
+            queueStore.queue = queueStore.queue.filter(id => id != songId)
+          }
+        }
+
+        this.songs = this.songs.filter(song => song.songId !== songId)
+      } else {
+        song.isVisible = true
+      } 
     },
     async toggleFavorite(songId) {
       const song = this.songs.find(song => song.songId == songId)

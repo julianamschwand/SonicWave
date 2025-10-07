@@ -228,6 +228,10 @@ const handleEditSong = (songId) => {
         display: flex;
         gap: 10px;
         justify-content: flex-end;
+        
+        > div {
+          height: 30px;
+        }
       }
     }
 
