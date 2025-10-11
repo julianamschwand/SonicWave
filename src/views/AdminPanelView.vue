@@ -7,17 +7,10 @@ import { useOtherUsersStore } from '@/stores/otherUsers'
 
 const userStore = useUserStore()
 const otherUsersStore = useOtherUsersStore()
-const requests = ref([])
-const users = ref([])
 const isOwner = ref(false)
 
-const filteredRequests = computed(() => {
-  return otherUsersStore.registerRequests.filter(request => request.isVisible)
-})
-
-const filteredUsers = computed(() => {
-  return otherUsersStore.otherUsers.filter(user => user.isVisible)
-})
+const filteredRequests = computed(() => otherUsersStore.registerRequests.filter(request => request.isVisible))
+const filteredUsers = computed(() => otherUsersStore.otherUsers.filter(user => user.isVisible))
 
 onBeforeMount(async () => {
   await userStore.checkLogin()
@@ -55,7 +48,7 @@ onMounted(async () => {
               <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
             </svg>
           </button>
-          <button class="dark-button button-light-hover" @click="otherUsersStore.denyRegister(request.userDataId)">
+          <button class="dark-button button-dark-hover" @click="otherUsersStore.denyRegister(request.userDataId)">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
               <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
             </svg>
@@ -76,12 +69,12 @@ onMounted(async () => {
               <path d="M480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v227q-19-8-39-14.5t-41-9.5v-147l-240-90-240 90v188q0 47 12.5 94t35 89.5Q310-290 342-254t71 60q11 32 29 61t41 52q-1 0-1.5.5t-1.5.5Zm200 0q-83 0-141.5-58.5T480-280q0-83 58.5-141.5T680-480q83 0 141.5 58.5T880-280q0 83-58.5 141.5T680-80ZM480-494Zm180 334h40v-100h100v-40H700v-100h-40v100H560v40h100v100Z"/>
             </svg>
           </button>
-          <button class="dark-button button-light-hover" v-else @click="otherUsersStore.removeAdmin(user.userDataId)">
+          <button class="dark-button button-dark-hover" v-else @click="otherUsersStore.removeAdmin(user.userDataId)">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
               <path d="m754-318-60-62q12-32 19-66.5t7-69.5v-189l-240-90-146 55-62-62 208-78 320 120v244q0 51-11.5 101T754-318Zm38 262L662-186q-38 39-84.5 65.5T480-80q-139-35-229.5-159.5T160-516v-172L56-792l56-56 736 736-56 56ZM423-425Zm91-135Zm-34 396q35-11 67-31t59-47L240-608v92q0 121 68 220t172 132Z"/>
             </svg>
           </button>
-          <button class="dark-button button-light-hover" @click="otherUsersStore.deleteUser(user.userDataId)">
+          <button class="dark-button button-dark-hover" @click="otherUsersStore.deleteUser(user.userDataId)">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
               <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
             </svg>
