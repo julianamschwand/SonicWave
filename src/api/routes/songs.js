@@ -4,8 +4,8 @@ export async function downloadSong(songURL) {
   return request("post", "/songs/download", { data: { songURL }});
 }
 
-export async function browseSongs(query) {
-  return request("get", "/songs/browse", { params: { query }});
+export async function browseSongs(query, site) {
+  return request("get", "/songs/browse", { params: { query, site }});
 }
 
 export async function getSongs() {

@@ -36,7 +36,7 @@ const updateVolume = (value) => {
 onMounted(() => {
   const audio = audioRef.value
 
-  volume.value = Number(localStorage.getItem("volume")) || 100
+  volume.value = localStorage.getItem("volume") !== "null" ? Number(localStorage.getItem("volume")) : 100
   audio.volume = volume.value / 100
 
   audio.addEventListener('loadedmetadata', () => duration.value = audio.duration)
