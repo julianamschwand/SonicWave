@@ -87,6 +87,7 @@ const artists = computed(() => {
   width: 450px;
   overflow-y: auto;
   max-height: calc(100vh - 200px);
+  z-index: 1;
 
   .search-results-container {
     display: flex;
