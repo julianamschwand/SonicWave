@@ -3,7 +3,6 @@ import { formatDuration } from '@/functions.js'
 import { useSongStore } from '@/stores/songs.js'
 import { useQueueStore } from '@/stores/queue.js'
 import { usePlaylistStore } from '@/stores/playlists'
-import { downloadSong } from '@/api/routes/songs.js'
 import router from '@/router'
 import PlayButton from './PlayButton.vue'
 
@@ -32,7 +31,7 @@ const handlePlaySong = (songId) => {
 const handleDownload = async (url, index) => {
   props.songs[index]["status"] = "downloading"
 
-  const response = await downloadSong(url)
+  const response = await songStore.downloadSong(url)
 
   if (response.success) {
     props.songs[index]["status"] = "success"

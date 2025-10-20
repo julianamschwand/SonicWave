@@ -35,7 +35,8 @@ export const useArtistStore = defineStore("artists", {
         
         artist.songs = artist.songs.map(song => song.songId)
         const artistIndex = this.artists.findIndex(artist => artist.artistId == artistId)
-        this.artists[artistIndex] = artist
+        if (artistIndex === -1) this.artists.push(artist)
+        else this.artists[artistIndex] = artist
       }
 
       return response

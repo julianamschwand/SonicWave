@@ -1,7 +1,11 @@
 import request from "../request.js"
 
 export async function downloadSong(songURL) {
-  return request("post", "/songs/download", { data: { songURL }});
+  return request("post", "/songs/download-song", { data: { songURL }});
+}
+
+export async function downloadPlaylist(playlistURL) {
+  return request("post", "/songs/download-playlist", { data: { playlistURL }});
 }
 
 export async function browseSongs(query, site) {
