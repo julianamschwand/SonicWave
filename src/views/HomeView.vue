@@ -118,7 +118,21 @@ onMounted(async () => {
   </div>
   <div id="site-layout" v-else>
     <section v-if="songs.length">
-      <div>Recently Played</div>
+      <div>
+        <div>Recently Played</div>
+        <div class="scroll-container" v-if="songs.length > 8" >
+          <button class="icon-button" :class="{ 'disabled-button': songPageIndex === 0 }" @click="scroll('songs', 'left')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+              <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
+            </svg>
+          </button>
+          <button class="icon-button" :class="{ 'disabled-button': songPageIndex === songs.length / 8 - 1}" @click="scroll('songs', 'right')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+              <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
       <div id="song-container" ref="songContainerRef">
         <div v-for="song in songs" :style="{ 'visibility': song.songId == 0 ? 'hidden' : 'visible'}" @click="playSong(song)">
           <img :src="song.cover" alt="">
@@ -131,57 +145,49 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <div class="scroll-container" v-if="songs.length > 8" >
-        <button class="icon-button" :class="{ 'disabled-button': songPageIndex === 0 }" @click="scroll('songs', 'left')">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-            <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
-          </svg>
-        </button>
-        <button class="icon-button" :class="{ 'disabled-button': songPageIndex === songs.length / 8 - 1}" @click="scroll('songs', 'right')">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-            <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
-          </svg>
-        </button>
-      </div>
     </section>
     <section v-if="playlists.length">
-      <div>Playlists</div>
+      <div>
+        <div>Playlists</div>
+        <div class="scroll-container" v-if="playlists.length > 10">
+          <button class="icon-button" :class="{ 'disabled-button': playlistPageIndex === 0 }" @click="scroll('playlists', 'left')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+              <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
+            </svg>
+          </button>
+          <button class="icon-button" :class="{ 'disabled-button': playlistPageIndex === playlists.length / 10 - 1 }" @click="scroll('playlists', 'right')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+              <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
       <div id="playlist-container" ref="playlistContainerRef">
         <div v-for="playlist of playlists" :style="{ 'visibility': playlist.playlistId == 0 ? 'hidden' : 'visible'}">
           <PlaylistItem :playlist="playlist" @click="router.push(`/playlists/${playlist.playlistId}`)"/>
         </div>
       </div>
-      <div class="scroll-container" v-if="playlists.length > 10">
-        <button class="icon-button" :class="{ 'disabled-button': playlistPageIndex === 0 }" @click="scroll('playlists', 'left')">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-            <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
-          </svg>
-        </button>
-        <button class="icon-button" :class="{ 'disabled-button': playlistPageIndex === playlists.length / 10 - 1 }" @click="scroll('playlists', 'right')">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-            <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
-          </svg>
-        </button>
-      </div>
     </section>
     <section v-if="artists.length">
-      <div>Artists</div>
+      <div>
+        <div>Artists</div>
+        <div class="scroll-container" v-if="artists.length > 10">
+          <button class="icon-button" :class="{ 'disabled-button': artistPageIndex === 0 }" @click="scroll('artists', 'left')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+              <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
+            </svg>
+          </button>
+          <button class="icon-button" :class="{ 'disabled-button': artistPageIndex === artists.length / 10 - 1 }" @click="scroll('artists', 'right')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+              <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
       <div id="artist-container" ref="artistContainerRef">
         <div v-for="artist of artists" :style="{ 'visibility': artist.artistId == 0 ? 'hidden' : 'visible'}">
           <ArtistItem :artist="artist" @click="router.push(`/artist/${artist.artistId}`)"/>
         </div>
-      </div>
-      <div class="scroll-container" v-if="artists.length > 10">
-        <button class="icon-button" :class="{ 'disabled-button': artistPageIndex === 0 }" @click="scroll('artists', 'left')">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-            <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
-          </svg>
-        </button>
-        <button class="icon-button" :class="{ 'disabled-button': artistPageIndex === artists.length / 10 - 1 }" @click="scroll('artists', 'right')">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-            <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
-          </svg>
-        </button>
       </div>
     </section>
   </div>
@@ -194,9 +200,14 @@ section {
   gap: 10px;
 
   > div:first-child {
-    font-size: 27px;
-    font-weight: bold;
-    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+
+    > div:first-child {
+      font-size: 27px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
   }
 }
 
@@ -280,8 +291,7 @@ section {
 
 .scroll-container {
   display: flex;
-  width: 100%;
-  justify-content: space-between;
+  gap: 5px;
 
   svg {
     width: 30px;
