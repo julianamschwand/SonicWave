@@ -50,7 +50,7 @@ onMounted(() => {
   <div id="player-container">
     <audio :src="songUrl" ref="audioRef" autoplay @ended="queueStore.changeSong('forward')"></audio>
     <div id="cover-container">
-      <img :src="song.cover" alt="">
+      <img :src="song.cover">
     </div>
     <div id="close-box" class="button-light-hover" @click="queueStore.clearQueue()">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">

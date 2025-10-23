@@ -17,6 +17,7 @@
   - Delete songs
 
 ## Playlists
+  - Download playlists
   - Create playlists
   - Edit playlists
   - Delete playlists

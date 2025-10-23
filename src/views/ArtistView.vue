@@ -62,7 +62,7 @@ onMounted(async () => {
   </div>
   <div id="content-container" v-else>
     <div class="playlist-head-container">
-      <img :src="artist.image" alt="">
+      <img :src="artist.image">
       <div>
         <div>
           <div>{{ artist.songCount + (artist.songCount === 1 ? " Song" : " Songs") }}</div>

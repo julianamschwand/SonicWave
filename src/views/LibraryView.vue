@@ -1,11 +1,9 @@
 <script setup>
-import router from '@/router'
 import { onMounted, ref, computed, onBeforeMount } from 'vue'
 import { useQueueStore } from '@/stores/queue.js'
 import { useUserStore } from '@/stores/user.js'
 import { useSongStore } from '@/stores/songs.js'
-import { formatDuration, shuffleArray } from '@/functions.js'
-import PlayButton from '@/components/PlayButton.vue'
+import { shuffleArray } from '@/functions.js'
 import SongTable from '@/components/SongTable.vue'
 
 const userStore = useUserStore()

@@ -47,7 +47,7 @@ const artists = computed(() => {
         <div class="dropdown-content">
           <div class="song-list" v-for="song in songs" @click="queueStore.initQueue([song]), emit('selected')">
             <div>
-              <img :src="song.cover" alt="">
+              <img :src="song.cover" loading="lazy">
               <div>{{ song.title }}</div>  
             </div>
             <PlayButton :size="35" :songId="song.songId"/>
@@ -59,7 +59,7 @@ const artists = computed(() => {
         <div class="dropdown-content">
           <div v-for="playlist in playlists" @click="emit('selected', `/playlists/${playlist.playlistId}`)">
             <div>
-              <img :src="playlist.cover" alt="">
+              <img :src="playlist.cover" loading="lazy">
               <div>{{ playlist.name }}</div>
             </div>
           </div>
@@ -70,7 +70,7 @@ const artists = computed(() => {
         <div class="dropdown-content">
           <div class="artist-list" v-for="artist in artists" @click="emit('selected', `/artist/${artist.artistId}`)">
             <div>
-              <img :src="artist.image" alt="">
+              <img :src="artist.image" loading="lazy">
               <div>{{ artist.name }}</div>
             </div>
           </div>
