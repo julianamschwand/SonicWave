@@ -209,7 +209,7 @@ onMounted(async () => {
   font-weight: bold;
 
   &:hover {
-    background-color: rgb(58, 23, 23) !important;
+    background-color: color-mix(in srgb, var(--background) 70%, rgb(215, 36, 36)) !important;
   }
 
   svg {
@@ -218,7 +218,7 @@ onMounted(async () => {
 }
 
 .selected-page {
-  background-color: var(--objects) !important;
+  filter: brightness(1.6) !important;
 }
 
 .site-content {
