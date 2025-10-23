@@ -27,7 +27,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="playlist-item" ref="playlistRef">
-    <img :src="playlist.cover" alt="">
+    <img :src="playlist.cover" loading="lazy">
     <div :style="`font-size: ${infoFontSize}px;`">
       <div>{{ playlist.songCount + " Songs"}}</div>
       <div>{{ formatDuration(playlist.duration) }}</div>

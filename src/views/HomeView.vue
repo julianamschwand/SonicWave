@@ -117,6 +117,9 @@ onMounted(async () => {
     <div class="loader-request"></div>
   </div>
   <div id="site-layout" v-else>
+    <div class="main-container" v-if="songs.length + playlists.length + artists.length === 0">
+      Start using SonicWave by downloading some of your songs
+    </div>
     <section v-if="songs.length">
       <div>
         <div>Recently Played</div>
@@ -216,6 +219,7 @@ section {
   gap: 20px;
   flex-direction: column;
   box-sizing: border-box;
+  height: 100%;
 }
 
 #song-container {
@@ -321,6 +325,9 @@ section {
     width: calc(100% / 10 - (9 * 20px) / 10);
     flex: 0 0 auto;
   }
-  
+}
+
+.main-container {
+  font-size: 25px;
 }
 </style>

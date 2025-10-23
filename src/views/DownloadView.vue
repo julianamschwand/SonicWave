@@ -2,6 +2,7 @@
 import { onBeforeMount, ref } from 'vue'
 import { useUserStore } from '@/stores/user.js'
 import { useSongStore } from '@/stores/songs.js'
+import { parseNull } from '@/functions'
 
 const userStore = useUserStore()
 const songStore = useSongStore()
@@ -34,8 +35,14 @@ const handleDownload = async () => {
   downloading.value = false
 }
 
+const changeMode = (mode) => {
+  selectedMode.value = mode
+  localStorage.setItem("downloadMode", mode)
+}
+
 onBeforeMount(async () => {
   await userStore.checkLogin()
+  selectedMode.value = parseNull(localStorage.getItem("downloadMode")) || "song"
 })
 </script>
 <template>
@@ -45,12 +52,12 @@ onBeforeMount(async () => {
       <h1>Enter Song-URL</h1>
       <div>
         <div class="mode-selector">
-          <button :class="{ 'mode-selected': selectedMode === 'song' }" @click="selectedMode = 'song'">
+          <button :class="{ 'mode-selected': selectedMode === 'song', 'button-dark-hover': true }" @click="changeMode('song')">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
               <path d="M500-360q42 0 71-29t29-71v-220h120v-80H560v220q-13-10-28-15t-32-5q-42 0-71 29t-29 71q0 42 29 71t71 29ZM320-240q-33 0-56.5-23.5T240-320v-480q0-33 23.5-56.5T320-880h480q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H320Zm0-80h480v-480H320v480ZM160-80q-33 0-56.5-23.5T80-160v-560h80v560h560v80H160Zm160-720v480-480Z"/>
             </svg>
           </button>
-          <button :class="{ 'mode-selected': selectedMode === 'playlist' }" @click="selectedMode = 'playlist'">
+          <button :class="{ 'mode-selected': selectedMode === 'playlist', 'button-dark-hover': true }" @click="changeMode('playlist')">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
               <path d="M640-160q-50 0-85-35t-35-85q0-50 35-85t85-35q11 0 21 1.5t19 6.5v-328h200v80H760v360q0 50-35 85t-85 35ZM120-320v-80h320v80H120Zm0-160v-80h480v80H120Zm0-160v-80h480v80H120Z"/>
             </svg>

@@ -62,7 +62,7 @@ const handleEditSong = (songId) => {
               <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
             </svg>
           </button>
-          <img :src="song.cover" :style="`width: ${coverSize ? coverSize : 60}px;`" alt="">
+          <img :src="song.cover" :style="`width: ${coverSize ? coverSize : 60}px;`" loading="lazy">
           <div>{{ song.title }}</div>
           <div class="music-playing-animation" v-if="queueStore.songPlaying(song.songId) && enableSongPlay">
             <span></span>

@@ -28,7 +28,7 @@ const handleRegister = async () => {
   <BackButton @click="router.push('/welcome')"/>
   <div class="main-container">
     <div id="center-container">
-      <img src="/images/logo.png" alt="">
+      <img src="/images/logo.png" alt="SonicWave">
       <div id="login-container">
         <form @submit.prevent="handleRegister">
           <label for="username">Username:</label>

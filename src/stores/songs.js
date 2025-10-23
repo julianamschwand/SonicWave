@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { deleteSong, downloadPlaylist, downloadSong, editSong, getSongs, resetSong, singleSong, toggleFavorite } from '@/api/routes/songs.js'
 import { useQueueStore } from './queue.js'
 import { usePlaylistStore } from './playlists.js'
+import { useArtistStore } from './artists.js'
 
 export const useSongStore = defineStore("songs", {
   state: () => ({
@@ -103,6 +104,7 @@ export const useSongStore = defineStore("songs", {
 
       if (response.success) {
         await this.getSongs()
+        await useArtistStore().getArtists()
       }
       
       return response
@@ -113,6 +115,7 @@ export const useSongStore = defineStore("songs", {
       if (response.success) {
         await this.getSongs()
         await usePlaylistStore().getPlaylists()
+        await useArtistStore().getArtists()
       }
       
       return response

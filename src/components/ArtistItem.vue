@@ -22,7 +22,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div id="artist-item" ref="artistRef" :style="`gap: ${fontSize}px;`">
-    <img :src="artist.image" alt="">
+    <img :src="artist.image" loading="lazy">
     <div :style="`font-size: ${fontSize}px;`">{{ artist.name }}</div>
   </div>
 </template>

@@ -30,7 +30,7 @@ const handleLogin = async () => {
   <BackButton @click="router.push('/welcome')"/>
   <div class="main-container">
     <div id="center-container">
-      <img src="/images/logo.png" alt="">
+      <img src="/images/logo.png" alt="SonicWave">
       <div id="login-container">
         <form @submit.prevent="handleLogin">
           <label for="email-username">E-Mail or Username:</label>

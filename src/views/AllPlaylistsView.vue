@@ -21,7 +21,7 @@ onMounted(async () => {
     Playlists
     <button class="icon-button" @click="router.push('/playlists/create')">+</button>
   </header>
-  <div id="playlist-container" v-if="!playlistStore.playlists.length !== 0">
+  <div id="playlist-container" v-if="playlistStore.playlists.length !== 0">
     <div v-for="playlist of playlistStore.playlists">
       <PlaylistItem :playlist="playlist" @click="router.push(`/playlists/${playlist.playlistId}`)"/>
     </div>
