@@ -9,6 +9,7 @@ import { useSongStore } from './stores/songs.js'
 import { useOtherUsersStore } from './stores/otherUsers.js'
 import { usePlaylistStore } from './stores/playlists.js'
 import { useArtistStore } from './stores/artists.js'
+import { useLocalOptionsStore } from './stores/localOptions.js'
 import { computed, onMounted, onBeforeMount } from 'vue'
 import { parseNull } from './functions.js'
 
@@ -18,6 +19,7 @@ const queueStore = useQueueStore()
 const songStore = useSongStore()
 const playlistStore = usePlaylistStore()
 const otherUsersStore = useOtherUsersStore()
+const localOptionsStore = useLocalOptionsStore()
 const artistStore = useArtistStore()
 const siteContentHeight = computed(() => {
   return queueStore.queue?.length ? "cut-height" : "full-height"
@@ -37,6 +39,7 @@ onMounted(async () => {
   await userStore.updateLogin()
 
   if (userStore.loggedIn) {
+    localOptionsStore.getLocalOptions()
     await userStore.fetchUserData()
     await songStore.getSongs()
     await queueStore.loadQueue()
