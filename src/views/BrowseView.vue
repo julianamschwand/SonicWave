@@ -23,7 +23,7 @@ const handleBrowse = async () => {
   songs.value = []
   loaderVisible.value = true
 
-  const response = await browseSongs(query.value, site.value)
+  const response = await browseSongs(query.value, localOptionsStore.browseOption)
 
   loaderVisible.value = false
   songs.value = response.songs
