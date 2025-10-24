@@ -52,6 +52,10 @@ export const useArtistStore = defineStore("artists", {
       }
 
       return response
+    },
+    reset() {
+      this.artists = []
+      this.artistsLoading = true
     }
   }
 })

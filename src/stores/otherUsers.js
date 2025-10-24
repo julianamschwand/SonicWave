@@ -93,6 +93,12 @@ export const useOtherUsersStore = defineStore("otherUsers", {
       } else {
         user.isVisible = true
       }
+    },
+    reset() {
+      this.registerRequests = []
+      this.otherUsers = []
+      this.requestsLoading = true
+      this.otherUsersLoading = true
     }
   }
 })

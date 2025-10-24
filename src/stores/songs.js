@@ -125,6 +125,10 @@ export const useSongStore = defineStore("songs", {
         song.isVisible = true
         return song
       })
+    },
+    reset() {
+      this.songs = []
+      this.songsLoading = true
     }
   }
 })

@@ -60,6 +60,11 @@ export const useQueueStore = defineStore("queue", {
     songPlaying(songId) {
       if (this.queue) return this.queue[this.queueIndex] == songId && this.songIsPlaying
       return false
+    },
+    reset() {
+      this.queue = []
+      this.queueIndex = null
+      this.songIsPlaying = false
     }
   }
 })

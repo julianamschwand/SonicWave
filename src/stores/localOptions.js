@@ -18,6 +18,10 @@ export const useLocalOptionsStore = defineStore("localOptions", {
     setDownloadMode(mode) {
       this.downloadMode = mode
       localStorage.setItem("downloadMode", mode)
+    },
+    reset() {
+      this.browseOption = ""
+      this.downloadMode = ""
     }
   }
 })

@@ -3,6 +3,7 @@ import router from '@/router'
 import { register } from '@/api/routes/users'
 import { ref } from 'vue'
 import BackButton from '@/components/BackButton.vue'
+import Logo from '@/components/Logo.vue'
 
 const username = ref("")
 const email = ref("")
@@ -28,7 +29,7 @@ const handleRegister = async () => {
   <BackButton @click="router.push('/welcome')"/>
   <div class="main-container">
     <div id="center-container">
-      <img src="/images/logo.png" alt="SonicWave">
+      <Logo :size="53"/>
       <div id="login-container">
         <form @submit.prevent="handleRegister">
           <label for="username">Username:</label>

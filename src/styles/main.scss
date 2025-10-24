@@ -1,7 +1,15 @@
 // General
+@font-face {
+  font-family: 'Montserrat-ttf';
+  src: url('/fonts/Montserrat.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   color: white;
-  font-family: 'Montserrat';
+  font-family: 'Montserrat-ttf';
   user-select: none;
 }
 
