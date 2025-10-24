@@ -2,6 +2,12 @@ import { userdata, login, logout, loginState, deleteUser } from '@/api/routes/us
 import { defineStore } from 'pinia'
 import router from '@/router'
 import { useQueueStore } from './queue.js'
+import { useArtistStore } from './artists.js'
+import { useLocalOptionsStore } from './localOptions.js'
+import { useOtherUsersStore } from './otherUsers.js'
+import { usePlaylistStore } from './playlists.js'
+import { useSongStore } from './songs.js'
+import { loadAllData } from '@/functions.js'
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -17,9 +23,7 @@ export const useUserStore = defineStore("user", {
       if (response.success) {
         this.loggedIn = true
 
-        const queueStore = useQueueStore()
-        await queueStore.loadQueue()
-        await this.fetchUserData()
+        await loadAllData()
 
         router.push("/")
       }
@@ -65,14 +69,13 @@ export const useUserStore = defineStore("user", {
     async logout() {
       const response = await logout()
       if (response.success) {
-        this.loggedIn = false
-        this.userDataId = 0
-        this.username = ""
-        this.email = ""
-        this.userRole = ""
-
-        const queueStore = useQueueStore()
-        queueStore.clearLocalQueue()
+        this.reset()
+        useArtistStore().reset()
+        useLocalOptionsStore().reset()
+        useOtherUsersStore().reset()
+        usePlaylistStore().reset()
+        useQueueStore().reset()
+        useSongStore().reset()
 
         router.push("/welcome")
       }
@@ -86,6 +89,13 @@ export const useUserStore = defineStore("user", {
       }
 
       return response
+    },
+    reset() {
+      this.loggedIn = false
+      this.userDataId = 0
+      this.username = ""
+      this.email = ""
+      this.userRole = ""
     }
   }
 })

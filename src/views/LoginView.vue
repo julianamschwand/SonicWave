@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import BackButton from '@/components/BackButton.vue'
 import { useUserStore } from '@/stores/user.js'
+import Logo from '@/components/Logo.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -30,7 +31,7 @@ const handleLogin = async () => {
   <BackButton @click="router.push('/welcome')"/>
   <div class="main-container">
     <div id="center-container">
-      <img src="/images/logo.png" alt="SonicWave">
+      <Logo :size="53"/>
       <div id="login-container">
         <form @submit.prevent="handleLogin">
           <label for="email-username">E-Mail or Username:</label>

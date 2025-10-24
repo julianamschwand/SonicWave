@@ -1,3 +1,11 @@
+import { useQueueStore } from './stores/queue.js'
+import { useUserStore } from './stores/user.js'
+import { useArtistStore } from './stores/artists.js'
+import { useLocalOptionsStore } from './stores/localOptions.js'
+import { useOtherUsersStore } from './stores/otherUsers.js'
+import { usePlaylistStore } from './stores/playlists.js'
+import { useSongStore } from './stores/songs.js'
+
 export function formatDuration(seconds) {
   const hrs = Math.floor(seconds / 3600)
   const mins = Math.floor((seconds % 3600) / 60)
@@ -22,4 +30,23 @@ export function shuffleArray(array) {
 
 export function parseNull(string) {
   return string === "null" ? null : string
+}
+
+export async function loadAllData() {
+  const userStore = useUserStore()
+  const otherUsersStore = useOtherUsersStore()
+
+  useLocalOptionsStore().getLocalOptions()
+  await userStore.fetchUserData()
+  await useSongStore().getSongs()
+  await useQueueStore().loadQueue()
+  await usePlaylistStore().getPlaylists()
+  await useArtistStore().getArtists()
+
+  if (userStore.userRole === "admin" || userStore.userRole === "owner") {
+    const isOwner = userStore.userRole === "owner"
+
+    const apiRequests = [otherUsersStore.getRegisterRequests(), isOwner ? otherUsersStore.getOtherUsers() : Promise.resolve()]
+    await Promise.all(apiRequests)
+  }
 }
