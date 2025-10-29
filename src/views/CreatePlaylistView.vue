@@ -1,7 +1,6 @@
 <script setup>
 import router from '@/router'
 import { onBeforeMount, ref } from 'vue'
-import { createPlaylist } from '@/api/routes/playlists.js'
 import { useUserStore } from '@/stores/user.js'
 import { usePlaylistStore } from '@/stores/playlists'
 

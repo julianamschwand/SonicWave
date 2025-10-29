@@ -11,6 +11,8 @@ const url = ref("")
 const downloading = ref(false)
 const errorMessage = ref("")
 const successMessage = ref("")
+const downloadAction = ref("")
+const downloadStats = ref(null)
 
 const handleDownload = async () => {
   if (!url.value.trim()) {
@@ -18,20 +20,18 @@ const handleDownload = async () => {
     return
   }
 
+  successMessage.value = ""
+  errorMessage.value = ""
+
   const tempUrl = url.value
   url.value = ""
   downloading.value = true
 
-  const response = localOptionsStore.downloadMode === "song" ? await songStore.downloadSong(tempUrl) : await songStore.downloadPlaylist(tempUrl)
+  const response = localOptionsStore.downloadMode === "song" ? await songStore.downloadSong(tempUrl, downloadAction, downloadStats) : await songStore.downloadPlaylist(tempUrl, downloadAction, downloadStats)
 
-  if (response.success) {
-    errorMessage.value = ""
-    successMessage.value = response.message
-  } else {
-    successMessage.value = ""
-    errorMessage.value = response.message
-  }
-
+  if (response.success) successMessage.value = response.message
+  else errorMessage.value = response.message
+  
   downloading.value = false
 }
 
@@ -44,7 +44,7 @@ onBeforeMount(async () => {
   <header>Download</header>
   <div class="main-container">
     <div id="center-container">
-      <h1>Enter Song-URL</h1>
+      <h1>{{ `Enter ${localOptionsStore.downloadMode === "song" ? "Song" : "Playlist"}-URL` }}</h1>
       <div>
         <div class="mode-selector">
           <button :class="{ 'mode-selected': localOptionsStore.downloadMode === 'song', 'button-dark-hover': true }" @click="localOptionsStore.setDownloadMode('song')">
@@ -70,6 +70,13 @@ onBeforeMount(async () => {
           </button>
         </div>
       </div>
+      <div class="download-action-container" v-if="downloadAction">{{ downloadAction }}</div>
+      <div class="progress-bar-container" v-if="downloadStats">
+        <div class="progress-bar">
+          <div :style="`width: ${downloadStats.maxSongs ? ((downloadStats.currentSong - 1 + downloadStats.progress / 100) / downloadStats.maxSongs) * 100  : downloadStats.progress}%`"></div>
+        </div>
+        <div>{{ downloadStats.speed }}</div>
+      </div>
       <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
       <div class="success-message" v-if="successMessage">{{ successMessage }}</div>
     </div>
@@ -85,10 +92,40 @@ onBeforeMount(async () => {
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  width: 435px;
 
   > div {
     display: flex;
     gap: 5px;
+  }
+
+  .download-action-container {
+    font-size: 19x;
+  }
+
+  .progress-bar-container {
+    width: 100%;
+    height: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .progress-bar {
+      width: 75%;
+      height: 7px;
+      border: 1px solid var(--accent);
+      border-radius: 5px;
+
+      > div {
+        height: 100%;
+        background-color: var(--accent);
+        border-radius: 5px;
+      }
+    }
+
+    > div:last-child {
+      font-size: 13.5px;
+    }
   }
 }
 

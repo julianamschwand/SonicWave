@@ -1,11 +1,67 @@
 import request from "../request.js"
 
-export async function downloadSong(songURL) {
-  return request("post", "/songs/download-song", { data: { songURL }});
+export async function downloadSong(songURL, actionRef, downloadRef) {
+  return new Promise(resolve => {
+    const source = new EventSource(`${import.meta.env.VITE_API_URL}/songs/download-song?songURL=${encodeURIComponent(songURL)}`, { withCredentials: true})
+
+    source.addEventListener("download", event => {
+      const data = JSON.parse(event.data)
+      actionRef.value = "Downloading song ..."
+      downloadRef.value = data
+    })
+
+    source.addEventListener("action", event => {
+      actionRef.value = JSON.parse(event.data).desc
+    })
+
+    source.addEventListener("done", event => {
+      source.close()
+      actionRef.value = ""
+      downloadRef.value = null
+      resolve(JSON.parse(event.data))
+    })
+
+    source.onerror = (event) => {
+      const data = JSON.parse(event?.data)
+      source.close()
+      console.error("Download error:", data)
+      actionRef.value = ""
+      downloadRef.value = null
+      resolve(data)
+    }
+  })
 }
 
-export async function downloadPlaylist(playlistURL) {
-  return request("post", "/songs/download-playlist", { data: { playlistURL }});
+export async function downloadPlaylist(playlistURL, actionRef, downloadRef) {
+  return new Promise(resolve => {
+    const source = new EventSource(`${import.meta.env.VITE_API_URL}/songs/download-playlist?playlistURL=${encodeURIComponent(playlistURL)}`, { withCredentials: true})
+
+    source.addEventListener("download", event => {
+      const data = JSON.parse(event.data)
+      actionRef.value = `Downloading song ${data.currentSong} of ${data.maxSongs} ...`
+      downloadRef.value = data
+    })
+
+    source.addEventListener("action", event => {
+      actionRef.value = JSON.parse(event.data).desc
+    })
+
+    source.addEventListener("done", event => {
+      source.close()
+      actionRef.value = ""
+      downloadRef.value = null
+      resolve(JSON.parse(event.data))
+    })
+
+    source.onerror = (event) => {
+      const data = JSON.parse(event?.data)
+      source.close()
+      console.error("Download error:", data)
+      actionRef.value = ""
+      downloadRef.value = null
+      resolve(data)
+    }
+  })
 }
 
 export async function browseSongs(query, site) {

@@ -99,8 +99,8 @@ export const useSongStore = defineStore("songs", {
 
       return response
     },
-    async downloadSong(songURL) {
-      const response = await downloadSong(songURL) 
+    async downloadSong(songURL, actionRef, downloadRef) {
+      const response = await downloadSong(songURL, actionRef, downloadRef) 
 
       if (response.success) {
         await this.getSongs()
@@ -109,8 +109,8 @@ export const useSongStore = defineStore("songs", {
       
       return response
     },
-    async downloadPlaylist(playlistURL) {
-      const response = await downloadPlaylist(playlistURL) 
+    async downloadPlaylist(playlistURL, actionRef, downloadRef) {
+      const response = await downloadPlaylist(playlistURL, actionRef, downloadRef) 
 
       if (response.success) {
         await this.getSongs()
