@@ -177,7 +177,6 @@ const handleEditSong = (songId) => {
         gap: 20px;
         flex-grow: 1;
         min-width: 0;
-        white-space: nowrap;
 
         .checkbox {
           height: 20px;

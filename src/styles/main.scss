@@ -286,12 +286,14 @@ button {
 .error-message {
   color: red;
   font-size: 15px;
+  text-align: center;
 }
 
 // Success Message
 .success-message {
   color: var(--accent);
   font-size: 15px;
+  text-align: center;
 }
 
 // Playlist head
