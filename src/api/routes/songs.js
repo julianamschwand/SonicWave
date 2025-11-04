@@ -1,23 +1,25 @@
 import request from "../request.js"
 
-export async function downloadSong(songURL, actionRef, downloadRef) {
+async function download(mode, downloadURL, actionObj, downloadObj, objKey) {
   return new Promise(resolve => {
-    const source = new EventSource(`${import.meta.env.VITE_API_URL}/songs/download-song?songURL=${encodeURIComponent(songURL)}`, { withCredentials: true})
+    const source = new EventSource(`${import.meta.env.VITE_API_URL}/songs/download-${mode}?songURL=${encodeURIComponent(downloadURL)}`, { withCredentials: true})
 
     source.addEventListener("download", event => {
       const data = JSON.parse(event.data)
-      actionRef.value = "Downloading song ..."
-      downloadRef.value = data
+      actionObj[objKey] = mode === "song" ? 
+        "Downloading song ..." : 
+        `Downloading song ${data.currentSong} of ${data.maxSongs} ...`
+      downloadObj[objKey] = data
     })
 
     source.addEventListener("action", event => {
-      actionRef.value = JSON.parse(event.data).desc
+      actionObj[objKey] = JSON.parse(event.data).desc
     })
 
     source.addEventListener("done", event => {
       source.close()
-      actionRef.value = ""
-      downloadRef.value = null
+      actionObj[objKey] = ""
+      downloadObj[objKey] = null
       resolve(JSON.parse(event.data))
     })
 
@@ -25,44 +27,15 @@ export async function downloadSong(songURL, actionRef, downloadRef) {
       const data = JSON.parse(event?.data)
       source.close()
       console.error("Download error:", data)
-      actionRef.value = ""
-      downloadRef.value = null
+      actionObj[objKey] = ""
+      downloadObj[objKey] = null
       resolve(data)
     }
   })
 }
 
-export async function downloadPlaylist(playlistURL, actionRef, downloadRef) {
-  return new Promise(resolve => {
-    const source = new EventSource(`${import.meta.env.VITE_API_URL}/songs/download-playlist?playlistURL=${encodeURIComponent(playlistURL)}`, { withCredentials: true})
-
-    source.addEventListener("download", event => {
-      const data = JSON.parse(event.data)
-      actionRef.value = `Downloading song ${data.currentSong} of ${data.maxSongs} ...`
-      downloadRef.value = data
-    })
-
-    source.addEventListener("action", event => {
-      actionRef.value = JSON.parse(event.data).desc
-    })
-
-    source.addEventListener("done", event => {
-      source.close()
-      actionRef.value = ""
-      downloadRef.value = null
-      resolve(JSON.parse(event.data))
-    })
-
-    source.onerror = (event) => {
-      const data = JSON.parse(event?.data)
-      source.close()
-      console.error("Download error:", data)
-      actionRef.value = ""
-      downloadRef.value = null
-      resolve(data)
-    }
-  })
-}
+export const downloadSong = (songURL, actionObj, downloadObj, objKey) => download("song", songURL, actionObj, downloadObj, objKey)
+export const downloadPlaylist = (playlistURL, actionObj, downloadObj, objKey) => download("playlist", playlistURL, actionObj, downloadObj, objKey)
 
 export async function browseSongs(query, site) {
   return request("get", "/songs/browse", { params: { query, site }});

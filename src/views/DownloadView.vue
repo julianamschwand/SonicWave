@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, reactive, ref } from 'vue'
 import { useUserStore } from '@/stores/user.js'
 import { useSongStore } from '@/stores/songs.js'
 import { useLocalOptionsStore } from '@/stores/localOptions.js'
@@ -11,8 +11,8 @@ const url = ref("")
 const downloading = ref(false)
 const errorMessage = ref("")
 const successMessage = ref("")
-const downloadAction = ref("")
-const downloadStats = ref(null)
+const downloadAction = reactive([])
+const downloadStats = reactive([])
 
 const handleDownload = async () => {
   if (!url.value.trim()) {
@@ -27,7 +27,9 @@ const handleDownload = async () => {
   url.value = ""
   downloading.value = true
 
-  const response = localOptionsStore.downloadMode === "song" ? await songStore.downloadSong(tempUrl, downloadAction, downloadStats) : await songStore.downloadPlaylist(tempUrl, downloadAction, downloadStats)
+  const response = localOptionsStore.downloadMode === "song" ? 
+    await songStore.downloadSong(tempUrl, downloadAction, downloadStats, 0) : 
+    await songStore.downloadPlaylist(tempUrl, downloadAction, downloadStats, 0)
 
   if (response.success) successMessage.value = response.message
   else errorMessage.value = response.message
@@ -70,12 +72,15 @@ onBeforeMount(async () => {
           </button>
         </div>
       </div>
-      <div class="download-action-container" v-if="downloadAction">{{ downloadAction }}</div>
-      <div class="progress-bar-container" v-if="downloadStats">
+      <div class="download-action-container" v-if="downloadAction[0]">{{ downloadAction[0] }}</div>
+      <div class="progress-bar-container" v-if="downloadStats[0]">
         <div class="progress-bar">
-          <div :style="`width: ${downloadStats.maxSongs ? ((downloadStats.currentSong - 1 + downloadStats.progress / 100) / downloadStats.maxSongs) * 100  : downloadStats.progress}%`"></div>
+          <div :style="`width: ${downloadStats[0].maxSongs ?
+            ((downloadStats[0].currentSong - 1 + downloadStats[0].progress / 100) / downloadStats[0].maxSongs) * 100 :
+            downloadStats[0].progress}%`">
+          </div>
         </div>
-        <div>{{ downloadStats.speed }}</div>
+        <div>{{ downloadStats[0].speed }}</div>
       </div>
       <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
       <div class="success-message" v-if="successMessage">{{ successMessage }}</div>

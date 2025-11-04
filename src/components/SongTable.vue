@@ -1,4 +1,5 @@
 <script setup>
+import { reactive } from 'vue'
 import { formatDuration } from '@/functions.js'
 import { useSongStore } from '@/stores/songs.js'
 import { useQueueStore } from '@/stores/queue.js'
@@ -9,6 +10,8 @@ import PlayButton from './PlayButton.vue'
 const songStore = useSongStore()
 const queueStore = useQueueStore()
 const playlistStore = usePlaylistStore()
+const downloadAction = reactive({})
+const downloadStats = reactive({})
 
 const props = defineProps({
   songs: Array,
@@ -31,7 +34,7 @@ const handlePlaySong = (songId) => {
 const handleDownload = async (url, index) => {
   props.songs[index]["status"] = "downloading"
 
-  const response = await songStore.downloadSong(url)
+  const response = await songStore.downloadSong(url, downloadAction, downloadStats, String(index))
 
   if (response.success) {
     props.songs[index]["status"] = "success"
@@ -106,8 +109,11 @@ const handleEditSong = (songId) => {
               <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/>
             </svg>
           </div>
-          <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'downloading'">
+          <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'downloading' && !downloadStats[String(index)]">
             <div class="loader-download"></div>
+          </div>
+          <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'downloading' && downloadStats[String(index)]">
+            <div class="progress-ring" :style="`background: conic-gradient(white ${downloadStats[String(index)].progress * 3.6}deg, var(--background) 0deg);`"></div>
           </div>
           <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'success'">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" class="unclickable">
@@ -260,11 +266,24 @@ const handleEditSong = (songId) => {
       width: 35px;
     }
 
-    .loader-download {
+    > div {
       height: 30px;
       width: 30px;
       background-color: white;
       margin-right: 2px;
+    }
+
+    .progress-ring {
+      border-radius: 50%;
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 3px;
+        background-color: var(--background);
+        border-radius: 50%;
+      }
     }
   }
 }
