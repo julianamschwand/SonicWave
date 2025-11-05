@@ -68,7 +68,13 @@ onMounted(async () => {
     </div>
   </header>
   <div id="table-container" v-if="filteredSongs.length && !songStore.loading">
-    <SongTable :songs="songs" :enableSelect="true" :checkedSongs="checkedSongs" :enabledComponents="['artists','genre','releaseYear','duration']" @toggleSong="toggleSong"/>
+    <SongTable 
+      :songs="songs" 
+      :enableSelect="true" 
+      :checkedSongs="checkedSongs" 
+      :enabledComponents="['artists','genre','releaseYear','duration']" 
+      @toggleSong="toggleSong"
+    />
   </div>
   <div class="main-container" v-else>
     <div class="loader-request" v-if="songStore.songsLoading"></div>

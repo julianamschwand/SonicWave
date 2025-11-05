@@ -100,7 +100,15 @@ onMounted(async () => {
     </div>
     <div class="playlist-description-container" v-if="playlist.description">{{ playlist.description }}</div>
     <div class="main-container" v-if="!songs.length">No songs have been added yet</div>
-    <SongTable :songs="songs" :enableSongPlay="true" :playlistId="route.params.id" :enabledComponents="['artists', 'genre', 'releaseYear', 'duration', 'favorite', 'edit', 'remove']" v-else @playSong="(songId) => playSong(true, songId)"/>
+    <SongTable 
+      :songs="songs" 
+      :enableSongPlay="true"
+      :enableDrag="true"
+      :playlistId="route.params.id" 
+      :enabledComponents="['artists', 'genre', 'releaseYear', 'duration', 'favorite', 'edit', 'remove']" 
+      v-else 
+      @playSong="(songId) => playSong(true, songId)"
+    />
   </div>
 </template>
 <style lang="scss" scoped>

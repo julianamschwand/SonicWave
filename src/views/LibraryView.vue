@@ -53,7 +53,13 @@ onMounted(async () => {
       </div>
     </div>
   </header>
-  <SongTable :songs="filteredSongs" :enableSongPlay="true" :enabledComponents="['artists','genre','releaseYear','duration','favorite','edit','delete']" v-if="!songStore.loading && filteredSongs.length" @playSong="playSong"/>
+  <SongTable 
+    :songs="filteredSongs" 
+    :enableSongPlay="true" 
+    :enabledComponents="['artists','genre','releaseYear','duration','favorite','edit','delete']" 
+    v-if="!songStore.loading && filteredSongs.length" 
+    @playSong="playSong"
+  />
   <div class="main-container" v-else>
     <div class="loader-request" v-if="songStore.loading"></div>
     <div v-else>

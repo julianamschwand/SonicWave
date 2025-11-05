@@ -115,7 +115,11 @@ onMounted(() => {
   <div class="main-container" v-if="loaderVisible">
     <div class="loader-request"></div>
   </div>
-  <SongTable :songs="songs" :coverSize="100" :enabledComponents="['artists', 'genre', 'download']"/>
+  <SongTable 
+    :songs="songs" 
+    :coverSize="100" 
+    :enabledComponents="['artists', 'genre', 'download']"
+  />
   <div class="main-container" v-if="greetingVisible">
     Browse for songs
   </div>

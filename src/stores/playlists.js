@@ -103,6 +103,10 @@ export const usePlaylistStore = defineStore("playlists", {
 
       return response
     },
+    updateOrder(playlistId, order) {
+      const playlist = this.playlists.find(playlist => playlist.playlistId == playlistId)
+      playlist.songs = order
+    },
     reset() {
       this.playlists = []
       this.playlistsLoading = true
