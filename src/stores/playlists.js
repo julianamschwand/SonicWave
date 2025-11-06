@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { addToPlaylist, allPlaylists, createPlaylist, deleteFromPlaylist, deletePlaylist, editPlaylist, singlePlaylist } from "@/api/routes/playlists.js"
+import { addToPlaylist, allPlaylists, createPlaylist, deleteFromPlaylist, deletePlaylist, editPlaylist, singlePlaylist, updateOrder } from "@/api/routes/playlists.js"
 import { useSongStore } from "./songs.js"
 import router from "@/router"
 
@@ -103,9 +103,17 @@ export const usePlaylistStore = defineStore("playlists", {
 
       return response
     },
-    updateOrder(playlistId, order) {
+    async updateOrder(playlistId, oldIndex, newIndex) {
       const playlist = this.playlists.find(playlist => playlist.playlistId == playlistId)
-      playlist.songs = order
+      const songId = playlist.songs.splice(oldIndex, 1)[0]
+      playlist.songs.splice(newIndex, 0, songId)
+
+      const response = await updateOrder(playlistId, songId, oldIndex, newIndex)
+
+      if (!response.success) {
+        playlist.songs.splice(newIndex, 1)
+        playlist.songs.splice(oldIndex, 0, songId)
+      }
     },
     reset() {
       this.playlists = []

@@ -36,3 +36,7 @@ export async function allPlaylists() {
 export async function singlePlaylist(playlistId) {
   return request("get", "/playlists/single", { params: { playlistId }});
 }
+
+export async function updateOrder(playlistId, songId, oldIndex, newIndex) {
+  return request("patch", "/playlists/update-order", { data: { playlistId, songId, oldIndex, newIndex }})
+}

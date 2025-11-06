@@ -56,11 +56,6 @@ const handleEditSong = (songId) => {
   else if (props.artistId) router.push(`/artist/${props.artistId}/edit/song/${songId}`)
   else router.push(`/library/edit/song/${songId}`)
 }
-
-const onDragEnd = () => {
-  const newOrder = props.songs.map(song => song.songId)
-  playlistStore.updateOrder(props.playlistId, newOrder)
-}
 </script>
 <template>
   <div id="song-table">
@@ -70,7 +65,7 @@ const onDragEnd = () => {
       :disabled="!enableDrag"
       handle=".drag-handle"
       :animation="150"
-      @end="onDragEnd"
+      @change="(event) => playlistStore.updateOrder(props.playlistId, event.moved.oldIndex, event.moved.newIndex)"
       tag="div"
     > 
       <template #item="{ element: song, index }">
@@ -222,7 +217,7 @@ const onDragEnd = () => {
 
         .checkbox {
           height: 20px;
-          width: 20px;
+          aspect-ratio: 1/1;
           background-color: var(--background);
           border: 2px solid var(--accent);
           padding: 0px;
