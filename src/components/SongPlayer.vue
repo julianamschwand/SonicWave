@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useQueueStore } from '@/stores/queue.js'
 import { NSlider } from 'naive-ui'
 import { formatDuration } from '@/functions.js'
@@ -44,6 +44,22 @@ onMounted(() => {
   audio.addEventListener('play', () => queueStore.songIsPlaying = true)
   audio.addEventListener('pause', () => queueStore.songIsPlaying = false)
   audio.addEventListener('ended', () => queueStore.songIsPlaying = false)
+
+  navigator.mediaSession.setActionHandler('play', () => audioRef.value.play())
+  navigator.mediaSession.setActionHandler('pause', () => audioRef.value.pause())
+
+  watch(() => song.value, () => {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: song.value.title,
+      artist: song.value.artists.map(artist => artist.name).join(", ") || "Unknown Artist",
+      artwork: [{ src: song.value.cover, sizes: "1000x1000", type: "image/avif" }]
+    })
+
+    if (queueStore.queueIndex === 0) navigator.mediaSession.setActionHandler('previoustrack', null)
+    else navigator.mediaSession.setActionHandler('previoustrack', () => queueStore.changeSong('backward'))
+    if (queueStore.queueIndex === queueStore.queue.length - 1) navigator.mediaSession.setActionHandler('nexttrack', null)
+    else navigator.mediaSession.setActionHandler('nexttrack', () => queueStore.changeSong('forward'))
+  }, { immediate: true })
 })
 </script>
 <template>
