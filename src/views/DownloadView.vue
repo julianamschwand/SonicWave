@@ -73,15 +73,13 @@ onBeforeMount(async () => {
         </div>
       </div>
       <div class="download-action-container" v-if="downloadAction[0]">{{ downloadAction[0] }}</div>
-      <div class="progress-bar-container" v-if="downloadStats[0]">
-        <div class="progress-bar">
-          <div :style="`width: ${downloadStats[0].maxSongs ?
-            ((downloadStats[0].currentSong - 1 + downloadStats[0].progress / 100) / downloadStats[0].maxSongs) * 100 :
-            downloadStats[0].progress}%`">
-          </div>
+      <div class="progress-bar" v-if="downloadStats[0]">
+        <div :style="`width: ${downloadStats[0].maxSongs ?
+          ((downloadStats[0].currentSong - 1 + downloadStats[0].progress / 100) / downloadStats[0].maxSongs) * 100 :
+          downloadStats[0].progress}%`">
         </div>
-        <div>{{ downloadStats[0].speed }}</div>
       </div>
+      <div class="download-speed" v-if="downloadStats[0]">{{ downloadStats[0].speed }}</div>
       <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
       <div class="success-message" v-if="successMessage">{{ successMessage }}</div>
     </div>
@@ -108,29 +106,24 @@ onBeforeMount(async () => {
     font-size: 19x;
   }
 
-  .progress-bar-container {
+  .progress-bar {
     width: 100%;
-    height: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    height: 7px;
+    border: 1px solid var(--accent);
+    border-radius: 5px;
 
-    .progress-bar {
-      width: 75%;
-      height: 7px;
-      border: 1px solid var(--accent);
+    > div {
+      height: 100%;
+      background-color: var(--accent);
       border-radius: 5px;
-
-      > div {
-        height: 100%;
-        background-color: var(--accent);
-        border-radius: 5px;
-      }
     }
+  }
 
-    > div:last-child {
-      font-size: 13.5px;
-    }
+  > .download-speed {
+    width: 100%;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 

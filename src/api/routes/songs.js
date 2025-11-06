@@ -2,7 +2,7 @@ import request from "../request.js"
 
 async function download(mode, downloadURL, actionObj, downloadObj, objKey) {
   return new Promise(resolve => {
-    const source = new EventSource(`${import.meta.env.VITE_API_URL}/songs/download-${mode}?songURL=${encodeURIComponent(downloadURL)}`, { withCredentials: true})
+    const source = new EventSource(`${import.meta.env.VITE_API_URL}/songs/download-${mode}?${mode}URL=${encodeURIComponent(downloadURL)}`, { withCredentials: true})
 
     source.addEventListener("download", event => {
       const data = JSON.parse(event.data)
