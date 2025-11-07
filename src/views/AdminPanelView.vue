@@ -40,20 +40,22 @@ onMounted(async () => {
   <div id="split-container" v-else>
     <div v-if="filteredRequests.length">
       <div v-for="request of filteredRequests">
-        <div>{{ request.username }}</div>
-        <div>{{ request.email }}</div>
         <div>
-          <button class="light-button button-dark-hover" @click="otherUsersStore.approveRegister(request.userDataId)">
-            <svg xmlns="http://www.w3.org/2000/svg"viewBox="0 -960 960 960">
-              <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
-            </svg>
-          </button>
-          <button class="dark-button button-dark-hover" @click="otherUsersStore.denyRegister(request.userDataId)">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-              <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
-            </svg>
-          </button>
+          <span>{{ request.username }}</span>
         </div>
+        <div>
+          <span>{{ request.email }}</span>
+        </div>
+        <button class="light-button button-dark-hover" @click="otherUsersStore.approveRegister(request.userDataId)">
+          <svg xmlns="http://www.w3.org/2000/svg"viewBox="0 -960 960 960">
+            <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+          </svg>
+        </button>
+        <button class="dark-button button-dark-hover" @click="otherUsersStore.denyRegister(request.userDataId)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+          </svg>
+        </button>
       </div>
     </div>
     <div v-else class="center-container">
@@ -61,25 +63,27 @@ onMounted(async () => {
     </div>
     <div v-if="isOwner && filteredUsers.length">
       <div v-for="user in filteredUsers">
-        <div>{{ user.username }}</div>
-        <div>{{ user.email }}</div>
         <div>
-          <button class="light-button button-dark-hover" v-if="user.userRole !== 'admin'" @click="otherUsersStore.makeAdmin(user.userDataId)">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-              <path d="M480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v227q-19-8-39-14.5t-41-9.5v-147l-240-90-240 90v188q0 47 12.5 94t35 89.5Q310-290 342-254t71 60q11 32 29 61t41 52q-1 0-1.5.5t-1.5.5Zm200 0q-83 0-141.5-58.5T480-280q0-83 58.5-141.5T680-480q83 0 141.5 58.5T880-280q0 83-58.5 141.5T680-80ZM480-494Zm180 334h40v-100h100v-40H700v-100h-40v100H560v40h100v100Z"/>
-            </svg>
-          </button>
-          <button class="dark-button button-dark-hover" v-else @click="otherUsersStore.removeAdmin(user.userDataId)">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-              <path d="m754-318-60-62q12-32 19-66.5t7-69.5v-189l-240-90-146 55-62-62 208-78 320 120v244q0 51-11.5 101T754-318Zm38 262L662-186q-38 39-84.5 65.5T480-80q-139-35-229.5-159.5T160-516v-172L56-792l56-56 736 736-56 56ZM423-425Zm91-135Zm-34 396q35-11 67-31t59-47L240-608v92q0 121 68 220t172 132Z"/>
-            </svg>
-          </button>
-          <button class="dark-button button-dark-hover" @click="otherUsersStore.deleteUser(user.userDataId)">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-              <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
-            </svg>
-          </button>
+          <span>{{ user.username }}</span>
         </div>
+        <div>
+          <span>{{ user.email }}</span>
+        </div>
+        <button class="light-button button-dark-hover" v-if="user.userRole !== 'admin'" @click="otherUsersStore.makeAdmin(user.userDataId)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path d="M480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v227q-19-8-39-14.5t-41-9.5v-147l-240-90-240 90v188q0 47 12.5 94t35 89.5Q310-290 342-254t71 60q11 32 29 61t41 52q-1 0-1.5.5t-1.5.5Zm200 0q-83 0-141.5-58.5T480-280q0-83 58.5-141.5T680-480q83 0 141.5 58.5T880-280q0 83-58.5 141.5T680-80ZM480-494Zm180 334h40v-100h100v-40H700v-100h-40v100H560v40h100v100Z"/>
+          </svg>
+        </button>
+        <button class="dark-button button-dark-hover" v-else @click="otherUsersStore.removeAdmin(user.userDataId)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path d="m754-318-60-62q12-32 19-66.5t7-69.5v-189l-240-90-146 55-62-62 208-78 320 120v244q0 51-11.5 101T754-318Zm38 262L662-186q-38 39-84.5 65.5T480-80q-139-35-229.5-159.5T160-516v-172L56-792l56-56 736 736-56 56ZM423-425Zm91-135Zm-34 396q35-11 67-31t59-47L240-608v92q0 121 68 220t172 132Z"/>
+          </svg>
+        </button>
+        <button class="dark-button button-dark-hover" @click="otherUsersStore.deleteUser(user.userDataId)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+          </svg>
+        </button>
       </div>
     </div>
     <div v-if="!filteredUsers.length && isOwner" class="center-container">
@@ -108,55 +112,29 @@ header {
 
     > div {
       width: 100%;
-      display: flex;
-      margin-bottom: 10px;
-
-      &:last-child {
-        margin-bottom: 0px;
-      }
+      display: grid;
+      grid-template-columns: 1fr 1fr 40px 40px;
+      grid-template-rows: 40px;
+      gap: 5px;
 
       > div {
         background-color: var(--objects);
-        height: 40px;
+        border-radius: 5px;
         padding-left: 10px;
         padding-right: 10px;
-        border-radius: 5px;
         display: flex;
         align-items: center;
-        width: 100%;
+        min-width: 0;
 
-        &:not(:last-child) {
+        span {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-        }
-
-        &:last-child {
-          width: 90px;
-          padding: 0px;
-          background-color: var(--background);
+          flex-shrink: 1;
+          min-width: 0;
         }
       }
     }
-  }
-
-  > div > div div, button {
-    margin-right: 5px;
-  }
-
-  > div > div div:last-child, button:last-child {
-    margin-right: 0px;
-  }
-}
-
-button {
-  height: 40px;
-  width: 40px;
-  padding: 0px;
-
-  svg {
-    height: 30px;
-    width: 30px;
   }
 }
 

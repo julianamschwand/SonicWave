@@ -195,7 +195,7 @@ onMounted(async () => {
     }
 
     button:hover:not(.risky-action-button) {
-      filter: brightness(1.25);
+      background-color: color-mix(in srgb, var(--background) 50%, var(--objects) 50%);
     }
   }
 
@@ -218,7 +218,7 @@ onMounted(async () => {
 }
 
 .selected-page {
-  filter: brightness(1.6) !important;
+  background-color: var(--objects) !important;
 }
 
 .site-content {

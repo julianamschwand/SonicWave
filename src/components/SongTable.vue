@@ -86,7 +86,7 @@ const handleEditSong = (songId) => {
                 </svg>
               </button>
               <img :src="song.cover" :style="`width: ${coverSize ? coverSize : 60}px;`" loading="lazy">
-              <div>{{ song.title }}</div>
+              <div class="song-title">{{ song.title }}</div>
               <div class="music-playing-animation" v-if="queueStore.songPlaying(song.songId) && enableSongPlay">
                 <span></span><span></span><span></span>
               </div>
@@ -236,7 +236,7 @@ const handleEditSong = (songId) => {
           flex-shrink: 0;
         }
 
-        div:last-child {
+        .song-title {
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
