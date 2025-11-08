@@ -104,8 +104,8 @@ const artists = computed(() => {
       }
 
       .dropdown-title {
-        background-color: var(--accent);
-        color: var(--background);
+        background-color: var(--objects);
+        color: white;
         font-weight: bold;
         padding: 3px;
         padding-left: 5px;
@@ -114,7 +114,7 @@ const artists = computed(() => {
 
       .dropdown-content {
         background-color: var(--background);
-        border: 2px solid var(--accent);
+        border: 2px solid var(--objects);
         padding: 5px;
         font-weight: 650;
         font-size: 13px;

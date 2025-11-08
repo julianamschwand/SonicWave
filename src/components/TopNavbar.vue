@@ -67,11 +67,10 @@ onMounted(async () => {
       </svg>
     </button>
   </div>
-  <div id="seperator"></div>
 </template>
 <style lang="scss" scoped>
 #navbar {
-  height: 60px;
+  height: 65px;
   width: 100%;
   background-color: var(--objects);
   display: flex;
@@ -79,12 +78,7 @@ onMounted(async () => {
   justify-content: space-between;
   padding: 8px;
   box-sizing: border-box;
-}
-
-#seperator {
-  height: 5px;
-  width: 100%;
-  background-color: var(--accent);
+  border-radius: 5px;
 }
 
 #login-button {
@@ -108,7 +102,7 @@ onMounted(async () => {
 
   > div:not(.search-container) {
     position: absolute;
-    top: 70px;
+    top: 75px;
   }
 }
 

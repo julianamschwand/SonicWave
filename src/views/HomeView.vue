@@ -90,7 +90,7 @@ const scroll = (container, direction) => {
   isScrolling = true
   setTimeout(() => {
     isScrolling = false
-  }, 500)
+  }, 600)
 }
 
 const playSong = async (song) => {

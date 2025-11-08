@@ -36,7 +36,9 @@ onMounted(async () => {
 <template>
   <TopNavbar v-if="route.path !== '/login' && route.path !== '/register'"/>
   <div id="layout">
-    <SideNavbar v-if="route.path !== '/login' && route.path !== '/register'"/>
+    <div>
+      <SideNavbar v-if="route.path !== '/login' && route.path !== '/register'"/>
+    </div>
     <div id="main-content">
       <div id="site-content" :class="siteContentHeight">
         <RouterView/>
@@ -45,11 +47,17 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 #layout {
   display: flex;
   height: calc(100% - 65px);
   width: 100%;
+
+  > div:first-child {
+    height: 100%;
+    padding-top: 5px;
+    box-sizing: border-box;
+  }
 }
 
 #main-content {
@@ -72,6 +80,6 @@ onMounted(async () => {
 }
 
 .cut-height {
-  height: calc(100% - 110px);
+  height: calc(100% - 100px);
 } 
 </style>

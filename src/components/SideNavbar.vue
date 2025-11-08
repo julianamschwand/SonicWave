@@ -75,6 +75,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  border-radius: 5px;
 }
 
 button {
@@ -84,7 +85,6 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 0px;
 }
 
 .active {
