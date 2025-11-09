@@ -1,10 +1,8 @@
 <script setup>
 import router from '@/router'
-import { onBeforeMount, ref } from 'vue'
-import { useUserStore } from '@/stores/user.js'
+import { ref } from 'vue'
 import { usePlaylistStore } from '@/stores/playlists'
 
-const userStore = useUserStore()
 const playlistStore = usePlaylistStore()
 const fileInputRef = ref(null)
 const name = ref("")
@@ -25,10 +23,6 @@ const handleCreatePlaylist = async () => {
     router.push("/playlists")
   }
 }
-
-onBeforeMount(async () => {
-  await userStore.checkLogin()
-})
 </script>
 <template>
   <header>Create Playlist</header>

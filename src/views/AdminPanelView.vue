@@ -1,6 +1,6 @@
 <script setup>
 import router from '@/router'
-import { computed, onBeforeMount, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user.js'
 import { useOtherUsersStore } from '@/stores/otherUsers'
 
@@ -11,10 +11,6 @@ const isOwner = ref(false)
 
 const filteredRequests = computed(() => otherUsersStore.registerRequests.filter(request => request.isVisible))
 const filteredUsers = computed(() => otherUsersStore.otherUsers.filter(user => user.isVisible))
-
-onBeforeMount(async () => {
-  await userStore.checkLogin()
-})
 
 onMounted(async () => {
   isOwner.value = userStore.userRole === "owner"

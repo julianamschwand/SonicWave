@@ -1,12 +1,10 @@
 <script setup>
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import { computed, onBeforeMount, onMounted, ref } from 'vue'
-import { useUserStore } from '@/stores/user.js'
+import { computed, onMounted, ref } from 'vue'
 import { useSongStore } from '@/stores/songs.js'
 
 const route = useRoute()
-const userStore = useUserStore()
 const songStore = useSongStore()
 const artist = ref("")
 const fileInputRef = ref(null)
@@ -74,10 +72,6 @@ const handleResetSong = async () => {
   const response = await songStore.resetSong(route.params.songId)
   if (response.success) goBack(true)
 }
-
-onBeforeMount(async () => {
-  await userStore.checkLogin()
-})
 
 onMounted(async () => {
   await songStore.getSingleSong(route.params.songId)

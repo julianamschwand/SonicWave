@@ -1,11 +1,9 @@
 <script setup>
 import { onBeforeMount, onMounted, onBeforeUnmount, ref } from 'vue'
 import { browseSongs } from '@/api/routes/songs.js'
-import { useUserStore } from '@/stores/user.js'
 import { useLocalOptionsStore } from '@/stores/localOptions.js'
 import SongTable from '@/components/SongTable.vue'
 
-const userStore = useUserStore()
 const localOptionsStore = useLocalOptionsStore()
 const query = ref("")
 const songs = ref([])
@@ -54,7 +52,6 @@ onBeforeUnmount(() => {
 })
 
 onBeforeMount(async () => {
-  await userStore.checkLogin()
   localOptionsStore.getLocalOptions()
 })
 

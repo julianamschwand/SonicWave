@@ -1,10 +1,8 @@
 <script setup>
 import { onBeforeMount, reactive, ref } from 'vue'
-import { useUserStore } from '@/stores/user.js'
 import { useSongStore } from '@/stores/songs.js'
 import { useLocalOptionsStore } from '@/stores/localOptions.js'
 
-const userStore = useUserStore()
 const songStore = useSongStore()
 const localOptionsStore = useLocalOptionsStore()
 const url = ref("")
@@ -38,7 +36,6 @@ const handleDownload = async () => {
 }
 
 onBeforeMount(async () => {
-  await userStore.checkLogin()
   localOptionsStore.getLocalOptions()
 })
 </script>

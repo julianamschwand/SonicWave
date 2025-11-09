@@ -1,6 +1,5 @@
 <script setup>
-import { onBeforeMount, onMounted, computed } from 'vue'
-import { useUserStore } from '@/stores/user.js'
+import { onMounted, computed } from 'vue'
 import { useQueueStore } from '@/stores/queue.js'
 import { useRoute } from 'vue-router'
 import BackButton from '@/components/BackButton.vue'
@@ -11,7 +10,6 @@ import { useSongStore } from '@/stores/songs'
 import SongTable from '@/components/SongTable.vue'
 
 const route = useRoute()
-const userStore = useUserStore()
 const queueStore = useQueueStore()
 const artistStore = useArtistStore()
 const songStore = useSongStore()
@@ -38,11 +36,6 @@ const playSong = async (shuffle, songId) => {
 
   await queueStore.initQueue(shuffledQueue || queue)
 }
-
-
-onBeforeMount(async () => {
-  await userStore.checkLogin()
-})
 
 onMounted(async () => {
   await artistStore.getSingleArtist(route.params.id)

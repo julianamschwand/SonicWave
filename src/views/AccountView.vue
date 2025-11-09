@@ -1,6 +1,6 @@
 <script setup>
 import { useUserStore } from '@/stores/user.js'
-import { onMounted, onBeforeMount, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { changePassword } from '@/api/routes/users.js'
 import { parseNull } from '@/functions.js'
 
@@ -41,10 +41,6 @@ const saveColors = () => {
   document.documentElement.style.setProperty("--objects", objectsColor.value)
   document.documentElement.style.setProperty("--accent", accentColor.value)
 }
-
-onBeforeMount(async () => {
-  await userStore.checkLogin()
-})
 
 onMounted(async () => {
   await userStore.fetchUserData()

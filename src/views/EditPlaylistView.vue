@@ -1,12 +1,10 @@
 <script setup>
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import { computed, onBeforeMount, onMounted, ref } from 'vue'
-import { useUserStore } from '@/stores/user.js'
+import { computed, onMounted, ref } from 'vue'
 import { usePlaylistStore } from '@/stores/playlists'
 
 const route = useRoute()
-const userStore = useUserStore()
 const playlistStore = usePlaylistStore()
 const fileInputRef = ref(null)
 const coverUrl = ref("")
@@ -29,10 +27,6 @@ const handleEditPlaylist = async () => {
     else router.push(`/playlists/${route.params.id}`)
   }
 }
-
-onBeforeMount(async () => {
-  await userStore.checkLogin()
-})
 
 onMounted(async () => {
   await playlistStore.getSinglePlaylist(route.params.id)

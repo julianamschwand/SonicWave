@@ -18,6 +18,7 @@ import AccountView from '@/views/AccountView.vue'
 import LanderView from '@/views/LanderView.vue'
 import ArtistView from '@/views/ArtistView.vue'
 import EditArtistView from '@/views/EditArtistView.vue'
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -128,6 +129,32 @@ const router = createRouter({
       component: EditArtistView,
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const routeNames = [
+    'account', 
+    'add playlist songs', 
+    'admin panel', 
+    'playlists', 
+    'artist', 
+    'browse', 
+    'create playlist', 
+    'download', 
+    'edit playlist',
+    'edit artist',
+    'edit library song',
+    'edit playlist song',
+    'edit artist song',
+    'library',
+    'playlist'
+  ]
+
+  if (routeNames.includes(to.name)) {
+    useUserStore().checkLogin()
+  }
+
+  next()
 })
 
 export default router

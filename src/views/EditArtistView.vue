@@ -1,12 +1,10 @@
 <script setup>
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import { computed, onBeforeMount, onMounted, ref } from 'vue'
-import { useUserStore } from '@/stores/user.js'
+import { computed, onMounted, ref } from 'vue'
 import { useArtistStore } from '@/stores/artists'
 
 const route = useRoute()
-const userStore = useUserStore()
 const artistStore = useArtistStore()
 const fileInputRef = ref(null)
 const imageUrl = ref("")
@@ -27,10 +25,6 @@ const handleEditArtist = async () => {
     else router.push(`/artist/${route.params.id}`)
   }
 }
-
-onBeforeMount(async () => {
-  await userStore.checkLogin()
-})
 
 onMounted(async () => {
   await artistStore.getSingleArtist(route.params.id)

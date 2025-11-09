@@ -1,14 +1,12 @@
 <script setup>
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import { onMounted, ref, computed, onBeforeMount } from 'vue'
-import { useUserStore } from '@/stores/user'
+import { onMounted, ref, computed } from 'vue'
 import { usePlaylistStore } from '@/stores/playlists'
 import { useSongStore } from '@/stores/songs'
 import SongTable from '@/components/SongTable.vue'
 
 const route = useRoute()
-const userStore = useUserStore()
 const playlistStore = usePlaylistStore()
 const songStore = useSongStore()
 const query = ref("")
@@ -40,11 +38,6 @@ const toggleSong = (songId) => {
     checkedSongs.value.push(songId)
   }
 }
-
-
-onBeforeMount(async () => {
-  await userStore.checkLogin()
-})
 
 onMounted(async () => {
   if (!playlistStore.playlists.length) await playlistStore.getPlaylists()

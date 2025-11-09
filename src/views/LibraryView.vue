@@ -1,12 +1,10 @@
 <script setup>
 import { onMounted, ref, computed, onBeforeMount } from 'vue'
 import { useQueueStore } from '@/stores/queue.js'
-import { useUserStore } from '@/stores/user.js'
 import { useSongStore } from '@/stores/songs.js'
 import { shuffleArray } from '@/functions.js'
 import SongTable from '@/components/SongTable.vue'
 
-const userStore = useUserStore()
 const queueStore = useQueueStore()
 const songStore = useSongStore()
 const query = ref("")
@@ -30,10 +28,6 @@ const playSong = async (songId) => {
 
   await queueStore.initQueue(shuffledQueue)
 }
-
-onBeforeMount(async () => {
-  await userStore.checkLogin()
-})
 
 onMounted(async () => {
   await songStore.getSongs()
