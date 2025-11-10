@@ -122,10 +122,9 @@ onMounted(() => {
 </template>
 <style lang="scss" scoped>
 #player-container {
-  width: calc(100% - 5px);
+  width: 100%;
   height: 100px;
   background-color: var(--objects);
-  margin-left: 5px;
   border-radius: 5px;
   border-top-right-radius: 0px;
   display: flex;

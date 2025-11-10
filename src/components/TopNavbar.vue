@@ -4,14 +4,17 @@ import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user.js'
 import SearchDropdown from './SearchDropdown.vue'
 import Logo from './Logo.vue'
+import { useDeviceStore } from '@/stores/device.js'
 
 const userStore = useUserStore()
+const deviceStore = useDeviceStore()
 const searchQuery = ref("")
 const dropdownRef = ref(null)
 const searchbarRef = ref(null)
 const showDropdown = ref(false)
 
 const handleClick = (event) => {
+  if (!searchbarRef.value) return
   const clickedOutsideSearchbar = !searchbarRef.value.contains(event.target)
   const clickedOutsideDropdown = !dropdownRef.value || !dropdownRef.value.$el.contains(event.target)
 
@@ -44,7 +47,7 @@ onMounted(async () => {
 <template>
   <div id="navbar">
     <Logo :size="26" @click="router.push('/home')"/>
-    <div id="navbar-search-container">
+    <div id="navbar-search-container" v-if="!deviceStore.isMobile">
       <div class="search-container">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF">

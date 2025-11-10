@@ -175,7 +175,7 @@ const artists = computed(() => {
   }
 
   .no-search-results-container {
-    border: 2px solid var(--accent);
+    border: 2px solid var(--objects);
     border-radius: 5px;
     display: flex;
     justify-content: center;
