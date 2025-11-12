@@ -93,13 +93,13 @@ button {
 }
 
 svg {
-  height: 35px;
   width: 35px;
+  aspect-ratio: 1/1;
 }
 
 @media (max-aspect-ratio: 4/3) {
   #navbar {
-    height: 65px;
+    height: 55px;
     width: 100%;
     flex-direction: row;
 
@@ -110,7 +110,12 @@ svg {
     }
 
     button {
+      height: 55px;
       flex: 1;
+    }
+
+    svg {
+      width: 30px;
     }
   }
 }

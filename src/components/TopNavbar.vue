@@ -46,7 +46,7 @@ onMounted(async () => {
 </script>
 <template>
   <div id="navbar">
-    <Logo :size="26" @click="router.push('/home')"/>
+    <Logo :size="deviceStore.isMobile ? 24 : 26" @click="router.push('/home')"/>
     <div id="navbar-search-container" v-if="!deviceStore.isMobile">
       <div class="search-container">
         <div>
@@ -127,5 +127,11 @@ onMounted(async () => {
   width: 30px;
   height: 30px;
   stroke: var(--accent);
+}
+
+@media (max-aspect-ratio: 4/3) {
+  #navbar {
+    height: 55px;
+  }
 }
 </style>

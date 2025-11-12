@@ -79,4 +79,14 @@ onMounted(async () => {
   overflow: auto;
   box-sizing: border-box;
 }
+
+@media (max-aspect-ratio: 4/3) {
+  #site-content {
+    padding: 15px;
+  }
+
+  #layout {
+    height: calc(100% - 55px);
+  }
+}
 </style>

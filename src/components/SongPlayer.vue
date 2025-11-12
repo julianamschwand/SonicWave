@@ -4,11 +4,13 @@ import { useQueueStore } from '@/stores/queue.js'
 import { NSlider } from 'naive-ui'
 import { formatDuration } from '@/functions.js'
 import PlayButton from './PlayButton.vue'
-import { useSongStore } from '@/stores/songs'
+import { useSongStore } from '@/stores/songs.js'
 import router from '@/router'
+import { useDeviceStore } from '@/stores/device.js'
 
 const queueStore = useQueueStore()
 const songStore = useSongStore()
+const deviceStore = useDeviceStore()
 const audioRef = ref(null)
 const currentTime = ref(0)
 const duration = ref(0)
@@ -29,7 +31,7 @@ const playPauseSong = () => {
 } 
 
 const updateVolume = (value) => {
-  audioRef.value.volume = value / 100
+  audioRef.value.volume = deviceStore.isMobile ? 1 : value / 100
   localStorage.setItem("volume", value)
 }
 
@@ -68,13 +70,23 @@ onMounted(() => {
     <div id="cover-container">
       <img :src="song.cover">
     </div>
-    <div id="close-box" class="button-light-hover" @click="queueStore.clearQueue()">
+    <div id="close-box" class="button-light-hover" @click="queueStore.clearQueue()" v-if="!deviceStore.isMobile">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
         <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
       </svg>
     </div>
     <div>
-      <n-slider id="timeline-slider" :tooltip="false" :max="duration" v-model:value="currentTime" @update:value="value => audioRef.currentTime = value"/>
+      <n-slider 
+        id="timeline-slider" 
+        :tooltip="false" 
+        :max="duration" 
+        v-model:value="currentTime" 
+        @update:value="value => audioRef.currentTime = value" 
+        v-if="!deviceStore.isMobile"
+      />
+      <div class="timeline-bar" v-if="deviceStore.isMobile">
+        <div :style="`width: ${currentTime / duration * 100}%`"></div>
+      </div>
       <div id="content-container">
         <div>
           <div id="title">{{ song.title }}</div>
@@ -84,20 +96,20 @@ onMounted(() => {
           </div>
         </div>
         <div id="control-buttons">
-          <button @click="queueStore.changeSong('backward')" :class="{ 'disabled-button': queueStore.queueIndex === 0 }">
+          <button @click="queueStore.changeSong('backward')" :class="{ 'disabled-button': queueStore.queueIndex === 0 }" v-if="!deviceStore.isMobile">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="19 20 9 12 19 4 19 20"/>
               <line x1="5" x2="5" y1="19" y2="5"/>
             </svg>
           </button>
-          <PlayButton :size="60" :songId="song.songId" @click="playPauseSong"/>
-          <button @click="queueStore.changeSong('forward')" :class="{ 'disabled-button': queueStore.queueIndex === queueStore.queue.length - 1 }">
+          <PlayButton :size="deviceStore.isMobile ? 50 : 60" :songId="song.songId" @click="playPauseSong"/>
+          <button @click="queueStore.changeSong('forward')" :class="{ 'disabled-button': queueStore.queueIndex === queueStore.queue.length - 1 }" v-if="!deviceStore.isMobile">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/>
             </svg>
           </button>
         </div>
-        <div id="right-container">
+        <div id="right-container" v-if="!deviceStore.isMobile">
           <div id="volume-container">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-if="volume > 50">
               <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/>
@@ -136,33 +148,37 @@ onMounted(() => {
     flex-direction: column;
     width: 100%;
     height: 100%;
+
+    > div > div:last-child {
+      justify-content: flex-end !important;
+    }
   }
 }
 
 #cover-container {
   background-color: var(--accent);
-  border-radius: 5px;
+  border-radius: 6px;
   border-top-right-radius: 0px;
   max-width: 100px;
 }
 
 img {
   width: 100px;
-  height: 100px;
-  border-radius: 4px;
+  aspect-ratio: 1/1;
+  border-radius: 5px;
 }
 
 #content-container {
-  width: 100%;
   height: 100%;
-  display: flex;
+  flex: 1;
+  display: grid;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
   box-sizing: border-box;
+  grid-template-columns: 1fr 1fr 1fr;
 
   > div {
-    flex: 1;
     min-width: 0px;
   }
 }
@@ -183,11 +199,11 @@ img {
   }
 }
 
-#title, #artist {
+#title, #artist, #artist > div {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%;
+  min-width: 0;
 }
 
 #timeline-slider {
@@ -203,6 +219,16 @@ img {
 
   :deep(.n-slider-rail__fill) {
     border-radius: 0px;
+    background-color: var(--accent);
+  }
+}
+
+.timeline-bar {
+  width: 100%;
+  height: 5px;
+  
+  div {
+    height: 100%;
     background-color: var(--accent);
   }
 }
@@ -234,7 +260,6 @@ img {
 
 #right-container {
   display: flex;
-  justify-content: right;
   height: 100%;
   align-items: center;
   gap: 20px;
@@ -300,5 +325,26 @@ img {
     width: 20px;
     height: 20px;
   } 
+}
+
+@media (max-aspect-ratio: 4/3) {
+  img {
+    width: 80px;
+  }
+
+  #player-container {
+    height: 80px;
+    border-top-right-radius: 5px;
+    overflow: hidden;
+  }
+
+  #content-container  {
+    gap: 10px;
+    grid-template-columns: 1fr 50px;
+  }
+
+  #cover-container {
+    max-width: 80px;
+  }
 }
 </style>
