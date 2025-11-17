@@ -3,8 +3,10 @@ import { onBeforeMount, onMounted, onBeforeUnmount, ref } from 'vue'
 import { browseSongs } from '@/api/routes/songs.js'
 import { useLocalOptionsStore } from '@/stores/localOptions.js'
 import SongTable from '@/components/SongTable.vue'
+import { useDeviceStore } from '@/stores/device.js'
 
 const localOptionsStore = useLocalOptionsStore()
+const deviceStore = useDeviceStore()
 const query = ref("")
 const songs = ref([])
 const loaderVisible = ref(false)
@@ -61,7 +63,7 @@ onMounted(() => {
 </script>
 <template>
   <header>
-    Browse      
+    <div v-if="!deviceStore.isMobile">Browse</div>
     <div id="search-bar-container">
       <div ref="siteDropdownRef">
         <div class="button-dark-hover">
@@ -96,16 +98,7 @@ onMounted(() => {
           </div>
         </div>
       </div>  
-      <div class="search-container">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF">
-            <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
-          </svg>
-        </div>
-        <div>
-          <input type="text" placeholder="Search for something ..." v-model="query" @keydown.enter="handleBrowse">
-        </div>
-      </div>
+      <input type="text" :placeholder="deviceStore.isMobile ? 'Search ...' : 'Search for something ...'" v-model="query" @keydown.enter="handleBrowse">
       <button class="button-dark-hover" @click="handleBrowse">🡲</button>
     </div>
   </header>
@@ -123,8 +116,10 @@ onMounted(() => {
 </template>
 <style lang="scss" scoped>
 #search-bar-container {
-  display: flex;
+  display: grid;
   gap: 5px;
+  grid-template-columns: 63px auto 40px;
+  width: 400px;
 
   > div:first-child {
     position: relative;
@@ -133,7 +128,7 @@ onMounted(() => {
     > div:first-child {
       display: flex;
       gap: 3px;
-      width: 65px;
+      width: 63px;
       padding: 0px;
       cursor: pointer;
 
@@ -205,8 +200,17 @@ onMounted(() => {
           height: 24px;
         }
       }
-      
     }
+  }
+
+  input {
+    background-color: var(--objects);
+    padding: 10px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    min-width: 0;
   }
 
   button {
@@ -217,10 +221,6 @@ onMounted(() => {
   }
 }
 
-.search-container * {
-  background-color: var(--objects);
-}
-
 .main-container {
   font-size: 25px;
 }
@@ -228,5 +228,11 @@ onMounted(() => {
 #loader-container {
   display: flex;
   justify-content: center;
+}
+
+@media (max-aspect-ratio: 4/3) {
+  #search-bar-container {
+    width: 100%;
+  }
 }
 </style>

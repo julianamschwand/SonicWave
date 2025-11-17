@@ -5,10 +5,12 @@ import { onMounted, ref, computed } from 'vue'
 import { usePlaylistStore } from '@/stores/playlists'
 import { useSongStore } from '@/stores/songs'
 import SongTable from '@/components/SongTable.vue'
+import { useDeviceStore } from '@/stores/device.js'
 
 const route = useRoute()
 const playlistStore = usePlaylistStore()
 const songStore = useSongStore()
+const deviceStore = useDeviceStore()
 const query = ref("")
 const songs = ref([])
 const checkedSongs = ref([])
@@ -48,7 +50,7 @@ onMounted(async () => {
 </script>
 <template>
   <header>
-    Add Songs to Playlist
+    <div v-if="!deviceStore.isMobile">Add Songs to Playlist</div>
     <div class="search-container">
       <div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF">

@@ -356,15 +356,17 @@ const handleEditSong = (songId) => {
 }
 
 @media (max-aspect-ratio: 4/3) {
-  #song-table {
-    gap: 10px;
-  }
-
   .song-item {
     grid-template-columns: 1fr 30px !important;
 
     > div:first-child {
       padding: 0px !important;
+      padding-top: 5px !important;
+      padding-bottom: 5px !important;
+
+      .checkbox {
+        margin-left: 10px;
+      }
 
       > div:first-child {
         gap: 10px !important;

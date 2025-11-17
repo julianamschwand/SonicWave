@@ -4,9 +4,11 @@ import { useQueueStore } from '@/stores/queue.js'
 import { useSongStore } from '@/stores/songs.js'
 import { shuffleArray } from '@/functions.js'
 import SongTable from '@/components/SongTable.vue'
+import { useDeviceStore } from '@/stores/device.js'
 
 const queueStore = useQueueStore()
 const songStore = useSongStore()
+const deviceStore = useDeviceStore()
 const query = ref("")
 
 const filteredSongs = computed(() => {
@@ -35,7 +37,7 @@ onMounted(async () => {
 </script>
 <template>
   <header>
-    Library
+    <div v-if="!deviceStore.isMobile">Library</div>
     <div class="search-container">
       <div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF">

@@ -3,8 +3,10 @@ import router from '@/router'
 import { onMounted } from 'vue'
 import { usePlaylistStore } from '@/stores/playlists.js'
 import PlaylistItem from '@/components/PlaylistItem.vue'
+import { useDeviceStore } from '@/stores/device.js'
 
 const playlistStore = usePlaylistStore()
+const deviceStore = useDeviceStore()
 
 onMounted(async () => {
   await playlistStore.getPlaylists()
@@ -12,7 +14,7 @@ onMounted(async () => {
 </script>
 <template>
   <header>
-    Playlists
+    <div v-if="!deviceStore.isMobile">Playlists</div>
     <button class="icon-button" @click="router.push('/playlists/create')">+</button>
   </header>
   <div id="playlist-container" v-if="playlistStore.playlists.length !== 0">
@@ -27,17 +29,19 @@ onMounted(async () => {
 </template>
 <style lang="scss" scoped>
 #playlist-container {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 10px;
   width: 100%;
-
-  > div {
-    width: calc(12.5% - 70px / 8);
-  }
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
 .main-container {
   font-size: 25px;
+}
+
+@media (max-aspect-ratio: 4/3) {
+  header {
+    justify-content: flex-end;
+  }
 }
 </style>
