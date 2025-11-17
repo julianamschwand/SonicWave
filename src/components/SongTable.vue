@@ -3,14 +3,16 @@ import { reactive } from 'vue'
 import { formatDuration } from '@/functions.js'
 import { useSongStore } from '@/stores/songs.js'
 import { useQueueStore } from '@/stores/queue.js'
-import { usePlaylistStore } from '@/stores/playlists'
+import { usePlaylistStore } from '@/stores/playlists.js'
 import router from '@/router'
 import draggable from 'vuedraggable'
 import PlayButton from './PlayButton.vue'
+import { useDeviceStore } from '@/stores/device'
 
 const songStore = useSongStore()
 const queueStore = useQueueStore()
 const playlistStore = usePlaylistStore()
+const deviceStore = useDeviceStore()
 const downloadAction = reactive({})
 const downloadStats = reactive({})
 
@@ -58,97 +60,113 @@ const handleEditSong = (songId) => {
 }
 </script>
 <template>
-  <div id="song-table">
-    <draggable
-      :list="props.songs"
-      item-key="songId"
-      :disabled="!enableDrag"
-      handle=".drag-handle"
-      :animation="150"
-      @change="(event) => playlistStore.updateOrder(props.playlistId, event.moved.oldIndex, event.moved.newIndex)"
-      tag="div"
-    > 
-      <template #item="{ element: song, index }">
-        <div class="song-item" :class="{ 'enabled-select': enableSelect, 'checked': checkedSongs?.includes(song.songId) }" @click="handleToggleSong(song.songId)">
-          <div :class="{ 'enabled-song-play': enableSongPlay }" @click="handlePlaySong(song.songId)">
-            <div>
-              <div
-                v-if="enableDrag"
-                class="drag-handle"
-                title="Drag to reorder"
-                style="cursor: grab; user-select: none;"
-              >
-                ⠿
-              </div>
-              <button class="checkbox" v-if="enableSelect">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-                  <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
-                </svg>
-              </button>
-              <img :src="song.cover" :style="`width: ${coverSize ? coverSize : 60}px;`" loading="lazy">
-              <div class="song-title">{{ song.title }}</div>
-              <div class="music-playing-animation" v-if="queueStore.songPlaying(song.songId) && enableSongPlay">
-                <span></span><span></span><span></span>
+  <draggable
+    :list="props.songs"
+    item-key="songId"
+    :disabled="!enableDrag"
+    handle=".drag-handle"
+    :animation="150"
+    @change="(event) => playlistStore.updateOrder(props.playlistId, event.moved.oldIndex, event.moved.newIndex)"
+    tag="div"
+    id="song-table"
+  > 
+    <template #item="{ element: song, index }">
+      <div class="song-item" :class="{ 'enabled-select': enableSelect, 'checked': checkedSongs?.includes(song.songId) }" @click="handleToggleSong(song.songId)">
+        <div :class="{ 'enabled-song-play': enableSongPlay && !deviceStore.isMobile }" @click="handlePlaySong(song.songId)">
+          <div>
+            <div
+              v-if="enableDrag"
+              class="drag-handle"
+              title="Drag to reorder"
+              style="cursor: grab; user-select: none;"
+            >
+              ⠿
+            </div>
+            <button class="checkbox" v-if="enableSelect">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+              </svg>
+            </button>
+            <div class="image-wrapper" :style="`height: ${coverSize ? coverSize : (deviceStore.isMobile ? 50 : 60)}px;`">
+              <img :src="song.cover" loading="lazy">
+              <div v-if="queueStore.songPlaying(song.songId) && enableSongPlay && deviceStore.isMobile">
+                <div class="music-playing-animation" >
+                  <span></span><span></span><span></span>
+                </div>
               </div>
             </div>
-            <PlayButton :size="50" :songId="song.songId"/>
+            <div class="song-title-container">
+              <div>{{ song.title }}</div>
+              <div v-if="enabledComponents.includes('artists') && deviceStore.isMobile">
+                {{ song.artists.map(artist => artist.name).join(", ") || "(None)" }}
+              </div>
+            </div>
+            <div class="music-playing-animation" v-if="queueStore.songPlaying(song.songId) && enableSongPlay && !deviceStore.isMobile">
+              <span></span><span></span><span></span>
+            </div>
           </div>
-          <div>
-            <div v-if="enabledComponents.includes('artists')">{{ song.artists.map(artist => artist.name).join(", ") || "(None)" }}</div>
-            <div v-if="enabledComponents.includes('genre')">{{ song.genre || "(None)" }}</div>
-            <div v-if="enabledComponents.includes('releaseYear')">{{ song.releaseYear }}</div>
-            <div v-if="enabledComponents.includes('duration')">{{ formatDuration(song.duration) }}</div>
-            <div class="icon-container" v-if="enabledComponents.some(component => !['artists','genre','releaseYear','duration'].includes(component))">
-              <div v-if="enabledComponents.includes('favorite')" @click="songStore.toggleFavorite(song.songId)">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" v-if="!song.isFavorite">
-                  <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
-                </svg>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff00ae" v-if="song.isFavorite">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-              </div>
-              <div v-if="enabledComponents.includes('edit')">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="handleEditSong(song.songId)">
-                  <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
-                </svg>
-              </div>
-              <div v-if="enabledComponents.includes('delete')">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="songStore.deleteSong(song.songId)">
-                  <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
-                </svg>
-              </div>
-              <div v-if="enabledComponents.includes('remove')">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="playlistStore.deleteFromPlaylist(playlistId, song.songId)">
-                  <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
-                </svg>
-              </div>
-              <div class="download-icon" v-if="enabledComponents.includes('download') && !song.status">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="handleDownload(song.url, index)">
-                  <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/>
-                </svg>
-              </div>
-              <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'downloading' && !downloadStats[String(index)]">
-                <div class="loader-download"></div>
-              </div>
-              <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'downloading' && downloadStats[String(index)]">
-                <div class="progress-ring" :style="`background: conic-gradient(white ${downloadStats[String(index)].progress * 3.6}deg, var(--background) 0deg);`"></div>
-              </div>
-              <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'success'">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" class="unclickable">
-                  <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
-                </svg>
-              </div>
-              <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'error'">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" class="unclickable">
-                  <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-                </svg>
-              </div>
+          <PlayButton :size="50" :songId="song.songId"/>
+        </div>
+        <div>
+          <div v-if="enabledComponents.includes('artists') && !deviceStore.isMobile">{{ song.artists.map(artist => artist.name).join(", ") || "(None)" }}</div>
+          <div v-if="enabledComponents.includes('genre') && !deviceStore.isMobile">{{ song.genre || "(None)" }}</div>
+          <div v-if="enabledComponents.includes('releaseYear') && !deviceStore.isMobile">{{ song.releaseYear }}</div>
+          <div v-if="enabledComponents.includes('duration') && !deviceStore.isMobile">{{ formatDuration(song.duration) }}</div>
+          <div class="icon-container" v-if="enabledComponents.some(component => !['artists','genre','releaseYear','duration'].includes(component))">
+            <div v-if="enabledComponents.includes('favorite') && !deviceStore.isMobile" @click="songStore.toggleFavorite(song.songId)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" v-if="!song.isFavorite">
+                <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff00ae" v-if="song.isFavorite">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </div>
+            <div v-if="enabledComponents.includes('edit') && !deviceStore.isMobile">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="handleEditSong(song.songId)">
+                <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+              </svg>
+            </div>
+            <div v-if="enabledComponents.includes('delete') && !deviceStore.isMobile">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="songStore.deleteSong(song.songId)">
+                <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+              </svg>
+            </div>
+            <div v-if="enabledComponents.includes('remove') && !deviceStore.isMobile">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="playlistStore.deleteFromPlaylist(playlistId, song.songId)">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+              </svg>
+            </div>
+            <div class="download-icon" v-if="enabledComponents.includes('download') && !song.status">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" @click="handleDownload(song.url, index)">
+                <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/>
+              </svg>
+            </div>
+            <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'downloading' && !downloadStats[String(index)]">
+              <div class="loader-download"></div>
+            </div>
+            <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'downloading' && downloadStats[String(index)]">
+              <div class="progress-ring" :style="`background: conic-gradient(white ${downloadStats[String(index)].progress * 3.6}deg, var(--background) 0deg);`"></div>
+            </div>
+            <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'success'">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" class="unclickable">
+                <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+              </svg>
+            </div>
+            <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'error'">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" class="unclickable">
+                <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+              </svg>
+            </div>
+            <div class="meatball-menu" v-if="deviceStore.isMobile && !enabledComponents.includes('download')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+              </svg>
             </div>
           </div>
         </div>
-      </template>
-    </draggable>
-  </div>
+      </div>
+    </template>
+  </draggable>
 </template>
 <style lang="scss" scoped>
 #song-table {
@@ -156,10 +174,6 @@ const handleEditSong = (songId) => {
   display: flex;
   flex-direction: column;
   font-size: 16px;
-
-  * {
-    box-sizing: border-box;
-  }
 
   .enabled-select:hover {
     background-color: var(--objects);
@@ -175,13 +189,16 @@ const handleEditSong = (songId) => {
   }
 
   .song-item {
-    display: flex;
+    display: grid;
     align-items: center;
     width: 100%;
-    padding-right: 10px;
+    box-sizing: border-box;
+    grid-template-columns: calc(45% - 5px) calc(55% - 5px);
+    gap: 10px;
 
     > div {
       display: flex;
+      min-width: 0;
     }
 
     div {
@@ -190,10 +207,6 @@ const handleEditSong = (songId) => {
 
     > div:first-child {
       gap: 20px;
-      font-weight: bold;
-      width: 45%;
-      max-width: 45%;
-      min-width: 45%;
       justify-content: space-between;
       padding: 10px;
       border-radius: 5px;
@@ -229,18 +242,43 @@ const handleEditSong = (songId) => {
           }
         }
         
-        img {
-          width: 60px;
+        .image-wrapper {
           aspect-ratio: 1/1;
-          border-radius: 5px;
-          flex-shrink: 0;
+          position: relative;
+
+          img {
+            height: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 5px;
+            flex-shrink: 0;
+          }
+
+          > div {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            top: 0;
+            left: 0;
+            background-color: black;
+            border-radius: 4.5px;
+            opacity: 0.65;
+          }
         }
 
-        .song-title {
-          white-space: nowrap;
-          text-overflow: ellipsis;
+        .song-title-container {
           overflow: hidden;
-          min-width: 0;
+
+          > div:first-child {
+            font-size: 16px;
+            font-weight: bold;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-width: 0;
+          }
         }
       }
       
@@ -250,10 +288,8 @@ const handleEditSong = (songId) => {
     }
 
     > div:last-child {
-      width: 55%;
-      max-width: 55%;
-      min-width: 55%;
       justify-content: space-between;
+      max-width: 100%;
 
       > div {
         flex: 1;
@@ -314,6 +350,37 @@ const handleEditSong = (songId) => {
         inset: 3px;
         background-color: var(--background);
         border-radius: 50%;
+      }
+    }
+  }
+}
+
+@media (max-aspect-ratio: 4/3) {
+  #song-table {
+    gap: 10px;
+  }
+
+  .song-item {
+    grid-template-columns: 1fr 30px !important;
+
+    > div:first-child {
+      padding: 0px !important;
+
+      > div:first-child {
+        gap: 10px !important;
+        
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
+      .song-title-container {
+        > div:first-child {
+          font-size: 14px !important;
+        }
+        > div:last-child {
+          font-size: 13px;
+        }
       }
     }
   }

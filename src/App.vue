@@ -5,7 +5,7 @@ import ButtonNavbar from './components/ButtonNavbar.vue'
 import SongPlayer from './components/SongPlayer.vue'
 import { useQueueStore } from './stores/queue.js'
 import { useUserStore } from './stores/user.js'
-import { computed, onMounted, onBeforeMount } from 'vue'
+import { onMounted, onBeforeMount } from 'vue'
 import { loadAllData, parseNull } from './functions.js'
 import { useDeviceStore } from './stores/device.js'
 
@@ -82,7 +82,7 @@ onMounted(async () => {
 
 @media (max-aspect-ratio: 4/3) {
   #site-content {
-    padding: 15px;
+    padding: 10px;
   }
 
   #layout {
