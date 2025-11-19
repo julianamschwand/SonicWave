@@ -128,7 +128,7 @@ const router = createRouter({
       name: 'edit artist',
       component: EditArtistView,
     },
-  ],
+  ]
 })
 
 router.beforeEach((to, from, next) => {
@@ -153,6 +153,9 @@ router.beforeEach((to, from, next) => {
   if (routeNames.includes(to.name)) {
     useUserStore().checkLogin()
   }
+
+  const siteContent = document.getElementById('site-content')
+  siteContent.scrollTop = 0
 
   next()
 })

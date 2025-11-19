@@ -17,15 +17,15 @@ const downloadAction = reactive({})
 const downloadStats = reactive({})
 
 const props = defineProps({
-  songs: Array,
-  playlistId: Number,
-  artistId: Number,
-  coverSize: Number,
-  enableSongPlay: Boolean,
-  enableSelect: Boolean,
-  enableDrag: Boolean,
-  checkedSongs: Array,
-  enabledComponents: Array
+  songs: { type: Array, required: true },
+  playlistId: { type: Number, default: 0 },
+  artistId: { type: Number, default: 0 },
+  coverSize: { type: Number, default: 60 },
+  enableSongPlay: { type: Boolean, default: false },
+  enableSelect: { type: Boolean, default: false },
+  enableDrag: { type: Boolean, default: false },
+  checkedSongs: { type: Array, default: [] },
+  enabledComponents: { type: Array, default: [] }
 })
 
 const emit = defineEmits(["playSong", "toggleSong"])
@@ -71,7 +71,7 @@ const handleEditSong = (songId) => {
     id="song-table"
   > 
     <template #item="{ element: song, index }">
-      <div class="song-item" :class="{ 'enabled-select': enableSelect, 'checked': checkedSongs?.includes(song.songId) }" @click="handleToggleSong(song.songId)">
+      <div class="song-item" :class="{ 'enabled-select': enableSelect, 'checked': checkedSongs.includes(song.songId) }" @click="handleToggleSong(song.songId)">
         <div :class="{ 'enabled-song-play': enableSongPlay && !deviceStore.isMobile }" @click="handlePlaySong(song.songId)">
           <div>
             <div
@@ -87,7 +87,7 @@ const handleEditSong = (songId) => {
                 <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
               </svg>
             </button>
-            <div class="image-wrapper" :style="`height: ${coverSize ? coverSize : (deviceStore.isMobile ? 50 : 60)}px;`">
+            <div class="image-wrapper" :style="{ height: coverSize - (deviceStore.isMobile ? 10 : 0) + 'px' }">
               <img :src="song.cover" loading="lazy">
               <div v-if="queueStore.songPlaying(song.songId) && enableSongPlay && deviceStore.isMobile">
                 <div class="music-playing-animation" >
@@ -145,7 +145,7 @@ const handleEditSong = (songId) => {
               <div class="loader-download"></div>
             </div>
             <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'downloading' && downloadStats[String(index)]">
-              <div class="progress-ring" :style="`background: conic-gradient(white ${downloadStats[String(index)].progress * 3.6}deg, var(--background) 0deg);`"></div>
+              <div class="progress-ring" :style="{ background: `conic-gradient(white ${downloadStats[String(index)].progress * 3.6}deg, var(--background) 0deg)` }"></div>
             </div>
             <div class="download-icon" v-if="enabledComponents.includes('download') && song.status === 'success'">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#FFF" class="unclickable">

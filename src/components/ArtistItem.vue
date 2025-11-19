@@ -1,7 +1,9 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue' 
 
-const props = defineProps({artist: Object})
+const props = defineProps({
+  artist: { type: Number, required: true}
+})
 
 const artistRef = ref(null)
 const fontSize = ref(16)
@@ -21,9 +23,9 @@ onBeforeUnmount(() => {
 })
 </script>
 <template>
-  <div id="artist-item" ref="artistRef" :style="`gap: ${fontSize}px;`">
+  <div id="artist-item" ref="artistRef" :style="{ gap: fontSize + 'px'}">
     <img :src="artist.image" loading="lazy">
-    <div :style="`font-size: ${fontSize}px;`">{{ artist.name }}</div>
+    <div :style="{ fontSize: fontSize + 'px' }">{{ artist.name }}</div>
   </div>
 </template>
 <style lang="scss" scoped>

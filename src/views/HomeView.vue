@@ -137,7 +137,7 @@ onMounted(async () => {
         </div>
       </div>
       <div id="song-container" ref="songContainerRef">
-        <div v-for="song in songs" :style="{ 'visibility': song.songId == 0 ? 'hidden' : 'visible'}" @click="playSong(song)">
+        <div v-for="song in songs" :style="{ visibility: song.songId == 0 ? 'hidden' : 'visible'}" @click="playSong(song)">
           <img :src="song.cover" alt="">
           <div>
             <div>
@@ -166,7 +166,7 @@ onMounted(async () => {
         </div>
       </div>
       <div id="playlist-container" ref="playlistContainerRef">
-        <div v-for="playlist of playlists" :style="{ 'visibility': playlist.playlistId == 0 ? 'hidden' : 'visible'}">
+        <div v-for="playlist of playlists" :style="{ visibility: playlist.playlistId == 0 ? 'hidden' : 'visible'}">
           <PlaylistItem :playlist="playlist" @click="router.push(`/playlists/${playlist.playlistId}`)"/>
         </div>
       </div>
@@ -188,7 +188,7 @@ onMounted(async () => {
         </div>
       </div>
       <div id="artist-container" ref="artistContainerRef">
-        <div v-for="artist of artists" :style="{ 'visibility': artist.artistId == 0 ? 'hidden' : 'visible'}">
+        <div v-for="artist of artists" :style="{ visibility: artist.artistId == 0 ? 'hidden' : 'visible'}">
           <ArtistItem :artist="artist" @click="router.push(`/artist/${artist.artistId}`)"/>
         </div>
       </div>

@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, withDirectives } from 'vue'
 import { useQueueStore } from '@/stores/queue.js'
-import { NSlider } from 'naive-ui'
+import Slider from './Slider.vue'
 import { formatDuration } from '@/functions.js'
 import PlayButton from './PlayButton.vue'
 import { useSongStore } from '@/stores/songs.js'
@@ -76,16 +76,19 @@ onMounted(() => {
       </svg>
     </div>
     <div>
-      <n-slider 
-        id="timeline-slider" 
-        :tooltip="false" 
-        :max="duration" 
-        v-model:value="currentTime" 
-        @update:value="value => audioRef.currentTime = value" 
+      <Slider 
+        v-model="currentTime" 
+        :max="duration"
+        :style="{ 
+          height: '7px',
+          borderRadius: '0px',
+          trackColor: 'var(--objects)'
+        }"
+        @update:modelValue="value => audioRef.currentTime = value" 
         v-if="!deviceStore.isMobile"
       />
       <div class="timeline-bar" v-if="deviceStore.isMobile">
-        <div :style="`width: ${currentTime / duration * 100}%`"></div>
+        <div :style="{ width: currentTime / duration * 100 + '%' }"></div>
       </div>
       <div id="content-container">
         <div>
@@ -123,7 +126,11 @@ onMounted(() => {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-else>
               <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/>
             </svg>
-            <n-slider id="volume-slider" :tooltip="false" v-model:value="volume" @update:value="value => updateVolume(value)"/>
+            <Slider 
+              v-model="volume"
+              :style="{ width: '120px' }"
+              @update:modelValue="value => updateVolume(value)" 
+            />
             <div>{{ volume + "%" }}</div>
           </div>
           <div>{{`${formatDuration(Math.round(currentTime))} / ${formatDuration(Math.round(duration))}` }}</div>
@@ -180,6 +187,12 @@ img {
 
   > div {
     min-width: 0px;
+
+    &:first-child {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
   }
 }
 
@@ -204,23 +217,6 @@ img {
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
-}
-
-#timeline-slider {
-  width: 100%;
-  margin-top: -7px;
-
-  :deep(.n-slider-rail) {
-    height: 7px;
-    border-radius: 0px;
-    border-top-right-radius: 5px;
-    background-color: var(--objects);
-  }
-
-  :deep(.n-slider-rail__fill) {
-    border-radius: 0px;
-    background-color: var(--accent);
-  }
 }
 
 .timeline-bar {
@@ -341,6 +337,10 @@ img {
   #content-container  {
     gap: 10px;
     grid-template-columns: 1fr 50px;
+
+    > div:first-child {
+      gap: 0px;
+    }
   }
 
   #cover-container {

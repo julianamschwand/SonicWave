@@ -2,7 +2,9 @@
 import { formatDuration } from '@/functions'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-const props = defineProps({playlist: Object})
+const props = defineProps({
+  playlist: { type: Object, required: true }
+})
 
 const playlistRef = ref(null)
 const infoFontSize = ref(12)
@@ -28,11 +30,16 @@ onBeforeUnmount(() => {
 <template>
   <div class="playlist-item" ref="playlistRef">
     <img :src="playlist.cover" loading="lazy">
-    <div :style="`font-size: ${infoFontSize}px;`">
+    <div :style="{ fontSize: infoFontSize + 'px' }">
       <div>{{ playlist.songCount + " Songs"}}</div>
       <div>{{ formatDuration(playlist.duration) }}</div>
     </div>
-    <div :style="`font-size: ${nameFontSize}px; margin-top: ${infoFontSize / 2}px; line-height: ${nameFontSize + 5}px; max-height: ${nameFontSize * 2 + 10}px`">
+    <div :style="{ 
+      fontSize: nameFontSize + 'px', 
+      marginTop: infoFontSize / 2 + 'px', 
+      lineHeight: nameFontSize + 5 + 'px', 
+      maxHeight: nameFontSize * 2 + 10 + 'px' 
+    }">
       {{ playlist.name }}
     </div>
   </div>

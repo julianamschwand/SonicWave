@@ -71,9 +71,10 @@ onBeforeMount(async () => {
       </div>
       <div class="download-action-container" v-if="downloadAction[0]">{{ downloadAction[0] }}</div>
       <div class="progress-bar" v-if="downloadStats[0]">
-        <div :style="`width: ${downloadStats[0].maxSongs ?
-          ((downloadStats[0].currentSong - 1 + downloadStats[0].progress / 100) / downloadStats[0].maxSongs) * 100 :
-          downloadStats[0].progress}%`">
+        <div :style="{ width: downloadStats[0].maxSongs ?
+          ((downloadStats[0].currentSong - 1 + downloadStats[0].progress / 100) / downloadStats[0].maxSongs) * 100 + '%' :
+          downloadStats[0].progress + '%' 
+        }">
         </div>
       </div>
       <div class="download-speed" v-if="downloadStats[0]">{{ downloadStats[0].speed }}</div>

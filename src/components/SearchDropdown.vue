@@ -6,7 +6,9 @@ import { useSongStore } from '@/stores/songs.js'
 import { useQueueStore } from '@/stores/queue.js'
 import PlayButton from './PlayButton.vue'
 
-const props = defineProps({query: String})
+const props = defineProps({
+  query: { type: String, required: true }
+})
 const emit = defineEmits(["selected"])
 
 const songStore = useSongStore()
